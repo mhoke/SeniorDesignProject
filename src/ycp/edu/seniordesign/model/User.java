@@ -19,7 +19,8 @@ public class User {
 	private int id;
 	private String username;
 	private String emailAddress;
-	private String password;
+	private String password; // this password is encrypted
+	private String salt;
 	private int type;
 	
 	public int getId() {
@@ -54,6 +55,14 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getSalt(){
+		return salt;
+	}
+	
+	public void setSalt(String salt){
+		this.salt = salt;
 	}
 	
 	public int getType() {

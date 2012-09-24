@@ -98,6 +98,7 @@ public abstract class HashPassword {
 		 Scanner keyboard = new Scanner(System.in);
 		 System.out.print("Enter plaintext password: ");
 		 String plaintextPassword = keyboard.nextLine();
+		 keyboard.close();
 		 
 		 String salt = generateRandomSalt(new Random());
 		 System.out.println("Salt is " + salt);

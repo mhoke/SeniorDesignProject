@@ -1,6 +1,7 @@
 package ycp.edu.seniordesign.model.persist;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.sql.SQLException;
  * @author David Hovemeyer
  */
 public class DBUtil {
+
 	/**
 	 * Quietly close a PreparedStatemnt.
 	 * @param stmt the PreparedStatement to close

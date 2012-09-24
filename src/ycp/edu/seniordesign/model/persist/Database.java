@@ -5,9 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.User;
+import ycp.edu.seniordesign.util.HashPassword;
 
 
 public class Database {
@@ -19,7 +21,7 @@ public class Database {
 	}
 	
 	public Database(){
-		
+
 	}
 	
 	/**
@@ -35,18 +37,27 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");		
 			
-			// TODO: hash password
-			
-			statement = connection.prepareStatement("select * from newPi.users where username=? and password=?");
+			// look up user with the given username
+			statement = connection.prepareStatement("select * from newPi.users where username=?");
 			statement.setString(1, username);
-			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
 				// the user does exist
-				return true;
+				User user = new User();
+				user.loadFrom(resultSet);
+				
+				// Check password
+				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
+				if (hashedPassword.equals(user.getPassword())){
+					// passwords matched
+					return true;
+				} else {
+					// passwords did not match
+					return false;
+				}
 			} else {
 				// the user does not exist
 				return false;
@@ -73,7 +84,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.dbb");
 						
 			// check to see if username is taken
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -86,14 +97,17 @@ public class Database {
 				return false;
 			}
 			
-			// TODO: hash password
+			// generate random salt and hash password
+			String salt = HashPassword.generateRandomSalt(new Random());
+			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?)");
+			statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
 			statement.setString(1, username);
 			statement.setString(2, emailAddress);
-			statement.setString(3, password);
-			statement.setInt(4, type);
+			statement.setString(3, hashedPassword);
+			statement.setString(4, salt);
+			statement.setInt(5, type);
 			statement.execute();
 			
 			return true;
