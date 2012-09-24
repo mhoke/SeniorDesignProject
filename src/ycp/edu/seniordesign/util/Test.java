@@ -89,9 +89,6 @@ public class Test {
 				lblLPress.setVisible(true);
 			}
 		});
-		
-		//This comment needs to appear
-		
 		btnLogin.setBounds(118, 185, 150, 23);
 		panel.add(btnLogin);
 		
