@@ -23,7 +23,7 @@ public class Database {
 	}
 	
 	/**
-	 * 
+	 * Authenticate the user via username and password
 	 * @param username the username of the user trying to login
 	 * @param password the plain-text password of the user trying to login
 	 * @return true if the user exists, false otherwise
@@ -42,7 +42,6 @@ public class Database {
 			statement = connection.prepareStatement("select * from newPi.users where username=? and password=?");
 			statement.setString(1, username);
 			statement.setString(2, password);
-		
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
@@ -60,7 +59,7 @@ public class Database {
 	}
 	
 	/**
-	 * 
+	 * Create an account in the user table
 	 * @param username the username of the new account
 	 * @param password the plain-text password of the new account
 	 * @param emailAddress the emailAddress of the new account
@@ -95,10 +94,52 @@ public class Database {
 			statement.setString(2, emailAddress);
 			statement.setString(3, password);
 			statement.setInt(4, type);
-			
 			statement.execute();
 			
 			return true;
+		} finally {
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * Delete account from the user table
+	 * @param username the username of the account to be deleted
+	 * @param password the password of the account to be deleted
+	 * @return ture if the account is sucessfully deleted, false otherwise
+	 * @throws SQLException
+	 */
+	public boolean deleteAccount(String username, String password) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+				
+			// TODO: hash password
+			
+			// check to see if user exists
+			statement = connection.prepareStatement("select * from newPi.users where username=? and password=?");
+			statement.setString(1, username);
+			statement.setString(2, password);
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the users exists
+				// delete the user from the database
+				statement = connection.prepareStatement("delete from newPi.users where username=? and password=?");
+				statement.setString(1,  username);
+				statement.setString(2, password);
+				statement.execute();
+				
+				return true;
+			} else {
+				// the user does not exist
+				return false;
+			}
+
 		} finally {
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
