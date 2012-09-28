@@ -16,7 +16,7 @@ public class MySQLDatabase implements IDatabase {
 	// Here we're assuming username=root, no password,
 	// which is appropriate for XAMPP.
 	public static String JDBC_URL =
-			"jdbc:hsqldb:newPi.db";
+			"jdbc:hsqldb:newBB.db";
 
 	// Maximum number of times to attempt a transaction
 	// before giving up.

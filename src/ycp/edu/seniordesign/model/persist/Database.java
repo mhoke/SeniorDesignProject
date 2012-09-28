@@ -37,7 +37,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");		
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newBB.db");		
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -84,7 +84,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.dbb");
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newBB.db");
 						
 			// check to see if username is taken
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
