@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Random;
 
 import ycp.edu.seniordesign.model.Course;
@@ -14,21 +13,11 @@ import ycp.edu.seniordesign.util.HashPassword;
 
 
 public class Database {
-	static {
-		try {
-			Class.forName("org.hsqldb.jdbc.JDBCDriver");
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Could not load hsql driver");
-		}
-	}
-
-	private static final String JDBC_URL ="jdbc:hsqldb:file:newPi.db";
-	private static final int MAX_ATTEMPTS = 10;
 	
-	private static final Database instance = new Database();
+	private static final Database theInstance = new Database();
 	
 	public static Database getInstance() {
-		return instance;
+		return theInstance;
 	}
 	
 	public Database(){
@@ -48,7 +37,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");		
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");		
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -88,18 +77,17 @@ public class Database {
 	 * @param type the type of the new account (1 for student, 2 for professor)
 	 * @return false if a username with the username already exists, true if the account is successfully created
 	 * @throws SQLException
-	 * @throws ClassNotFoundException 
 	 */
-	public boolean createAccount(String username, String password, String emailAddress, int type) throws SQLException, ClassNotFoundException{
+	public boolean createAccount(String username, String password, String emailAddress, int type) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection(JDBC_URL);
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.dbb");
 						
 			// check to see if username is taken
-			statement = connection.prepareStatement("select * from user where username=?");
+			statement = connection.prepareStatement("select * from newPi.users where username=?");
 			statement.setString(1, username);
 			
 			resultSet = statement.executeQuery();
@@ -114,7 +102,7 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into user values(NULL,?,?,?,?,?)");
+			statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
 			statement.setString(1, username);
 			statement.setString(2, emailAddress);
 			statement.setString(3, hashedPassword);
@@ -129,47 +117,11 @@ public class Database {
 		}
 	}
 	
-//	public Boolean createAccount(final User user) throws PersistenceException{		
-//		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
-//
-//			public Boolean run(Connection connection) throws SQLException{
-//				PreparedStatement statement = null;
-//				ResultSet resultSet = null;
-//				
-//				// check to see if username is taken
-//				statement = connection.prepareStatement("select * from newPi.users where username=?");
-//				statement.setString(1, user.getUsername());
-//				
-//				resultSet = statement.executeQuery();
-//				 
-//				if (resultSet.next()){
-//					// the username is already taken
-//					return false;
-//				}
-//				
-//				// generate random salt and hash password
-//				String salt = HashPassword.generateRandomSalt(new Random());
-//				String hashedPassword = HashPassword.computeHash(user.getPassword(), salt);
-//				
-//				// add the user to the database
-//				statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
-//				statement.setString(1, user.getUsername());
-//				statement.setString(2, user.getEmailAddress());
-//				statement.setString(3, hashedPassword);
-//				statement.setString(4, salt);
-//				statement.setInt(5, user.getType());
-//				statement.execute();
-//				
-//				return true;
-//			}
-//		});
-//	}
-	
 	/**
 	 * Delete account from the user table
 	 * @param username the username of the account to be deleted
 	 * @param password the password of the account to be deleted
-	 * @return true if the account is successfully deleted, false otherwise
+	 * @return ture if the account is sucessfully deleted, false otherwise
 	 * @throws SQLException
 	 */
 	public boolean deleteAccount(String username, String password) throws SQLException{
@@ -178,26 +130,22 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
-						
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+				
+			// TODO: hash password
+			
 			// check to see if user exists
-			statement = connection.prepareStatement("select * from newPi.users where username=?");
+			statement = connection.prepareStatement("select * from newPi.users where username=? and password=?");
 			statement.setString(1, username);
 			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
-				// the users does exists
-				User user = new User();
-				user.loadFrom(resultSet);
-				
-				// hash password
-				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
-				
+				// the users exists
 				// delete the user from the database
 				statement = connection.prepareStatement("delete from newPi.users where username=? and password=?");
 				statement.setString(1,  username);
-				statement.setString(2, hashedPassword);
+				statement.setString(2, password);
 				statement.execute();
 				
 				return true;
@@ -224,7 +172,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
 						
 			statement = connection.prepareStatement("select * from newPi.users where id=?");
 			statement.setInt(1, id);
@@ -255,7 +203,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
 						
 			statement = connection.prepareStatement("select * from newPi.courses where id=?");
 			statement.setInt(1, id);
@@ -277,84 +225,6 @@ public class Database {
 		} finally {
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
-		}
-	}
-	
-//	public ArrayList<Course> getCourseForStudent(User user){
-//		Connection connection = null;
-//		PreparedStatement statement = null;
-//		ResultSet resultSet = null;
-//		
-//		try {
-//			connection = DriverManager.getConnection("JDBC_URL");
-//						
-//			statement = connection.prepareStatement("select * from newPi.users where id=?");
-//			statement.setInt(1, id);
-//			
-//			resultSet = statement.executeQuery();
-//			 
-//			if (resultSet.next()){
-//				// the user exists
-//				User user = new User();
-//				user.loadFrom(resultSet);
-//				return user;
-//			}
-//			
-//			else {
-//				// no user exist with the given id
-//				return null;
-//			}
-//			
-//		} finally {
-//			DBUtil.closeQuietly(statement);
-//			DBUtil.closeQuietly(resultSet);
-//		}
-//	}
-	
-	private<E> E databaseRun(IDatabaseRunnable<E> dbRunnable) throws PersistenceException {
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(JDBC_URL);
-			conn.setAutoCommit(false);
-
-			int numAttempts = 0;
-			E result = null;
-			boolean committed = false;
-
-			while (!committed && numAttempts < MAX_ATTEMPTS) {
-				try {
-					// Attempt the transaction.
-					E tmpResult = dbRunnable.run(conn);
-					conn.commit();
-
-					// Success!
-					result = tmpResult;
-					committed = true;
-				} catch (SQLException e) {
-					// Check to see if the transaction aborted due to deadlock.
-					// If so, we can retry it.
-					// See: http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-troubleshooting.html
-					String sqlState = e.getSQLState();
-					if (sqlState != null && sqlState.equals("40001")) {
-						// Deadlock detected.
-						numAttempts++;
-					} else {
-						// Some other failure: just rethrow the exception.
-						throw e;
-					}
-				}
-			}
-
-			if (numAttempts >= MAX_ATTEMPTS) {
-				throw new PersistenceException("Transaction deadlock retry count exceeded");
-			}
-
-			return result;
-		} catch (SQLException e) {
-			throw new PersistenceException("MySQL error", e);
-		} finally {
-			dbRunnable.cleanup(); // ensure all resources are cleaned up
-			DBUtil.closeQuietly(conn); // ensure database connection is closed
 		}
 	}
 }

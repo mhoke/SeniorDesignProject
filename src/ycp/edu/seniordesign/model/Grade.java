@@ -10,6 +10,17 @@ public class Grade {
 	int courseId;
 	int grade;
 	
+	public Grade() {
+		
+	}
+	
+	public Grade(int id, int studentId, int courseId, int grade) {
+		this.id = id;
+		this.studentId = studentId;
+		this.courseId = courseId;
+		this.grade = grade;
+	}
+	
 	public int getId() {
 		return id;
 	}

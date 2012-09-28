@@ -16,6 +16,23 @@ public class Course {
 	int CRN;
 	String description;
 	
+	public Course() {
+		
+	}
+	
+	public Course(int id, String name, String time, int courseNumber, int sectionNumber, int credits, String days, String location, int CRN, String description) {
+		this.id = id;
+		this.name = name;
+		this.time = time;
+		this.courseNumber = courseNumber;
+		this.sectionNumber = sectionNumber;
+		this.credits = credits;
+		this.days = days;
+		this.location = location;
+		this.CRN = CRN;
+		this.description = description;
+	}	
+	
 	public int getId() {
 		return id;
 	}
