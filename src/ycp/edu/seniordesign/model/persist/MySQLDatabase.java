@@ -2,8 +2,12 @@ package ycp.edu.seniordesign.model.persist;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import java.sql.SQLException;
+
+import ycp.edu.seniordesign.model.User;
 
 //import org.hsqldb.server.Server;
 
@@ -16,7 +20,7 @@ public class MySQLDatabase implements IDatabase {
 	// Here we're assuming username=root, no password,
 	// which is appropriate for XAMPP.
 	public static String JDBC_URL =
-			"jdbc:hsqldb:newBB.db";
+			"jdbc:hsqldb:file:nenew.db";
 
 	// Maximum number of times to attempt a transaction
 	// before giving up.
@@ -26,10 +30,96 @@ public class MySQLDatabase implements IDatabase {
 	static {
 		try {
 			// Load the HSQL Database Engine JDBC driver
+			//org.hsqldb.jdbc.JDBCDriver
 			Class.forName("org.hsqldb.jdbc.JDBCDriver");
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Could not load SQLite JDBC driver", e);
 		}
+	}
+	
+	@Override
+	public boolean checkUser(final String userName) throws PersistenceException {
+
+		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
+
+			@Override
+			public Boolean run(Connection conn) throws SQLException {
+				boolean isValid = false;
+				String sqlstmt = "SELECT username FROM User WHERE username = ?";
+
+				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
+				stmt.setString(1, userName);
+
+				ResultSet resultSet = executeQuery(stmt);
+
+				while (resultSet.next()) {
+						isValid = true;			
+				}
+				stmt.close();
+				return isValid;
+
+			}
+
+		});
+	}
+
+	@Override
+	public boolean addUser(final User user) throws PersistenceException {
+
+		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
+
+			@Override
+			public Boolean run(Connection conn) throws SQLException {
+				boolean isValid = false;
+				String sqlstmt = "INSERT INTO User values (NULL, ?, ?, ?, ?, ?)";
+
+				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
+				stmt.setString(1, user.getUsername());
+				stmt.setString(2, user.getPassword());
+				stmt.setString(3, user.getSalt());
+				stmt.setString(4, user.getEmailAddress());
+				stmt.setInt(5, user.getType());
+				stmt.executeUpdate();
+				isValid = true;
+				stmt.close();
+				return isValid;
+				
+			}
+			
+
+		});
+	}
+	@Override
+	public User getUser(final String userName) throws PersistenceException {
+
+		return databaseRun(new AbstractDatabaseRunnable<User>() {
+
+			@Override
+			public User run(Connection conn) throws SQLException {
+				User user = new User();
+				String sqlstmt = "SELECT * FROM User WHERE username = ?";
+				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
+				stmt.setString(1, userName);
+				ResultSet resultSet = executeQuery(stmt);
+
+				if(resultSet.next()) {
+					//TODO: package all user info into user class and return
+					user.setId(Integer.parseInt(resultSet.getString("id")));
+					user.setUsername((resultSet.getString("username")));
+					user.setPassword((resultSet.getString("password")));
+					user.setEmailAddress((resultSet.getString("emailAddress")));
+					user.setSalt((resultSet.getString("salt")));
+					user.setType(Integer.parseInt((resultSet.getString("userType"))));
+
+
+				}
+				//conn.commit();
+				stmt.close();
+				return user;
+
+			}
+
+		});
 	}
 /*
 	@Override
@@ -59,91 +149,7 @@ public class MySQLDatabase implements IDatabase {
 
 		});
 	}
-	@Override
-	public boolean checkUser(final String userName) throws PersistenceException {
-
-		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
-
-			@Override
-			public Boolean run(Connection conn) throws SQLException {
-				boolean isValid = false;
-				String sqlstmt = "SELECT name FROM UserInfo WHERE name = ?";
-
-				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
-				stmt.setString(1, userName);
-
-				ResultSet resultSet = executeQuery(stmt);
-
-				while (resultSet.next()) {
-						isValid = true;			
-				}
-				stmt.close();
-				return isValid;
-
-			}
-
-		});
-	}
-
-	@Override
-	public boolean addUser(final String userName, final String password) throws PersistenceException {
-
-		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
-
-			@Override
-			public Boolean run(Connection conn) throws SQLException {
-				boolean isValid = false;
-				String sqlstmt = "INSERT INTO UserInfo values (NULL, ?, 0, 0.0, 0.0, 0, 5.0, ?, 'About me.')";
-
-				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
-				stmt.setString(1, userName);
-				stmt.setString(2, password);
-				stmt.executeUpdate();
-				isValid = true;
-				stmt.close();
-				return isValid;
-				
-			}
-			
-
-		});
-	}
-	@Override
-	public User getUser(final String userName) throws PersistenceException {
-
-		return databaseRun(new AbstractDatabaseRunnable<User>() {
-
-			@Override
-			public User run(Connection conn) throws SQLException {
-				User user = new User();
-				String sqlstmt = "SELECT * FROM UserInfo WHERE name = ?";
-				PreparedStatement stmt = prepareStatement(conn, sqlstmt);
-				stmt.setString(1, userName);
-				ResultSet resultSet = executeQuery(stmt);
-
-				if(resultSet.next()) {
-					//TODO: package all user info into user class and return
-					user.setId(Integer.parseInt(resultSet.getString("id")));
-					user.setName((resultSet.getString("name")));
-					user.setPassword((resultSet.getString("password")));
-					user.setGeoLat(Float.parseFloat((resultSet.getString("geolat"))));
-					user.setGeoLong(Float.parseFloat((resultSet.getString("geolong"))));
-					user.setPoints(Integer.parseInt((resultSet.getString("points"))));
-					//default 5, radius not stored in database yet
-					//user.setRadius(Float.parseFloat((resultSet.getString("radius"))));
-					user.setDescription((resultSet.getString("description")));
-					user.setRank(Integer.parseInt((resultSet.getString("rank_id"))));
-
-
-				}
-				//conn.commit();
-				stmt.close();
-				return user;
-
-			}
-
-		});
-	}
+	
 	@Override
 	public Quest getQuest(final int questID) throws PersistenceException {
 		return databaseRun(new AbstractDatabaseRunnable<Quest>() {

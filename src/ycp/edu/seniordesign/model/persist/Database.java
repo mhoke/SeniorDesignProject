@@ -22,7 +22,7 @@ public class Database {
 		}
 	}
 
-	private static final String JDBC_URL ="jdbc:hsqldb:file:newPi.db";
+	private static final String JDBC_URL ="jdbc:hsqldb:file:nenew.db";
 	private static final int MAX_ATTEMPTS = 10;
 	
 	private static final Database instance = new Database();
