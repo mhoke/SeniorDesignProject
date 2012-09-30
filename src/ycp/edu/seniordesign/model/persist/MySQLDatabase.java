@@ -110,7 +110,7 @@ public class MySQLDatabase implements IDatabase {
 					user.setEmailAddress((resultSet.getString("emailAddress")));
 					user.setSalt((resultSet.getString("salt")));
 					user.setType(Integer.parseInt((resultSet.getString("userType"))));
-
+					
 
 				}
 				//conn.commit();
@@ -375,6 +375,13 @@ public class MySQLDatabase implements IDatabase {
 		} catch (SQLException e) {
 			throw new PersistenceException("Database error", e);
 		} finally {
+//			try {
+//			
+//				conn.commit();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			dbRunnable.cleanup();
 			DBUtil.closeQuietly(conn);
 		}

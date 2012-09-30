@@ -15,8 +15,8 @@ public class TestRunnable {
 
 
 		User user = new User();
-		user.setUsername("jay");
-		user.setPassword("ham");
+		user.setUsername("mike");
+		user.setPassword("mo");
 		user.setEmailAddress("theBaths@ycp.edu");
 		user.setSalt("peppery");
 		
