@@ -235,6 +235,83 @@ public class Database {
 		} finally {
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
+
+		}
+	}
+	
+	/**
+	 * This method returns a list of all the courses taken by the student
+	 * @param user
+	 * @return if the user is a professor the method returns null, otherwise the method returns an arraylist of all the courses the student is enrolled in
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCoursesForStudent(User user) throws SQLException{
+		if (user.getType() == User.PROFESSOR_PROFILE){
+			// the user that was passed is a professor and thus does not take any classes 
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection("JDBC_URL");
+						
+			statement = connection.prepareStatement("select * from newPi.Courses where student_id=?");
+			statement.setInt(1, user.getId());
+			
+			resultSet = statement.executeQuery();
+			ArrayList<Course> courses = new ArrayList<Course>(); 
+			while (resultSet.next()){
+				Course course = new Course();
+				course.loadFrom(resultSet);
+				courses.add(course);
+			}
+			
+			return courses;
+			
+		} finally {
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method returns a list of all the courses taught by a professor
+	 * @param user 
+	 * @return if the user is a student the method returns null, otherwise the method returns an arraylist of all the course the professor teaches
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCoursesForProfessor(User user) throws SQLException{
+		if (user.getType() == User.STUDENT_PROFILE){
+			// the user that was passed is a student and thus does not teach any classes
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection("JDBC_URL");
+						
+			statement = connection.prepareStatement("select * from newPi.Courses where professor_id=?");
+			statement.setInt(1, user.getId());
+			
+			resultSet = statement.executeQuery();
+			ArrayList<Course> courses = new ArrayList<Course>(); 
+			while (resultSet.next()){
+				Course course = new Course();
+				course.loadFrom(resultSet);
+				courses.add(course);
+			}
+			
+			return courses;
+			
+		} finally {
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 }

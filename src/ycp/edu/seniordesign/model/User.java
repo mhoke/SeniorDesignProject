@@ -14,6 +14,10 @@ public class User {
 	 * Profile type for professors
 	 */
 	public static final int PROFESSOR_PROFILE = 2;
+	/**
+	 * Profile type for professor and students
+	 */
+	public static final int PROFESSOR_STUDENT_PROFILE = 3;
 	
 	private int id;
 	private String username;
@@ -22,11 +26,12 @@ public class User {
 	private String salt;
 	private int type;
 	
-	public User() {
+	public User(){
 		
 	}
 	
-	public User(int id, String username, String emailAddress, String password, String salt, int type) {
+	public User(int id, String username, String emailAddress, String password, String salt, int type){
+
 		this.id = id;
 		this.username = username;
 		this.emailAddress = emailAddress;
