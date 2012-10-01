@@ -23,7 +23,6 @@ public class Database {
 	}
 
 	private static final String JDBC_URL ="jdbc:hsqldb:file:newPi.db";
-	private static final int MAX_ATTEMPTS = 10;
 	
 	private static final Database instance = new Database();
 	
@@ -48,7 +47,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");		
+			connection = DriverManager.getConnection("JDBC_URL", "SA", "");		
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -128,42 +127,6 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
-	
-//	public Boolean createAccount(final User user) throws PersistenceException{		
-//		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
-//
-//			public Boolean run(Connection connection) throws SQLException{
-//				PreparedStatement statement = null;
-//				ResultSet resultSet = null;
-//				
-//				// check to see if username is taken
-//				statement = connection.prepareStatement("select * from newPi.users where username=?");
-//				statement.setString(1, user.getUsername());
-//				
-//				resultSet = statement.executeQuery();
-//				 
-//				if (resultSet.next()){
-//					// the username is already taken
-//					return false;
-//				}
-//				
-//				// generate random salt and hash password
-//				String salt = HashPassword.generateRandomSalt(new Random());
-//				String hashedPassword = HashPassword.computeHash(user.getPassword(), salt);
-//				
-//				// add the user to the database
-//				statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
-//				statement.setString(1, user.getUsername());
-//				statement.setString(2, user.getEmailAddress());
-//				statement.setString(3, hashedPassword);
-//				statement.setString(4, salt);
-//				statement.setInt(5, user.getType());
-//				statement.execute();
-//				
-//				return true;
-//			}
-//		});
-//	}
 	
 	/**
 	 * Delete account from the user table
@@ -280,81 +243,79 @@ public class Database {
 		}
 	}
 	
-//	public ArrayList<Course> getCourseForStudent(User user){
-//		Connection connection = null;
-//		PreparedStatement statement = null;
-//		ResultSet resultSet = null;
-//		
-//		try {
-//			connection = DriverManager.getConnection("JDBC_URL");
-//						
-//			statement = connection.prepareStatement("select * from newPi.users where id=?");
-//			statement.setInt(1, id);
-//			
-//			resultSet = statement.executeQuery();
-//			 
-//			if (resultSet.next()){
-//				// the user exists
-//				User user = new User();
-//				user.loadFrom(resultSet);
-//				return user;
-//			}
-//			
-//			else {
-//				// no user exist with the given id
-//				return null;
-//			}
-//			
-//		} finally {
-//			DBUtil.closeQuietly(statement);
-//			DBUtil.closeQuietly(resultSet);
-//		}
-//	}
-	
-	private<E> E databaseRun(IDatabaseRunnable<E> dbRunnable) throws PersistenceException {
-		Connection conn = null;
+	/**
+	 * This method returns a list of all the courses taken by the student
+	 * @param user
+	 * @return if the user is a professor the method returns null, otherwise the method returns an arraylist of all the courses the student is enrolled in
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCoursesForStudent(User user) throws SQLException{
+		if (user.getType() == User.PROFESSOR_PROFILE){
+			// the user that was passed is a professor and thus does not take any classes 
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
 		try {
-			conn = DriverManager.getConnection(JDBC_URL);
-			conn.setAutoCommit(false);
-
-			int numAttempts = 0;
-			E result = null;
-			boolean committed = false;
-
-			while (!committed && numAttempts < MAX_ATTEMPTS) {
-				try {
-					// Attempt the transaction.
-					E tmpResult = dbRunnable.run(conn);
-					conn.commit();
-
-					// Success!
-					result = tmpResult;
-					committed = true;
-				} catch (SQLException e) {
-					// Check to see if the transaction aborted due to deadlock.
-					// If so, we can retry it.
-					// See: http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-troubleshooting.html
-					String sqlState = e.getSQLState();
-					if (sqlState != null && sqlState.equals("40001")) {
-						// Deadlock detected.
-						numAttempts++;
-					} else {
-						// Some other failure: just rethrow the exception.
-						throw e;
-					}
-				}
+			connection = DriverManager.getConnection("JDBC_URL");
+						
+			statement = connection.prepareStatement("select * from newPi.Courses where student_id=?");
+			statement.setInt(1, user.getId());
+			
+			resultSet = statement.executeQuery();
+			ArrayList<Course> courses = new ArrayList<Course>(); 
+			while (resultSet.next()){
+				Course course = new Course();
+				course.loadFrom(resultSet);
+				courses.add(course);
 			}
-
-			if (numAttempts >= MAX_ATTEMPTS) {
-				throw new PersistenceException("Transaction deadlock retry count exceeded");
-			}
-
-			return result;
-		} catch (SQLException e) {
-			throw new PersistenceException("MySQL error", e);
+			
+			return courses;
+			
 		} finally {
-			dbRunnable.cleanup(); // ensure all resources are cleaned up
-			DBUtil.closeQuietly(conn); // ensure database connection is closed
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method returns a list of all the courses taught by a professor
+	 * @param user 
+	 * @return if the user is a student the method returns null, otherwise the method returns an arraylist of all the course the professor teaches
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCoursesForProfessor(User user) throws SQLException{
+		if (user.getType() == User.STUDENT_PROFILE){
+			// the user that was passed is a student and thus does not teach any classes
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection("JDBC_URL");
+						
+			statement = connection.prepareStatement("select * from newPi.Courses where professor_id=?");
+			statement.setInt(1, user.getId());
+			
+			resultSet = statement.executeQuery();
+			ArrayList<Course> courses = new ArrayList<Course>(); 
+			while (resultSet.next()){
+				Course course = new Course();
+				course.loadFrom(resultSet);
+				courses.add(course);
+			}
+			
+			return courses;
+			
+		} finally {
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 }
