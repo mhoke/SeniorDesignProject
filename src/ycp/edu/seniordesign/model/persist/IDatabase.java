@@ -1,5 +1,7 @@
 package ycp.edu.seniordesign.model.persist;
 
+import ycp.edu.seniordesign.model.User;
+
 
 /**
  * Interface describing the persistence operations
@@ -14,14 +16,18 @@ public interface IDatabase {
 	 * @throws PersistenceException
 	 */
 	//user info database retrievals
+	
+	User getUser(String userName) throws PersistenceException;
+	boolean addUser(User user) throws PersistenceException;
+	boolean checkUser(String userName) throws PersistenceException;
 	/*
 	boolean checkPassword(String userName, String password) throws PersistenceException;
 
-	boolean addUser(String userName, String password) throws PersistenceException;
 	
-	boolean checkUser(String userName) throws PersistenceException;
+	
+	
 
-	User getUser(String userName) throws PersistenceException;
+	
 
 	int setRank(int points) throws PersistenceException;
 

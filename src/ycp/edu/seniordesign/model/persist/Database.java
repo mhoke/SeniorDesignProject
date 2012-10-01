@@ -22,7 +22,8 @@ public class Database {
 		}
 	}
 
-	private static final String JDBC_URL ="jdbc:hsqldb:file:newPi.db";
+	private static final String JDBC_URL ="jdbc:hsqldb:file:nenew.db";
+
 	
 	private static final Database instance = new Database();
 	
@@ -47,7 +48,8 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL", "SA", "");		
+
+			connection = DriverManager.getConnection("JDBC_URL");		
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -95,7 +97,11 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
+
+			//connection = DriverManager.getConnection("jdbc:hsqlbd:nenew.db");
+
 			connection = DriverManager.getConnection(JDBC_URL);
+			
 						
 			// check to see if username is taken
 			statement = connection.prepareStatement("select * from user where username=?");
