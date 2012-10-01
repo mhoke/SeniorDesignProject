@@ -4,11 +4,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Assignment {	
+public class Assignment {
 	int id;
 	String name;
 	int weight;
 	int courseId;
+	
+	public Assignment() {
+		
+	}
+	
+	public Assignment(int id, String name, int weight, int courseId) {
+		this.id = id;
+		this.name = name;
+		this.weight = weight;
+		this.courseId = courseId;
+	}
 	
 	public int getId() {
 		return id;

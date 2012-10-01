@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import ycp.edu.seniordesign.model.Course;
@@ -13,6 +14,15 @@ import ycp.edu.seniordesign.util.HashPassword;
 
 
 public class Database {
+	static {
+		try {
+			Class.forName("org.hsqldb.jdbc.JDBCDriver");
+		} catch (ClassNotFoundException e) {
+			throw new IllegalStateException("Could not load hsql driver");
+		}
+	}
+
+	private static final String JDBC_URL ="jdbc:hsqldb:file:nenew.db";
 	
 	private static final Database theInstance = new Database();
 	
@@ -37,7 +47,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");		
+			connection = DriverManager.getConnection("JDBC_URL");		
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
@@ -84,7 +94,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.dbb");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
 			// check to see if username is taken
 			statement = connection.prepareStatement("select * from newPi.users where username=?");
