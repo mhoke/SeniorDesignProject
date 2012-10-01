@@ -22,7 +22,7 @@ public class Database {
 		}
 	}
 
-	private static final String JDBC_URL ="jdbc:hsqldb:file:nenew.db";
+	private static final String JDBC_URL ="jdbc:hsqldb:file:whiteboard.db";
 	
 	private static final Database theInstance = new Database();
 	
@@ -50,7 +50,7 @@ public class Database {
 			connection = DriverManager.getConnection("JDBC_URL");		
 			
 			// look up user with the given username
-			statement = connection.prepareStatement("select * from newPi.users where username=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
 			resultSet = statement.executeQuery();
 			 
@@ -84,7 +84,7 @@ public class Database {
 	 * @param username the username of the new account
 	 * @param password the plain-text password of the new account
 	 * @param emailAddress the emailAddress of the new account
-	 * @param type the type of the new account (1 for student, 2 for professor)
+	 * @param type the type of the new account (1 for student, 2 for professor, 3 for both)
 	 * @return false if a username with the username already exists, true if the account is successfully created
 	 * @throws SQLException
 	 */
@@ -97,7 +97,7 @@ public class Database {
 			connection = DriverManager.getConnection(JDBC_URL);
 						
 			// check to see if username is taken
-			statement = connection.prepareStatement("select * from newPi.users where username=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
 			
 			resultSet = statement.executeQuery();
@@ -112,16 +112,17 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
+			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?)");
 			statement.setString(1, username);
-			statement.setString(2, emailAddress);
-			statement.setString(3, hashedPassword);
-			statement.setString(4, salt);
+			statement.setString(2, hashedPassword);
+			statement.setString(3, salt);
+			statement.setString(4, emailAddress);
 			statement.setInt(5, type);
 			statement.execute();
-			
+						
 			return true;
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -140,12 +141,12 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+			connection = DriverManager.getConnection(JDBC_URL);
 				
 			// TODO: hash password
 			
 			// check to see if user exists
-			statement = connection.prepareStatement("select * from newPi.users where username=? and password=?");
+			statement = connection.prepareStatement("select * from users where username=? and password=?");
 			statement.setString(1, username);
 			statement.setString(2, password);
 			resultSet = statement.executeQuery();
@@ -153,7 +154,7 @@ public class Database {
 			if (resultSet.next()){
 				// the users exists
 				// delete the user from the database
-				statement = connection.prepareStatement("delete from newPi.users where username=? and password=?");
+				statement = connection.prepareStatement("delete from users where username=? and password=?");
 				statement.setString(1,  username);
 				statement.setString(2, password);
 				statement.execute();
@@ -182,9 +183,9 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from newPi.users where id=?");
+			statement = connection.prepareStatement("select * from users where id=?");
 			statement.setInt(1, id);
 			
 			resultSet = statement.executeQuery();
@@ -213,9 +214,9 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:hsqlbd:newPi.db");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from newPi.courses where id=?");
+			statement = connection.prepareStatement("select * from courses where id=?");
 			statement.setInt(1, id);
 			
 			resultSet = statement.executeQuery();
@@ -242,7 +243,7 @@ public class Database {
 	/**
 	 * This method returns a list of all the courses taken by the student
 	 * @param user
-	 * @return if the user is a professor the method returns null, otherwise the method returns an arraylist of all the courses the student is enrolled in
+	 * @return if the user is a professor the method returns null, otherwise the method returns an ArrayList of all the courses the student is enrolled in
 	 * @throws SQLException
 	 */
 	public ArrayList<Course> getCoursesForStudent(User user) throws SQLException{
@@ -258,7 +259,7 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection("JDBC_URL");
 						
-			statement = connection.prepareStatement("select * from newPi.Courses where student_id=?");
+			statement = connection.prepareStatement("select * from courses where student_id=?");
 			statement.setInt(1, user.getId());
 			
 			resultSet = statement.executeQuery();
@@ -280,7 +281,7 @@ public class Database {
 	/**
 	 * This method returns a list of all the courses taught by a professor
 	 * @param user 
-	 * @return if the user is a student the method returns null, otherwise the method returns an arraylist of all the course the professor teaches
+	 * @return if the user is a student the method returns null, otherwise the method returns an ArrayList of all the course the professor teaches
 	 * @throws SQLException
 	 */
 	public ArrayList<Course> getCoursesForProfessor(User user) throws SQLException{
@@ -296,7 +297,7 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection("JDBC_URL");
 						
-			statement = connection.prepareStatement("select * from newPi.Courses where professor_id=?");
+			statement = connection.prepareStatement("select * from courses where professor_id=?");
 			statement.setInt(1, user.getId());
 			
 			resultSet = statement.executeQuery();
@@ -314,4 +315,6 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
+	
+	
 }

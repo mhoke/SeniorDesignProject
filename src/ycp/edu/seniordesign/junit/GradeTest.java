@@ -1,4 +1,4 @@
-package junit_tests;
+package ycp.edu.seniordesign.junit;
 
 import static org.junit.Assert.*;
 

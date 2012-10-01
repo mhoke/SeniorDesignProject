@@ -1,4 +1,4 @@
-package junit_tests;
+package ycp.edu.seniordesign.junit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

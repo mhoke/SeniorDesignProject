@@ -56,6 +56,7 @@ CREATE CACHED TABLE Buildings (
 	building_name VARCHAR(80) NOT NULL
 );
 
+/* Run this after creating all the tables*/
 INSERT INTO Buildings values(NULL, 'KEC');
 INSERT INTO Buildings values(NULL, 'HUM');
 INSERT INTO Buildings values(NULL, 'CH');
@@ -66,9 +67,4 @@ INSERT INTO Buildings values(NULL, 'GC');
 INSERT INTO Buildings values(NULL, 'MKH');
 INSERT INTO Buildings values(NULL, 'LIBRY');
 INSERT INTO Buildings values(NULL, 'NESC');
-
-
-
-
-
 

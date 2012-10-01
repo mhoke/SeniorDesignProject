@@ -1,7 +1,6 @@
 package ycp.edu.seniordesign.model.persist;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,5 +53,8 @@ public class DBUtil {
 			// TODO: log
 		}
 	}
-
+	
+	public static void close(Connection conn) throws SQLException{
+		conn.prepareStatement("shutdown").execute();
+	}
 }
