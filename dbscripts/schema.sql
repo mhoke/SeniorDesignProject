@@ -1,18 +1,13 @@
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
-  due_date DATE NOT NULL,
   course_id INTEGER NOT NULL,
+  course_id INTEGER NOT NULL,
+  name VARCHAR(80) NOT NULL,
+  due_date DATE NOT NULL,
+  grade_weight_type INTEGER NOT NULL,
   earned_points INTEGER NOT NULL,
   possible_points INTEGER NOT NULL		
  );
-
-CREATE CACHED TABLE Grades (
-  id INTEGER IDENTITY, 
-  course_id INTEGER NOT NULL, 
-  due_date DATE NOT NULL, 
-  grade_weight_id INTEGER NOT NULL,
-  grade INTEGER NOT NULL
-);
 
 CREATE CACHED TABLE Grade_Weights (
 	id INTEGER IDENTITY,
@@ -67,4 +62,11 @@ INSERT INTO Buildings values(NULL, 'GC');
 INSERT INTO Buildings values(NULL, 'MKH');
 INSERT INTO Buildings values(NULL, 'LIBRY');
 INSERT INTO Buildings values(NULL, 'NESC');
+
+/* Test data*/
+/* The password for all the test users is "password"*/
+INSERT INTO Users values(NULL,'TestStudent', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1);
+INSERT INTO Users values(NULL,'TestProfessor', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2);
+INSERT INTO Users values(NULL,'TestBoth', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3);
+
 
