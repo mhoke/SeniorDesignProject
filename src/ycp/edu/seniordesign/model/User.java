@@ -70,6 +70,8 @@ public class User {
 		return password;
 	}
 	
+	// NOTE: YOU SHOULD PASS THIS METHOD A HASHED PASSWORD
+	// TODO: hash the password in this method
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -99,8 +101,9 @@ public class User {
 		int index = 1;
 		setId(resultSet.getInt(index++));
 		setUsername (resultSet.getString(index++));
-		setEmailAddress(resultSet.getString(index++));
 		setPassword(resultSet.getString(index++));
+		setSalt(resultSet.getString(index++));
+		setEmailAddress(resultSet.getString(index++));
 		setType(resultSet.getInt(index++));
 	}
 	
@@ -114,8 +117,9 @@ public class User {
 		int index = 1;
 		statement.setInt(index++, id);
 		statement.setString(index++, username);
-		statement.setString(index++, emailAddress);
 		statement.setString(index++, password);
+		statement.setString(index++, salt);
+		statement.setString(index++, emailAddress);
 		statement.setInt(index++, type);
 	}
 
@@ -127,8 +131,9 @@ public class User {
 		User other = (User) obj;
 		return id == other.id
 			&& username.equals(other.username)
-			&& emailAddress.equals(other.emailAddress)
 			&& password.equals(other.password)
+			&& salt.equals(other.salt)
+			&& emailAddress.equals(other.emailAddress)
 			&& type == other.type;
 	}
 

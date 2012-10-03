@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.util.HashPassword;
@@ -47,7 +48,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");		
+			connection = DriverManager.getConnection(JDBC_URL);	
 			
 			// look up user with the given username
 			statement = connection.prepareStatement("select * from users where username=?");
@@ -55,7 +56,7 @@ public class Database {
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
-				// the user does exist
+				// there is someone with the given username
 				User user = new User();
 				user.loadFrom(resultSet);
 				
@@ -74,6 +75,7 @@ public class Database {
 			}
 				 	 
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -93,6 +95,9 @@ public class Database {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
+		// TODO: do not allow creation of account with a variation in case on a current username
+		// Example: If there is a user with a user name of "username" do not allow creation of an account with the username of 
+		// "UsErNaME"
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 						
@@ -143,29 +148,36 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 				
-			// TODO: hash password
-			
 			// check to see if user exists
-			statement = connection.prepareStatement("select * from users where username=? and password=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
-			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
-				// the users exists
-				// delete the user from the database
-				statement = connection.prepareStatement("delete from users where username=? and password=?");
-				statement.setString(1,  username);
-				statement.setString(2, password);
-				statement.execute();
+				// there is someone with the given username
+				User user = new User();
+				user.loadFrom(resultSet);
 				
-				return true;
-			} else {
-				// the user does not exist
-				return false;
+				// Check password
+				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
+				if (hashedPassword.equals(user.getPassword())){
+					// delete the user from the database
+					statement = connection.prepareStatement("delete from users where username=? and password=?");
+					statement.setString(1,  username);
+					statement.setString(2, hashedPassword);
+					statement.execute();
+				
+					return true;
+				} else {
+					// the user does not exist
+					return false;
+				}
 			}
-
+			
+			return false;
+		
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -203,6 +215,7 @@ public class Database {
 			}
 			
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -234,6 +247,7 @@ public class Database {
 			}
 			
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 
@@ -261,8 +275,8 @@ public class Database {
 						
 			statement = connection.prepareStatement("select * from courses where student_id=?");
 			statement.setInt(1, user.getId());
-			
 			resultSet = statement.executeQuery();
+			
 			ArrayList<Course> courses = new ArrayList<Course>(); 
 			while (resultSet.next()){
 				Course course = new Course();
@@ -273,6 +287,7 @@ public class Database {
 			return courses;
 			
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -299,8 +314,8 @@ public class Database {
 						
 			statement = connection.prepareStatement("select * from courses where professor_id=?");
 			statement.setInt(1, user.getId());
-			
 			resultSet = statement.executeQuery();
+			
 			ArrayList<Course> courses = new ArrayList<Course>(); 
 			while (resultSet.next()){
 				Course course = new Course();
@@ -311,10 +326,46 @@ public class Database {
 			return courses;
 			
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
 	
+	/**
+	 * This method gets a list of all assignments for the given courses and student
+	 * @param courseId the courseId the assignment is for
+	 * @param studentId the studentId the assignment is for
+	 * @return an ArrayList of the assignments for the given couse and student
+	 * @throws SQLException
+	 */
+	public ArrayList<Assignment> getAssignments(int courseId, int studentId) throws SQLException{		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection("JDBC_URL");
+						
+			statement = connection.prepareStatement("select * from assignements where course_id=? and student_id=?");
+			statement.setInt(1, courseId);
+			statement.setInt(2,  studentId);
+			resultSet = statement.executeQuery();
+			
+			ArrayList<Assignment> assignments = new ArrayList<Assignment>(); 
+			while (resultSet.next()){
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				assignments.add(assignment);
+			}
+			
+			return assignments;
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
 	
 }

@@ -4,11 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+// NOTE: THIS CLASS IN UNNECESSARY AND WILL BE DELELTED ON 10/10 UNLESS I AM CONVINCED IT IS LEGITIMATE
 public class Grade {
 	int id;
 	int studentId;
 	int courseId;
-	int grade;
+	int grade; // move to assignment
 	
 	public Grade() {
 		
