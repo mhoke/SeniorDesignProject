@@ -254,6 +254,33 @@ public class Database {
 		}
 	}
 	
+	public Assignment getAssignmentById(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from assignments where id=?");
+			statement.setInt(1,  id);
+			
+			resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				return assignment;
+			} else {
+				return null;
+			}
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
 	/**
 	 * This method returns a list of all the courses taken by the student
 	 * @param user

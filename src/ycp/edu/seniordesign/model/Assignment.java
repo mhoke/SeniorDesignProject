@@ -137,14 +137,26 @@ public class Assignment {
 			return false;
 		}
 		Assignment other = (Assignment) obj;
-		return id == other.id
-				&& courseId == other.courseId
-				&& studentId == other.studentId
-				&& name.equals(other.name)
-				&& dueDate.equals(other.dueDate)
-				&& gradeWeightType == other.gradeWeightType
-				&& earnedPoints == other.earnedPoints
-				&& possiblePoints == other.possiblePoints;
+		
+		if (dueDate == null) {
+			return id == other.id
+					&& courseId == other.courseId
+					&& studentId == other.studentId
+					&& name.equals(other.name)
+					&& dueDate == other.dueDate
+					&& gradeWeightType == other.gradeWeightType
+					&& earnedPoints == other.earnedPoints
+					&& possiblePoints == other.possiblePoints;
+		} else {		
+			return id == other.id
+					&& courseId == other.courseId
+					&& studentId == other.studentId
+					&& name.equals(other.name)
+					&& dueDate.equals(other.dueDate)
+					&& gradeWeightType == other.gradeWeightType
+					&& earnedPoints == other.earnedPoints
+					&& possiblePoints == other.possiblePoints;
+		}
 	}
 
 
