@@ -35,7 +35,9 @@ public class UserTest {
 		assertEquals(user.getPassword(),"incorrect");
 		assertEquals(user.getSalt(),"saltier");
 		assertEquals(user.getType(),1);
-		assertTrue(user.equals(user));		
+		assertTrue(user.equals(user));
+		
+		assertFalse(user.isProfessor());
 	}
 
 }

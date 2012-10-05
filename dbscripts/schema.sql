@@ -1,7 +1,6 @@
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
   course_id INTEGER NOT NULL,
-  course_id INTEGER NOT NULL,
   name VARCHAR(80) NOT NULL,
   due_date DATE NOT NULL,
   grade_weight_type INTEGER NOT NULL,
@@ -19,6 +18,7 @@ CREATE CACHED TABLE Grade_Weights (
 CREATE CACHED TABLE Courses (
   	id INTEGER IDENTITY, 
   	name VARCHAR(80) NOT NULL, 
+  	professor_id INTEGER NOT NULL,
   	time VARCHAR(80) NOT NULL, 
   	course_num INTEGER NOT NULL,
 	sec_num INTEGER NOT NULL,
@@ -32,7 +32,7 @@ CREATE CACHED TABLE Courses (
 CREATE CACHED TABLE Enrolled_Courses (
  	id INTEGER IDENTITY, 
  	student_id INTEGER NOT NULL, 
-	prof_id INTEGER NOT NULL, 
+	professor_id INTEGER NOT NULL, 
 	course_id INTEGER NOT NULL,
 	grade INTEGER NOT NULL
 );

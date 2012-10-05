@@ -7,6 +7,7 @@ import java.sql.SQLException;
 public class Course {
 	int id;
 	String name;
+	int professorId;
 	String time;
 	int courseNumber;
 	int sectionNumber;
@@ -20,9 +21,10 @@ public class Course {
 		
 	}
 	
-	public Course(int id, String name, String time, int courseNumber, int sectionNumber, int credits, String days, String location, int CRN, String description) {
+	public Course(int id, String name, int professorId, String time, int courseNumber, int sectionNumber, int credits, String days, String location, int CRN, String description) {
 		this.id = id;
 		this.name = name;
+		this.professorId = professorId;
 		this.time = time;
 		this.courseNumber = courseNumber;
 		this.sectionNumber = sectionNumber;
@@ -47,6 +49,14 @@ public class Course {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getProfessorId(){
+		return professorId;
+	}
+	
+	public void setProfessorId(int professorId){
+		this.professorId = professorId;
 	}
 	
 	public String getTime() {
@@ -122,6 +132,7 @@ public class Course {
 		int index = 1;
 		setId(resultSet.getInt(index++));
 		setName(resultSet.getString(index++));
+		setProfessorId(resultSet.getInt(index++));
 		setTime(resultSet.getString(index++));
 		setCourseNumber(resultSet.getInt(index++));
 		setSectionNumber(resultSet.getInt(index++));
@@ -142,6 +153,7 @@ public class Course {
 		int index = 1;
 		statement.setInt(index++, id);
 		statement.setString(index++, name);
+		statement.setInt(index++, professorId);
 		statement.setString(index++, time);
 		statement.setInt(index++, courseNumber);
 		statement.setInt(index++, sectionNumber);
@@ -160,6 +172,7 @@ public class Course {
 		Course other = (Course) obj;
 		return id == other.id
 			&& name.equals(other.name)
+			&& professorId == other.professorId
 			&& time.equals(other.time)
 			&& courseNumber == other.courseNumber
 			&& sectionNumber == other.sectionNumber

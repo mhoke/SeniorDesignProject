@@ -92,6 +92,14 @@ public class User {
 		this.type = type;
 	}
 	
+	public boolean isProfessor(){
+		if (type == PROFESSOR_PROFILE || type == PROFESSOR_STUDENT_PROFILE){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	/**
 	 * This method can be used to load the fields of a user from a resultSet to a User object
 	 * @param resultSet the resultSet to load the fields from
