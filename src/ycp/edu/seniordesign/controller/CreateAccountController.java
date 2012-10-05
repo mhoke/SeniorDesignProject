@@ -6,7 +6,7 @@ import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.model.persist.PersistenceException;
 import ycp.edu.seniordesign.model.persist.Database;
 
-public class LoginController 
+public class CreateAccountController 
 {
 	private User user;
 	
@@ -15,8 +15,10 @@ public class LoginController
 		this.user = model;
 	}
 	
-	public Boolean login(String username, String password) throws SQLException, PersistenceException
+	public Boolean createAccount(String username, String password, String email) throws SQLException, PersistenceException
 	{
-		return Database.getInstance().authenticateUser(username, password);
+		System.out.println("Attempts to create an account");
+		return Database.getInstance().createAccount(username, password, email, user.STUDENT_PROFILE);
 	}
 }
+

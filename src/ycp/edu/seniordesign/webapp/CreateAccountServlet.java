@@ -7,67 +7,58 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ycp.edu.seniordesign.controller.LoginController;
-import ycp.edu.seniordesign.model.User;
+import ycp.edu.seniordesign.controller.CreateAccountController;
 
-public class LoginServlet extends HttpServlet
+public class CreateAccountServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
+		req.getRequestDispatcher("/view/createAccount.jsp").forward(req, resp);
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		User user = new User();
-		
-		LoginController controller = new LoginController();
-		
-		controller.setModel(user);
+		CreateAccountController controller = new CreateAccountController();
 		
 		String username = req.getParameter("usernameBox");
 		String password = req.getParameter("passwordBox");
+		String email = req.getParameter("emailBox");
 		
 		String errorMessage = null;
 		
 		boolean result = false;
-		
-		if(req.getParameter("loginButton") != null)
+
+		if(req.getParameter("createButton") != null)
 		{
+			System.out.println("Enters here");
 			try
 			{
-				result = controller.login(username, password);
+				result = controller.createAccount(username, password, email);
 				
 				if(!result)
 				{
-					errorMessage = "Login failed";
+					errorMessage = "Create Account failed";
 				}
 				else
 				{
-					errorMessage = "Login successful";
-					req.getSession().setAttribute("user", user);
+					errorMessage = "Create Account successful";
 				}
 			}
 			catch(Exception e)
 			{
-				System.out.println("Login database fail");
+				System.out.println("Create Account fail");
 			}
-		}
-		
-		else if(req.getParameter("registerButton") != null)
-		{
-			System.out.println("Registering a new account");
-			req.getRequestDispatcher("/view/createAccount.jsp").forward(req, resp);
 		}
 		
 		req.setAttribute("errorMessage", errorMessage);
 		
 		if(result)
 		{
-			//Moves the page forward
-			//req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
+			//Moves the page back to login screen
+			req.getRequestDispatcher("/view/login.jsp").forward(req,resp);
 		}			
 	}
 }
+
