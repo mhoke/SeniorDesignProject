@@ -118,7 +118,7 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?)");
+			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?,'', 'false')");
 			statement.setString(1, username);
 			statement.setString(2, hashedPassword);
 			statement.setString(3, salt);
@@ -396,7 +396,7 @@ public class Database {
 	 * This method gets a list of all assignments for the given courses and student
 	 * @param courseId the courseId the assignment is for
 	 * @param studentId the studentId the assignment is for
-	 * @return an ArrayList of the assignments for the given couse and student
+	 * @return an ArrayList of the assignments for the given course and student
 	 * @throws SQLException
 	 */
 	public ArrayList<Assignment> getAssignmentsForCourse(int courseId, int studentId) throws SQLException{		

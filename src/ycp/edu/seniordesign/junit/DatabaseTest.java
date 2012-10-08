@@ -25,7 +25,7 @@ public class DatabaseTest {
 	@Test
 	// This method tests operations associated with the enrolled_courses table (addEnrolledCourseForStudent, removeEnrolledCourseForStudent, etc.)
 	public void testEnrolledCourseOperations() throws SQLException{
-		User testStudent = new User(999999, "username", "password", "salt", "emailAddress", User.STUDENT_PROFILE);
+		User testStudent = new User(999999, "username", "password", "salt", "emailAddress", User.STUDENT_PROFILE, "CS", true);
 		int id;
 		id = Database.getInstance().addEnrolledCourseForStudent(999999, 999999, 999999);
 		EnrolledCourse testCourse = new EnrolledCourse(id, 999999, 999999, 999999, 100);
