@@ -17,6 +17,11 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.CreateAccountServlet</servlet-class>
 </servlet>
 
+<servlet>
+	<servlet-name>SkeletonServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.SkeletonServlet</servlet-class>
+</servlet>
+
 <!-- Servlet Mappings -->
 
 <servlet-mapping>
@@ -26,6 +31,10 @@
 <servlet-mapping>
 	<servlet-name>CreateAccountServlet</servlet-name>
 	<url-pattern>createAccount</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>SkeletonServlet</servlet-name>
+	<url-pattern>skeleton</url-pattern>
 </servlet-mapping>
 
 </web-app>
