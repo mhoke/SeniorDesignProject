@@ -15,7 +15,7 @@ public class LoginController
 		this.user = model;
 	}
 	
-	public Boolean login(String username, String password) throws SQLException, PersistenceException
+	public User login(String username, String password) throws SQLException, PersistenceException
 	{
 		return Database.getInstance().authenticateUser(username, password);
 	}

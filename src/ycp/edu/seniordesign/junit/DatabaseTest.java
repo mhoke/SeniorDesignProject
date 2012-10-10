@@ -16,7 +16,7 @@ public class DatabaseTest {
 	// This method  tests operations associated with the users table (createAccount, authenticate user, etc.)
 	public void testUserOperations() throws SQLException {
 		assertTrue(Database.getInstance().createAccount("username", "password", "test@whiteboard.org", User.PROFESSOR_PROFILE));
-		assertTrue(Database.getInstance().authenticateUser("username", "password"));
+		assertTrue(Database.getInstance().authenticateUser("username", "password") != null);
 		assertFalse(Database.getInstance().createAccount("username", "password", "test@whiteboard.org", User.PROFESSOR_PROFILE));
 		assertTrue(Database.getInstance().deleteAccount("username", "password"));
 	}

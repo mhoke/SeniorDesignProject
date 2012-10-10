@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		User user = new User();
+		User user = null;
 		
 		LoginController controller = new LoginController();
 		
@@ -31,23 +31,22 @@ public class LoginServlet extends HttpServlet
 		String password = req.getParameter("passwordBox");
 		
 		String errorMessage = null;
-		
-		boolean result = false;
-		
+				
 		if(req.getParameter("loginButton") != null)
 		{
 			try
 			{
-				result = controller.login(username, password);
+				User result = controller.login(username, password);
 				
-				if(!result)
+				if(result == null)
 				{ 
 					errorMessage = "Login failed";
 				}
 				else
 				{
 					errorMessage = "Login successful";
-					req.getSession().setAttribute("user", user);
+					req.getSession().setAttribute("user", result);
+					System.out.println(result.getUsername());
 				}
 			}
 			catch(Exception e)
@@ -64,7 +63,7 @@ public class LoginServlet extends HttpServlet
 		
 		req.setAttribute("errorMessage", errorMessage);
 		
-		if(result)
+		if(user != null)
 		{
 			//Moves the page forward
 			//req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);

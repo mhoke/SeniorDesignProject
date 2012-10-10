@@ -40,10 +40,10 @@ public class Database {
 	 * Authenticate the user via username and password
 	 * @param username the username of the user trying to login
 	 * @param password the plain-text password of the user trying to login
-	 * @return true if the user exists, false otherwise
+	 * @return the User object associated with the username and password
 	 * @throws SQLException
 	 */
-	public boolean authenticateUser(String username, String password) throws SQLException {
+	public User authenticateUser(String username, String password) throws SQLException {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -65,14 +65,14 @@ public class Database {
 				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
 				if (hashedPassword.equals(user.getPassword())){
 					// passwords matched
-					return true;
+					return user;
 				} else {
 					// passwords did not match
-					return false;
+					return null;
 				}
 			} else {
 				// the user does not exist
-				return false;
+				return null;
 			}
 				 	 
 		} finally {
