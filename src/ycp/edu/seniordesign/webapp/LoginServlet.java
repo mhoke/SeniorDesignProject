@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet
 				result = controller.login(username, password);
 				
 				if(!result)
-				{
+				{ 
 					errorMessage = "Login failed";
 				}
 				else

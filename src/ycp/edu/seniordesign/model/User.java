@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User {
+	
 	/**
 	 * Profile type for students
 	 */
@@ -31,7 +32,6 @@ public class User {
 	}
 	
 	public User(int id, String username, String emailAddress, String password, String salt, int type){
-
 		this.id = id;
 		this.username = username;
 		this.emailAddress = emailAddress;
@@ -70,8 +70,6 @@ public class User {
 		return password;
 	}
 	
-	// NOTE: YOU SHOULD PASS THIS METHOD A HASHED PASSWORD
-	// TODO: hash the password in this method
 	public void setPassword(String password) {
 		this.password = password;
 	}
