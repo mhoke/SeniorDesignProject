@@ -6,7 +6,7 @@ import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.model.persist.PersistenceException;
 import ycp.edu.seniordesign.model.persist.Database;
 
-public class LoginController 
+public class HomePageController 
 {
 	private User user;
 	
@@ -15,8 +15,10 @@ public class LoginController
 		this.user = model;
 	}
 	
-	public User login(String username, String password) throws SQLException, PersistenceException
-	{
-		return Database.getInstance().authenticateUser(username, password);
-	}
+//	public Boolean displayHomePage(String user) 
+//	{
+//		
+//	}
+	
+
 }
