@@ -10,6 +10,7 @@ import java.util.Random;
 
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
+import ycp.edu.seniordesign.model.EnrolledCourse;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.util.HashPassword;
 
@@ -117,7 +118,7 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?)");
+			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?,'', 'false')");
 			statement.setString(1, username);
 			statement.setString(2, hashedPassword);
 			statement.setString(3, salt);
@@ -254,6 +255,38 @@ public class Database {
 		}
 	}
 	
+	public EnrolledCourse getEnrolledCourseById(int id) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from enrolled_courses where id=?");
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the enrolled course exists
+				EnrolledCourse course = new EnrolledCourse();
+				course.loadFrom(resultSet);
+				return course;
+			}
+			
+			else {
+				// no enrolled course exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+
+		}
+	}
+	
 	public Assignment getAssignmentById(int id) throws SQLException {
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -287,8 +320,8 @@ public class Database {
 	 * @return if the user is a professor the method returns null, otherwise the method returns an ArrayList of all the courses the student is enrolled in
 	 * @throws SQLException
 	 */
-	public ArrayList<Course> getCoursesForStudent(User user) throws SQLException{
-		if (user.getType() == User.PROFESSOR_PROFILE){
+	public ArrayList<EnrolledCourse> getEnrolledCoursesForStudent(User user) throws SQLException{
+		if (user.isProfessor()){
 			// the user that was passed is a professor and thus does not take any classes 
 			return null;
 		}
@@ -298,15 +331,15 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from courses where student_id=?");
+			statement = connection.prepareStatement("select * from enrolled_courses where student_id=?");
 			statement.setInt(1, user.getId());
 			resultSet = statement.executeQuery();
 			
-			ArrayList<Course> courses = new ArrayList<Course>(); 
+			ArrayList<EnrolledCourse> courses = new ArrayList<EnrolledCourse>(); 
 			while (resultSet.next()){
-				Course course = new Course();
+				EnrolledCourse course = new EnrolledCourse();
 				course.loadFrom(resultSet);
 				courses.add(course);
 			}
@@ -327,7 +360,7 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public ArrayList<Course> getCoursesForProfessor(User user) throws SQLException{
-		if (user.getType() == User.STUDENT_PROFILE){
+		if (!user.isProfessor()){
 			// the user that was passed is a student and thus does not teach any classes
 			return null;
 		}
@@ -337,7 +370,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
 			statement = connection.prepareStatement("select * from courses where professor_id=?");
 			statement.setInt(1, user.getId());
@@ -363,18 +396,18 @@ public class Database {
 	 * This method gets a list of all assignments for the given courses and student
 	 * @param courseId the courseId the assignment is for
 	 * @param studentId the studentId the assignment is for
-	 * @return an ArrayList of the assignments for the given couse and student
+	 * @return an ArrayList of the assignments for the given course and student
 	 * @throws SQLException
 	 */
-	public ArrayList<Assignment> getAssignments(int courseId, int studentId) throws SQLException{		
+	public ArrayList<Assignment> getAssignmentsForCourse(int courseId, int studentId) throws SQLException{		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from assignements where course_id=? and student_id=?");
+			statement = connection.prepareStatement("select * from assignments where course_id=? and student_id=?");
 			statement.setInt(1, courseId);
 			statement.setInt(2,  studentId);
 			resultSet = statement.executeQuery();
@@ -392,6 +425,70 @@ public class Database {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method adds an entry to the Enrolled_Courses table representing a Course that the given user is enrolled in
+	 * @param courseId the id of the course to add
+	 * @param studentId the id of the student who is enrolling in the course
+	 * @param professorId the id of the professor who teaches the course
+	 * @return returns the id of the newly inserted EnrolledCourse
+	 * @throws SQLException
+	 */
+	public int addEnrolledCourseForStudent(int studentId, int professorId, int courseId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into enrolled_courses values(null,?, ?, ?, ?)");
+			statement.setInt(1, studentId);
+			statement.setInt(2,  professorId);
+			statement.setInt(3, courseId);
+			statement.setInt(4, 100); // students start with a 100 in a course they have just enrolled in
+			statement.execute();
+			
+			// Get the id that the course was added with
+			statement = connection.prepareStatement("select id from enrolled_courses where student_id=? and professor_id =? and course_id=?");
+			statement.setInt(1, studentId);
+			statement.setInt(2,  professorId);
+			statement.setInt(3, courseId);
+			resultSet = statement.executeQuery();
+			
+			resultSet.next();
+			return resultSet.getInt(1);
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	/**
+	 * This method deletes the record in the database representing a course taken by the given student. It is used in the case of 
+	 * withdrawals, drops, etc.
+	 * @param courseId the id of the course to remove
+	 * @param studentId the id of the student who is removing the course
+	 * @throws SQLException
+	 */
+	public void removeEnrolledCourseForStudent(int courseId, int studentId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from enrolled_courses where student_id=? and course_id =?");
+			statement.setInt(1, studentId);
+			statement.setInt(2, courseId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
 		}
 	}
 	

@@ -1,7 +1,6 @@
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
   course_id INTEGER NOT NULL,
-  course_id INTEGER NOT NULL,
   name VARCHAR(80) NOT NULL,
   due_date DATE NOT NULL,
   grade_weight_type INTEGER NOT NULL,
@@ -19,6 +18,7 @@ CREATE CACHED TABLE Grade_Weights (
 CREATE CACHED TABLE Courses (
   	id INTEGER IDENTITY, 
   	name VARCHAR(80) NOT NULL, 
+  	professor_id INTEGER NOT NULL,
   	time VARCHAR(80) NOT NULL, 
   	course_num INTEGER NOT NULL,
 	sec_num INTEGER NOT NULL,
@@ -32,7 +32,7 @@ CREATE CACHED TABLE Courses (
 CREATE CACHED TABLE Enrolled_Courses (
  	id INTEGER IDENTITY, 
  	student_id INTEGER NOT NULL, 
-	prof_id INTEGER NOT NULL, 
+	professor_id INTEGER NOT NULL, 
 	course_id INTEGER NOT NULL,
 	grade INTEGER NOT NULL
 );
@@ -43,7 +43,9 @@ CREATE CACHED TABLE Users (
 	password VARCHAR(32) NOT NULL,
 	salt VARCHAR(16) NOT NULL,
 	emailAddress VARCHAR(80) NOT NULL,
-	userType INTEGER NOT NULL
+	userType INTEGER NOT NULL,
+	major VARCHAR(80) NOT NULL,
+	resident BOOLEAN NOT NULL
 );
 
 CREATE CACHED TABLE Buildings (
@@ -65,8 +67,8 @@ INSERT INTO Buildings values(NULL, 'NESC');
 
 /* Test data*/
 /* The password for all the test users is "password"*/
-INSERT INTO Users values(NULL,'TestStudent', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1);
-INSERT INTO Users values(NULL,'TestProfessor', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2);
-INSERT INTO Users values(NULL,'TestBoth', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3);
+INSERT INTO Users values(NULL,'TestStudent', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1, 'CS', true);
+INSERT INTO Users values(NULL,'TestProfessor', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false);
+INSERT INTO Users values(NULL,'TestBoth', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true);
 
 

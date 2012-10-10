@@ -7,15 +7,15 @@ import org.junit.Test;
 import ycp.edu.seniordesign.model.Course;
 
 public class CourseTest {
-
-	Course course = new Course(1, "Calc", "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
-	Course course2 = new Course(1, "Calc 2", "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");	
+	
+	Course course = new Course(1, "Calc",9, "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
+	Course course2 = new Course(1, "Calc 2",9 , "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");	
 	
 	@Test
 	public void test() {
-		//fail("Not yet implemented");
 		assertEquals(course.getId(),1);
 		assertEquals(course.getName(),"Calc");
+		assertEquals(course.getProfessorId(), 9);
 		assertEquals(course.getTime(),"8AM - 9AM");
 		assertEquals(course.getCourseNumber(),320);
 		assertEquals(course.getSectionNumber(),101);
@@ -29,7 +29,8 @@ public class CourseTest {
 		assertTrue(course2.equals(course2));
 		
 		course.setId(2);		
-		course.setName("Calc 2");		
+		course.setName("Calc 2");	
+		course.setProfessorId(9);
 		course.setTime("9AM - 10AM");
 		course.setCourseNumber(100);
 		course.setSectionNumber(105);
@@ -41,6 +42,7 @@ public class CourseTest {
 		
 		assertEquals(course.getId(),2);
 		assertEquals(course.getName(),"Calc 2");
+		assertEquals(course.getProfessorId(), 9);
 		assertEquals(course.getTime(),"9AM - 10AM");
 		assertEquals(course.getCourseNumber(),100);
 		assertEquals(course.getSectionNumber(),105);
