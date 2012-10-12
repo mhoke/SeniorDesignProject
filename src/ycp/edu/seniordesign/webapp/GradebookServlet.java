@@ -18,18 +18,4 @@ public class GradebookServlet extends HttpServlet
 	{
 		req.getRequestDispatcher("/view/gradebook.jsp").forward(req, resp);
 	}
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		User user = new User();
-		
-		GradebookController controller = new GradebookController();
-		
-		controller.setModel(user);
-		
-		String username = req.getParameter("usernameLabel");
-		String errorMessage = null;
-		
-		
-	}
 }
