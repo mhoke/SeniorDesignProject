@@ -21,16 +21,23 @@ public class LoginServlet extends HttpServlet
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		User user = null;
-		
-		LoginController controller = new LoginController();
-		
-		controller.setModel(user);
-		
 		String username = req.getParameter("usernameBox");
 		String password = req.getParameter("passwordBox");
 		
-		String errorMessage = null;
+		LoginController controller = new LoginController();
+		
+		String errorMessage = null;		
+		
+		User user = null;
+		
+		try {
+			user = controller.login(username, password);
+			req.getSession().setAttribute("courses", controller.getCourses(controller.getEnrolledCourses(user)));
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 				
 		if(req.getParameter("loginButton") != null)
 		{
@@ -41,6 +48,7 @@ public class LoginServlet extends HttpServlet
 				if(result == null)
 				{ 
 					errorMessage = "Login failed";
+					req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
 				}
 				else
 				{
@@ -52,6 +60,7 @@ public class LoginServlet extends HttpServlet
 			catch(Exception e)
 			{
 				System.out.println("Login database fail");
+				e.printStackTrace();
 			}
 		}
 		
@@ -66,7 +75,7 @@ public class LoginServlet extends HttpServlet
 		if(user != null)
 		{
 			//Moves the page forward
-			//req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
+			req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
 		}			
 	}
 }

@@ -1,10 +1,6 @@
 package ycp.edu.seniordesign.controller;
 
-import java.sql.SQLException;
-
 import ycp.edu.seniordesign.model.User;
-import ycp.edu.seniordesign.model.persist.PersistenceException;
-import ycp.edu.seniordesign.model.persist.Database;
 
 public class HomePageController 
 {
@@ -14,11 +10,4 @@ public class HomePageController
 	{
 		this.user = model;
 	}
-	
-//	public Boolean displayHomePage(String user) 
-//	{
-//		
-//	}
-	
-
 }

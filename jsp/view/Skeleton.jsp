@@ -2,10 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
-	<head>
-		<title>Login</title>
-		
+	<head>		
 		<style type="text/css">
+		
 			.error
 			{
 				color: red;
@@ -15,14 +14,46 @@
 			{
 				color: white;
 			}
+			
+			.header
+			{
+				width:100%;
+				height:10%;
+				clear:both;
+				text-align:center;
+			}
+			
+			.leftSidebar
+			{
+				width:25%;
+				height:100%;
+				float:left;
+				text-align:center;
+			}
+			
+			.body
+			{
+				width:50%;
+				height:80%;
+				float:left;
+				text-align:center;
+			}
+			
+			.rightSidebar
+			{
+				width:25%;
+				height:100%;
+				float:right;
+				text-align:center;
+			}
+			
+			.footer
+			{
+				width:100%;
+				height:10%;
+				clear:both;
+				text-align:center;
+			}
 		</style>
 	</head>
-	
-	<body>
-		<div id="Header" class="error" style="width:100%;">"Header"</div>
-		<div id="Left" class="error" style="width:25%; float:left">"Sidebar"</div>
-		<div id="Body" class="error" style="width:50%; float:left">"Body"</div>
-		<div id="Right" class="error" style="width:25%; float:right">"Right sidebar"</div>
-		<div id="Footer" class="error" style="width:100%; clear:both; bottom:0px">"Footer"</div>
-	</body>
 </html>

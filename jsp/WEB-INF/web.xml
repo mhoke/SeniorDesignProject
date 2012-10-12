@@ -18,8 +18,8 @@
 </servlet>
 
 <servlet>
-	<servlet-name>SkeletonServlet</servlet-name>
-	<servlet-class>ycp.edu.seniordesign.webapp.SkeletonServlet</servlet-class>
+	<servlet-name>HomePageServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.HomePageServlet</servlet-class>
 </servlet>
 
 <!-- Servlet Mappings -->
@@ -33,8 +33,8 @@
 	<url-pattern>createAccount</url-pattern>
 </servlet-mapping>
 <servlet-mapping>
-	<servlet-name>SkeletonServlet</servlet-name>
-	<url-pattern>skeleton</url-pattern>
+	<servlet-name>HomePageServlet</servlet-name>
+	<url-pattern>home</url-pattern>
 </servlet-mapping>
 
 </web-app>

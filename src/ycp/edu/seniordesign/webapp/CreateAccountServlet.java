@@ -54,11 +54,7 @@ public class CreateAccountServlet extends HttpServlet
 		
 		req.setAttribute("errorMessage", errorMessage);
 		
-		if(result)
-		{
-			//Moves the page back to login screen
-			req.getRequestDispatcher("/view/login.jsp").forward(req,resp);
-		}			
+		req.getRequestDispatcher("/view/login.jsp").forward(req,resp);
 	}
 }
 

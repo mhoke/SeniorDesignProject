@@ -18,19 +18,4 @@ private static final long serialVersionUID = 1L;
 	{
 		req.getRequestDispatcher("/view/homePage.jsp").forward(req, resp);
 	}
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		User user = new User();
-		
-		HomePageController controller = new HomePageController();
-		
-		controller.setModel(user);
-		
-		String username = req.getParameter("usernameLabel");
-		String errorMessage = null;
-		
-		
-	}
-
 }
