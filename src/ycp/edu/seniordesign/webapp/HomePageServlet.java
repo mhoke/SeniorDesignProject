@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ycp.edu.seniordesign.controller.HomePageController;
-import ycp.edu.seniordesign.model.User;
-
 public class HomePageServlet extends HttpServlet 
 {
 private static final long serialVersionUID = 1L;

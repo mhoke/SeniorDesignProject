@@ -18,27 +18,37 @@ public class LoginController
 		this.user = model;
 	}
 	
+	public User getModel()
+	{
+		return user;
+	}
+	
 	public User login(String username, String password) throws SQLException, PersistenceException
 	{
 		return Database.getInstance().authenticateUser(username, password);
 	}
 	
-	public ArrayList<EnrolledCourse> getEnrolledCourses(User user) throws SQLException
+	public ArrayList<Course> getEnrolledCourses() throws SQLException
 	{
-		ArrayList<EnrolledCourse> returnList = Database.getInstance().getEnrolledCoursesForStudent(user);
+		ArrayList<EnrolledCourse> resultList = Database.getInstance().getEnrolledCoursesForStudent(user);
+		
+		if(resultList == null)
+		{
+			return null;
+		}
+		
+		ArrayList<Course> returnList = new ArrayList<Course>();
+		
+		for(EnrolledCourse c : resultList)
+		{
+			returnList.add(Database.getInstance().getCourseById(c.getCourseId()));
+		}
 		
 		return returnList;
 	}
 	
-	public ArrayList<Course> getCourses(ArrayList<EnrolledCourse> courses) throws SQLException
-	{
-		ArrayList<Course> returnList = new ArrayList<Course>();
-		
-		for(EnrolledCourse c : courses)
-		{
-			returnList.add(Database.getInstance().getCourseById(c.getId()));
-		}
-		
-		return returnList;
+	public ArrayList<Course> getCourses() throws SQLException
+	{		
+		return Database.getInstance().getCoursesForProfessor(user);
 	}
 }

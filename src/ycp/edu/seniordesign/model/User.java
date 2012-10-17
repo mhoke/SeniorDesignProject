@@ -111,6 +111,15 @@ public class User {
 		}
 	}
 	
+	public boolean isStudent()
+	{
+		if (type == STUDENT_PROFILE)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isCommuter() {
 		return commuter;
 	}
