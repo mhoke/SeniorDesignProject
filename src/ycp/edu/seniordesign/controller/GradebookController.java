@@ -14,8 +14,4 @@ public class GradebookController
 	{
 		this.user = model;
 	}
-	
-//	public Boolean displayGradebookPage(String user) {
-//		
-//	}
 }
