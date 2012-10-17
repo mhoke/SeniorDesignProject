@@ -1,12 +1,14 @@
 package ycp.edu.seniordesign.webapp;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ycp.edu.seniordesign.controller.HomePageController;
 import ycp.edu.seniordesign.controller.LoginController;
 import ycp.edu.seniordesign.model.User;
 
@@ -16,7 +18,9 @@ public class LoginServlet extends HttpServlet
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		req.getSession().invalidate();
 		req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
+		//resp.sendRedirect("/Whiteboard/login");
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -27,17 +31,6 @@ public class LoginServlet extends HttpServlet
 		LoginController controller = new LoginController();
 		
 		String errorMessage = null;		
-		
-		User user = null;
-		
-		try {
-			user = controller.login(username, password);
-			req.getSession().setAttribute("courses", controller.getCourses(controller.getEnrolledCourses(user)));
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
 				
 		if(req.getParameter("loginButton") != null)
 		{
@@ -54,7 +47,18 @@ public class LoginServlet extends HttpServlet
 				{
 					errorMessage = "Login successful";
 					req.getSession().setAttribute("user", result);
+					
+					controller.setModel(result);
+					
+					req.getSession().setAttribute("isProfessor", controller.getModel().isProfessor());
+					req.getSession().setAttribute("isStudent", controller.getModel().isStudent());
+					
+					req.getSession().setAttribute("enrolledCourses", controller.getEnrolledCourses());
+					req.getSession().setAttribute("taughtCourses", controller.getCourses());
+					
 					System.out.println(result.getUsername());
+					
+					req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
 				}
 			}
 			catch(Exception e)
@@ -70,12 +74,6 @@ public class LoginServlet extends HttpServlet
 			req.getRequestDispatcher("/view/createAccount.jsp").forward(req, resp);
 		}
 		
-		req.setAttribute("errorMessage", errorMessage);
-		
-		if(user != null)
-		{
-			//Moves the page forward
-			req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
-		}			
+		req.setAttribute("errorMessage", errorMessage);		
 	}
 }
