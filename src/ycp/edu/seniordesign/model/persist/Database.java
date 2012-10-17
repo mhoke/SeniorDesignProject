@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
@@ -617,4 +618,51 @@ public class Database {
 			DBUtil.closeQuietly(statement);
 		}
 	}
+
+	/**
+	 * Authenticate the admin via username and password
+	 * @param username the username of the admin trying to login
+	 * @param password the plain-text password of the admin trying to login
+	 * @return the Admin object associated with the username and password
+	 * @throws SQLException
+	 */
+	public Admin authenticateAdmin(String username, String password) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);	
+			
+			// look up admin with the given username
+			statement = connection.prepareStatement("select * from admins where username=?");
+			statement.setString(1, username);
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// there is and admin with the given username
+				Admin admin = new Admin();
+				admin.loadFrom(resultSet);
+				
+				// Check password
+				String hashedPassword = HashPassword.computeHash(password, admin.getSalt());
+				if (hashedPassword.equals(admin.getHashedPassword())){
+					// passwords matched
+					return admin;
+				} else {
+					// passwords did not match
+					return null;
+				}
+			} else {
+				// the admin does not exist
+				return null;
+			}
+				 	 
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
 }
