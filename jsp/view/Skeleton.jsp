@@ -21,6 +21,7 @@
 				height:10%;
 				clear:both;
 				text-align:center;
+				background-color:#C2D6D6;
 			}
 			
 			.leftSidebar
@@ -29,14 +30,16 @@
 				height:100%;
 				float:left;
 				text-align:center;
+				background-color:#FF0000;
 			}
 			
 			.body
 			{
 				width:50%;
-				height:80%;
+				height:100%;
 				float:left;
 				text-align:center;
+				background-color:#00FF00;
 			}
 			
 			.rightSidebar
@@ -45,14 +48,17 @@
 				height:100%;
 				float:right;
 				text-align:center;
+				background-color:#FFFFFF;
 			}
 			
 			.footer
 			{
+				color:red;
 				width:100%;
 				height:10%;
 				clear:both;
 				text-align:center;
+				background-color:#000000;
 			}
 		</style>
 	</head>
