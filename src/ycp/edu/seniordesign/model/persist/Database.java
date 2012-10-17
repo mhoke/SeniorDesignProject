@@ -322,8 +322,8 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public ArrayList<EnrolledCourse> getEnrolledCoursesForStudent(User user) throws SQLException{
-		if (user.isProfessor()){
-			// the user that was passed is a professor and thus does not take any classes 
+		if (!user.isStudent()){
+			// the user that was passed is a professor and thus does not take any classes
 			return null;
 		}
 		
