@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
+import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
+import ycp.edu.seniordesign.model.EnrolledCourse;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.util.HashPassword;
 
@@ -22,13 +25,12 @@ public class Database {
 		}
 	}
 
-	private static final String JDBC_URL ="jdbc:hsqldb:file:nenew.db";
-	private static final int MAX_ATTEMPTS = 10;
+	private static final String JDBC_URL ="jdbc:hsqldb:file:whiteboard.db";
 	
-	private static final Database instance = new Database();
+	private static final Database theInstance = new Database();
 	
 	public static Database getInstance() {
-		return instance;
+		return theInstance;
 	}
 	
 	public Database(){
@@ -39,28 +41,24 @@ public class Database {
 	 * Authenticate the user via username and password
 	 * @param username the username of the user trying to login
 	 * @param password the plain-text password of the user trying to login
-	 * @return true if the user exists, false otherwise
+	 * @return the User object associated with the username and password
 	 * @throws SQLException
 	 */
-	public boolean authenticateUser(String username, String password) throws SQLException {
+	public User authenticateUser(String username, String password) throws SQLException {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
 		try {
-
-			//connection = DriverManager.getConnection("jdbc:hsqlbd:newnew.db");		
-
-			connection = DriverManager.getConnection("JDBC_URL");		
-
+			connection = DriverManager.getConnection(JDBC_URL);	
 			
 			// look up user with the given username
-			statement = connection.prepareStatement("select * from newPi.users where username=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
-				// the user does exist
+				// there is someone with the given username
 				User user = new User();
 				user.loadFrom(resultSet);
 				
@@ -68,17 +66,18 @@ public class Database {
 				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
 				if (hashedPassword.equals(user.getPassword())){
 					// passwords matched
-					return true;
+					return user;
 				} else {
 					// passwords did not match
-					return false;
+					return null;
 				}
 			} else {
 				// the user does not exist
-				return false;
+				return null;
 			}
 				 	 
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -89,25 +88,23 @@ public class Database {
 	 * @param username the username of the new account
 	 * @param password the plain-text password of the new account
 	 * @param emailAddress the emailAddress of the new account
-	 * @param type the type of the new account (1 for student, 2 for professor)
+	 * @param type the type of the new account (1 for student, 2 for professor, 3 for both)
 	 * @return false if a username with the username already exists, true if the account is successfully created
 	 * @throws SQLException
-	 * @throws ClassNotFoundException 
 	 */
-	public boolean createAccount(String username, String password, String emailAddress, int type) throws SQLException, ClassNotFoundException{
+	public boolean createAccount(String username, String password, String emailAddress, int type) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
+		// TODO: do not allow creation of account with a variation in case on a current username
+		// Example: If there is a user with a user name of "username" do not allow creation of an account with the username of 
+		// "UsErNaME"
 		try {
-
-			//connection = DriverManager.getConnection("jdbc:hsqlbd:nenew.db");
-
 			connection = DriverManager.getConnection(JDBC_URL);
-			
 						
 			// check to see if username is taken
-			statement = connection.prepareStatement("select * from user where username=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
 			
 			resultSet = statement.executeQuery();
@@ -122,62 +119,27 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into user values(NULL,?,?,?,?,?)");
+			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?,'', 'false')");
 			statement.setString(1, username);
-			statement.setString(2, emailAddress);
-			statement.setString(3, hashedPassword);
-			statement.setString(4, salt);
+			statement.setString(2, hashedPassword);
+			statement.setString(3, salt);
+			statement.setString(4, emailAddress);
 			statement.setInt(5, type);
 			statement.execute();
-			
+						
 			return true;
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
 	
-//	public Boolean createAccount(final User user) throws PersistenceException{		
-//		return databaseRun(new AbstractDatabaseRunnable<Boolean>() {
-//
-//			public Boolean run(Connection connection) throws SQLException{
-//				PreparedStatement statement = null;
-//				ResultSet resultSet = null;
-//				
-//				// check to see if username is taken
-//				statement = connection.prepareStatement("select * from newPi.users where username=?");
-//				statement.setString(1, user.getUsername());
-//				
-//				resultSet = statement.executeQuery();
-//				 
-//				if (resultSet.next()){
-//					// the username is already taken
-//					return false;
-//				}
-//				
-//				// generate random salt and hash password
-//				String salt = HashPassword.generateRandomSalt(new Random());
-//				String hashedPassword = HashPassword.computeHash(user.getPassword(), salt);
-//				
-//				// add the user to the database
-//				statement = connection.prepareStatement("insert into newPi.users values(NULL,?,?,?,?,?)");
-//				statement.setString(1, user.getUsername());
-//				statement.setString(2, user.getEmailAddress());
-//				statement.setString(3, hashedPassword);
-//				statement.setString(4, salt);
-//				statement.setInt(5, user.getType());
-//				statement.execute();
-//				
-//				return true;
-//			}
-//		});
-//	}
-	
 	/**
 	 * Delete account from the user table
 	 * @param username the username of the account to be deleted
 	 * @param password the password of the account to be deleted
-	 * @return true if the account is successfully deleted, false otherwise
+	 * @return ture if the account is sucessfully deleted, false otherwise
 	 * @throws SQLException
 	 */
 	public boolean deleteAccount(String username, String password) throws SQLException{
@@ -186,35 +148,38 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
-						
+			connection = DriverManager.getConnection(JDBC_URL);
+				
 			// check to see if user exists
-			statement = connection.prepareStatement("select * from newPi.users where username=?");
+			statement = connection.prepareStatement("select * from users where username=?");
 			statement.setString(1, username);
-			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			 
 			if (resultSet.next()){
-				// the users does exists
+				// there is someone with the given username
 				User user = new User();
 				user.loadFrom(resultSet);
 				
-				// hash password
+				// Check password
 				String hashedPassword = HashPassword.computeHash(password, user.getSalt());
+				if (hashedPassword.equals(user.getPassword())){
+					// delete the user from the database
+					statement = connection.prepareStatement("delete from users where username=? and password=?");
+					statement.setString(1,  username);
+					statement.setString(2, hashedPassword);
+					statement.execute();
 				
-				// delete the user from the database
-				statement = connection.prepareStatement("delete from newPi.users where username=? and password=?");
-				statement.setString(1,  username);
-				statement.setString(2, hashedPassword);
-				statement.execute();
-				
-				return true;
-			} else {
-				// the user does not exist
-				return false;
+					return true;
+				} else {
+					// the user does not exist
+					return false;
+				}
 			}
-
+			
+			return false;
+		
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -232,9 +197,9 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from newPi.users where id=?");
+			statement = connection.prepareStatement("select * from users where id=?");
 			statement.setInt(1, id);
 			
 			resultSet = statement.executeQuery();
@@ -252,6 +217,7 @@ public class Database {
 			}
 			
 		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
@@ -263,9 +229,9 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		try {
-			connection = DriverManager.getConnection("JDBC_URL");
+			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select * from newPi.courses where id=?");
+			statement = connection.prepareStatement("select * from courses where id=?");
 			statement.setInt(1, id);
 			
 			resultSet = statement.executeQuery();
@@ -283,86 +249,372 @@ public class Database {
 			}
 			
 		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+
+		}
+	}
+	
+	public EnrolledCourse getEnrolledCourseById(int id) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from enrolled_courses where id=?");
+			statement.setInt(1, id);
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the enrolled course exists
+				EnrolledCourse course = new EnrolledCourse();
+				course.loadFrom(resultSet);
+				return course;
+			}
+			
+			else {
+				// no enrolled course exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+
+		}
+	}
+	
+	public Assignment getAssignmentById(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from assignments where id=?");
+			statement.setInt(1,  id);
+			
+			resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				return assignment;
+			} else {
+				return null;
+			}
+		} finally {
+			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
 	
-//	public ArrayList<Course> getCourseForStudent(User user){
-//		Connection connection = null;
-//		PreparedStatement statement = null;
-//		ResultSet resultSet = null;
-//		
-//		try {
-//			connection = DriverManager.getConnection("JDBC_URL");
-//						
-//			statement = connection.prepareStatement("select * from newPi.users where id=?");
-//			statement.setInt(1, id);
-//			
-//			resultSet = statement.executeQuery();
-//			 
-//			if (resultSet.next()){
-//				// the user exists
-//				User user = new User();
-//				user.loadFrom(resultSet);
-//				return user;
-//			}
-//			
-//			else {
-//				// no user exist with the given id
-//				return null;
-//			}
-//			
-//		} finally {
-//			DBUtil.closeQuietly(statement);
-//			DBUtil.closeQuietly(resultSet);
-//		}
-//	}
-	
-	private<E> E databaseRun(IDatabaseRunnable<E> dbRunnable) throws PersistenceException {
-		Connection conn = null;
+	/**
+	 * This method returns a list of all the courses taken by the student
+	 * @param user
+	 * @return if the user is a professor the method returns null, otherwise the method returns an ArrayList of all the courses the student is enrolled in
+	 * @throws SQLException
+	 */
+	public ArrayList<EnrolledCourse> getEnrolledCoursesForStudent(User user) throws SQLException{
+		if (user.isProfessor()){
+			// the user that was passed is a professor and thus does not take any classes 
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
 		try {
-			conn = DriverManager.getConnection(JDBC_URL);
-			conn.setAutoCommit(false);
-
-			int numAttempts = 0;
-			E result = null;
-			boolean committed = false;
-
-			while (!committed && numAttempts < MAX_ATTEMPTS) {
-				try {
-					// Attempt the transaction.
-					E tmpResult = dbRunnable.run(conn);
-					conn.commit();
-
-					// Success!
-					result = tmpResult;
-					committed = true;
-				} catch (SQLException e) {
-					// Check to see if the transaction aborted due to deadlock.
-					// If so, we can retry it.
-					// See: http://dev.mysql.com/doc/refman/5.0/en/connector-j-usagenotes-troubleshooting.html
-					String sqlState = e.getSQLState();
-					if (sqlState != null && sqlState.equals("40001")) {
-						// Deadlock detected.
-						numAttempts++;
-					} else {
-						// Some other failure: just rethrow the exception.
-						throw e;
-					}
-				}
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from enrolled_courses where student_id=?");
+			statement.setInt(1, user.getId());
+			resultSet = statement.executeQuery();
+			
+			ArrayList<EnrolledCourse> courses = new ArrayList<EnrolledCourse>(); 
+			while (resultSet.next()){
+				EnrolledCourse course = new EnrolledCourse();
+				course.loadFrom(resultSet);
+				courses.add(course);
 			}
-
-			if (numAttempts >= MAX_ATTEMPTS) {
-				throw new PersistenceException("Transaction deadlock retry count exceeded");
-			}
-
-			return result;
-		} catch (SQLException e) {
-			throw new PersistenceException("MySQL error", e);
+			
+			return courses;
+			
 		} finally {
-			dbRunnable.cleanup(); // ensure all resources are cleaned up
-			DBUtil.closeQuietly(conn); // ensure database connection is closed
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method returns a list of all the courses taught by a professor
+	 * @param user 
+	 * @return if the user is a student the method returns null, otherwise the method returns an ArrayList of all the course the professor teaches
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCoursesForProfessor(User user) throws SQLException{
+		if (!user.isProfessor()){
+			// the user that was passed is a student and thus does not teach any classes
+			return null;
+		}
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from courses where professor_id=?");
+			statement.setInt(1, user.getId());
+			resultSet = statement.executeQuery();
+			
+			ArrayList<Course> courses = new ArrayList<Course>(); 
+			while (resultSet.next()){
+				Course course = new Course();
+				course.loadFrom(resultSet);
+				courses.add(course);
+			}
+			
+			return courses;
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method gets a list of all assignments for the given courses and student
+	 * @param courseId the courseId the assignment is for
+	 * @param studentId the studentId the assignment is for
+	 * @return an ArrayList of the assignments for the given course and student
+	 * @throws SQLException
+	 */
+	public ArrayList<Assignment> getAssignmentsForCourse(int courseId, int studentId) throws SQLException{		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from assignments where course_id=? and student_id=?");
+			statement.setInt(1, courseId);
+			statement.setInt(2,  studentId);
+			resultSet = statement.executeQuery();
+			
+			ArrayList<Assignment> assignments = new ArrayList<Assignment>(); 
+			while (resultSet.next()){
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				assignments.add(assignment);
+			}
+			
+			return assignments;
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method adds an entry to the Enrolled_Courses table representing a Course that the given user is enrolled in
+	 * @param courseId the id of the course to add
+	 * @param studentId the id of the student who is enrolling in the course
+	 * @param professorId the id of the professor who teaches the course
+	 * @return returns the id of the newly inserted EnrolledCourse
+	 * @throws SQLException
+	 */
+	public int addEnrolledCourseForStudent(int studentId, int professorId, int courseId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into enrolled_courses values(null,?, ?, ?, ?)");
+			statement.setInt(1, studentId);
+			statement.setInt(2,  professorId);
+			statement.setInt(3, courseId);
+			statement.setInt(4, 100); // students start with a 100 in a course they have just enrolled in
+			statement.execute();
+			
+			// Get the id that the course was added with
+			statement = connection.prepareStatement("select id from enrolled_courses where student_id=? and professor_id =? and course_id=?");
+			statement.setInt(1, studentId);
+			statement.setInt(2,  professorId);
+			statement.setInt(3, courseId);
+			resultSet = statement.executeQuery();
+			
+			resultSet.next();
+			return resultSet.getInt(1);
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method deletes the record in the database representing a course taken by the given student. It is used in the case of 
+	 * withdrawals, drops, etc.
+	 * @param courseId the id of the course to remove
+	 * @param studentId the id of the student who is removing the course
+	 * @throws SQLException
+	 */
+	public void removeEnrolledCourseForStudent(int courseId, int studentId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from enrolled_courses where student_id=? and course_id =?");
+			statement.setInt(1, studentId);
+			statement.setInt(2, courseId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	
+	/**
+	 * This method adds a row to the Courses table in the database for a given professor
+	 * @param course the course object to store (it should have the professor field set to the id of the professor who will be 
+	 * teaching the course
+	 * @return the id of the newly inserted row
+	 * @throws SQLException
+	 */
+	public int addCourseForProfessor(Course course) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into courses values(?,?,?,?,?,?,?,?,?,?,?)");
+			course.storeTo(statement);
+			statement.setString(1, null);
+			statement.execute();
+			
+			
+			// Get the id that the course was added with
+			statement = connection.prepareStatement("select id from courses where name =? and professor_id=? and time=? and course_num =? and sec_num=? and credits=? and weekly_days=? and location = ? and CRN =? and description =?");
+			statement.setString(1, course.getName());
+			statement.setInt(2, course.getProfessorId());
+			statement.setString(3, course.getTime());
+			statement.setInt(4, course.getCourseNumber());
+			statement.setInt(5, course.getSectionNumber());
+			statement.setInt(6, course.getCredits());
+			statement.setString(7, course.getDays());
+			statement.setString(8, course.getLocation());
+			statement.setInt(9, course.getCRN());
+			statement.setString(10, course.getDescription());
+			resultSet = statement.executeQuery();
+			
+			resultSet.next();
+			return resultSet.getInt(1);						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method deletes the row from the course table with the courseId
+	 * @param courseId the id of the course to remove
+	 * @throws SQLException
+	 */
+	public void removeCourseForProfessor(int courseId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from courses where id =?");
+			statement.setInt(1,  courseId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	
+	/**
+	 * This method adds a row to the Assignments table in the database
+	 * @param assignment the assignment object to store
+	 * @return the id of the newly inserted row
+	 * @throws SQLException
+	 */
+	public int addAssignmentForCourse(Assignment assignment) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into assignments values(?,?,?,?,?,?,?,?)");
+			assignment.storeTo(statement);
+			statement.setString(1, null);
+			statement.execute();
+			
+			// Get the id that the assignment was added with
+			statement = connection.prepareStatement("select id from assignments where course_id=? and student_id=? and name=? and due_date=? and grade_weight_type=? and earned_points=? and possible_points=?");
+			statement.setInt(1, assignment.getCourseId());
+			statement.setInt(2, assignment.getStudentId());
+			statement.setString(3, assignment.getName());
+			statement.setDate(4, new java.sql.Date(assignment.getDueDate().getTime()));
+			statement.setInt(5, assignment.getGradeWeightType());
+			statement.setInt(6, assignment.getEarnedPoints());
+			statement.setInt(7, assignment.getPossiblePoints());
+			resultSet = statement.executeQuery();
+
+			resultSet.next();
+			return resultSet.getInt(1);						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public void removeAssignmentForCourse(int assignmentId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from assignments where id =?");
+			statement.setInt(1,  assignmentId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
 		}
 	}
 }

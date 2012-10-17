@@ -15,6 +15,10 @@ public class User {
 	 * Profile type for professors
 	 */
 	public static final int PROFESSOR_PROFILE = 2;
+	/**
+	 * Profile type for professor and students
+	 */
+	public static final int PROFESSOR_STUDENT_PROFILE = 3;
 	
 	private int id;
 	private String username;
@@ -22,6 +26,24 @@ public class User {
 	private String password; // this password is encrypted
 	private String salt;
 	private int type;
+	private String major;
+	private boolean commuter; 
+	
+	public User(){
+		
+	}
+	
+
+	public User(int id, String username, String emailAddress, String password, String salt, int type, String major, boolean commuter){
+		this.id = id;
+		this.username = username;
+		this.emailAddress = emailAddress;
+		this.password = password;
+		this.salt = salt;
+		this.type = type;
+		this.major = major;
+		this.commuter = commuter;
+	}
 	
 	public int getId() {
 		return id;
@@ -73,6 +95,30 @@ public class User {
 		this.type = type;
 	}
 	
+	public String getMajor() {
+		return major;
+	}
+
+	public void setMajor(String major) {
+		this.major = major;
+	}
+	
+	public boolean isProfessor(){
+		if (type == PROFESSOR_PROFILE || type == PROFESSOR_STUDENT_PROFILE){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isCommuter() {
+		return commuter;
+	}
+
+	public void setCommuter(boolean commuter) {
+		this.commuter = commuter;
+	}
+	
 	/**
 	 * This method can be used to load the fields of a user from a resultSet to a User object
 	 * @param resultSet the resultSet to load the fields from
@@ -82,9 +128,12 @@ public class User {
 		int index = 1;
 		setId(resultSet.getInt(index++));
 		setUsername (resultSet.getString(index++));
-		setEmailAddress(resultSet.getString(index++));
 		setPassword(resultSet.getString(index++));
+		setSalt(resultSet.getString(index++));
+		setEmailAddress(resultSet.getString(index++));
 		setType(resultSet.getInt(index++));
+		setMajor(resultSet.getString(index++));
+		setCommuter(resultSet.getBoolean(index++));
 	}
 	
 	/**
@@ -97,9 +146,12 @@ public class User {
 		int index = 1;
 		statement.setInt(index++, id);
 		statement.setString(index++, username);
-		statement.setString(index++, emailAddress);
 		statement.setString(index++, password);
+		statement.setString(index++, salt);
+		statement.setString(index++, emailAddress);
 		statement.setInt(index++, type);
+		statement.setString(index++, major);
+		statement.setBoolean(index++, commuter);
 	}
 
 	@Override
@@ -110,9 +162,12 @@ public class User {
 		User other = (User) obj;
 		return id == other.id
 			&& username.equals(other.username)
-			&& emailAddress.equals(other.emailAddress)
 			&& password.equals(other.password)
-			&& type == other.type;
+			&& salt.equals(other.salt)
+			&& emailAddress.equals(other.emailAddress)
+			&& type == other.type
+			&& major.equals(other.major)
+			&& commuter == other.commuter;
 	}
 
 }
