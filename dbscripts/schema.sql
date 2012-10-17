@@ -72,4 +72,11 @@ INSERT INTO Users values(NULL,'TestStudent', '075293660cfd83e0644b52d5703243cc '
 INSERT INTO Users values(NULL,'TestProfessor', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false);
 INSERT INTO Users values(NULL,'TestBoth', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true);
 
+INSERT INTO Courses values(NULL, 'Calculus I', 1, '12:00-12:50', 101, 101, 4, 'MWF', 'CHM 223', 99999, 'This is a calculus I class.');
+INSERT INTO Courses values(NULL, 'CPADS', 1, '1:00-2:40', 101, 101, 4, 'WF', 'CS 119', 88888, 'This is a CPADS class.');
+INSERT INTO Courses values(NULL, 'Spanish I', 2, '1:00-1:50', 101, 101, 4, 'MWF', 'CHM 301', 77777, 'This is a spanish I class.');
+
+INSERT INTO Enrolled_Courses values(NULL, 0, 1, 0, 85);
+INSERT INTO Enrolled_Courses values(NULL, 0, 2, 2, 100);
+INSERT INTO Enrolled_Courses values(NULL, 2, 1, 1, 65);
 
