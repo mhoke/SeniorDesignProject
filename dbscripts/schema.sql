@@ -1,6 +1,7 @@
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
   course_id INTEGER NOT NULL,
+  student_id INTEGER NOT NULL,
   name VARCHAR(80) NOT NULL,
   due_date DATE NOT NULL,
   grade_weight_type INTEGER NOT NULL,

@@ -19,7 +19,6 @@ public class AssignmentTest {
 
 	@Test
 	public void test() {
-		//fail("Not yet implemented");
 		assertFalse(assign.equals(assign2));
 		assertTrue(assign.equals(assign));
 		assertEquals(assign.getId(),1);
@@ -49,5 +48,6 @@ public class AssignmentTest {
 		assertEquals(assign.getEarnedPoints(), 25);
 		assertEquals(assign.getPossiblePoints(), 25);
 		assertTrue(assign.equals(assign));
+		assertTrue(assign.isOverdue());
 	}
 }

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import ycp.edu.seniordesign.model.Assignment;
@@ -464,6 +465,7 @@ public class Database {
 		} finally {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 	
@@ -492,4 +494,127 @@ public class Database {
 		}
 	}
 	
+	
+	/**
+	 * This method adds a row to the Courses table in the database for a given professor
+	 * @param course the course object to store (it should have the professor field set to the id of the professor who will be 
+	 * teaching the course
+	 * @return the id of the newly inserted row
+	 * @throws SQLException
+	 */
+	public int addCourseForProfessor(Course course) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into courses values(?,?,?,?,?,?,?,?,?,?,?)");
+			course.storeTo(statement);
+			statement.setString(1, null);
+			statement.execute();
+			
+			
+			// Get the id that the course was added with
+			statement = connection.prepareStatement("select id from courses where name =? and professor_id=? and time=? and course_num =? and sec_num=? and credits=? and weekly_days=? and location = ? and CRN =? and description =?");
+			statement.setString(1, course.getName());
+			statement.setInt(2, course.getProfessorId());
+			statement.setString(3, course.getTime());
+			statement.setInt(4, course.getCourseNumber());
+			statement.setInt(5, course.getSectionNumber());
+			statement.setInt(6, course.getCredits());
+			statement.setString(7, course.getDays());
+			statement.setString(8, course.getLocation());
+			statement.setInt(9, course.getCRN());
+			statement.setString(10, course.getDescription());
+			resultSet = statement.executeQuery();
+			
+			resultSet.next();
+			return resultSet.getInt(1);						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method deletes the row from the course table with the courseId
+	 * @param courseId the id of the course to remove
+	 * @throws SQLException
+	 */
+	public void removeCourseForProfessor(int courseId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from courses where id =?");
+			statement.setInt(1,  courseId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	
+	/**
+	 * This method adds a row to the Assignments table in the database
+	 * @param assignment the assignment object to store
+	 * @return the id of the newly inserted row
+	 * @throws SQLException
+	 */
+	public int addAssignmentForCourse(Assignment assignment) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into assignments values(?,?,?,?,?,?,?,?)");
+			assignment.storeTo(statement);
+			statement.setString(1, null);
+			statement.execute();
+			
+			// Get the id that the assignment was added with
+			statement = connection.prepareStatement("select id from assignments where course_id=? and student_id=? and name=? and due_date=? and grade_weight_type=? and earned_points=? and possible_points=?");
+			statement.setInt(1, assignment.getCourseId());
+			statement.setInt(2, assignment.getStudentId());
+			statement.setString(3, assignment.getName());
+			statement.setDate(4, new java.sql.Date(assignment.getDueDate().getTime()));
+			statement.setInt(5, assignment.getGradeWeightType());
+			statement.setInt(6, assignment.getEarnedPoints());
+			statement.setInt(7, assignment.getPossiblePoints());
+			resultSet = statement.executeQuery();
+
+			resultSet.next();
+			return resultSet.getInt(1);						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public void removeAssignmentForCourse(int assignmentId) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from assignments where id =?");
+			statement.setInt(1,  assignmentId);
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
 }

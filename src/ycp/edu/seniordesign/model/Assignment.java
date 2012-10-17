@@ -94,6 +94,10 @@ public class Assignment {
 		this.possiblePoints = possiblePoints;
 	}
 	
+	public boolean isOverdue(){
+		return dueDate.before(new Date(System.currentTimeMillis()));
+	}
+	
 	/**
 	 * This method can be used to load the fields of an assignment from a resultSet to an Assignment object
 	 * @param resultSet the resultSet to load the fields from
@@ -125,7 +129,7 @@ public class Assignment {
 		statement.setInt(index++, courseId);
 		statement.setInt(index++, studentId);
 		statement.setString(index++, name);
-		statement.setDate(index++, (java.sql.Date) dueDate);
+		statement.setDate(index++, new java.sql.Date(dueDate.getTime()));
 		statement.setInt(index++, gradeWeightType);
 		statement.setInt(index++, earnedPoints);
 		statement.setInt(index++, possiblePoints);
