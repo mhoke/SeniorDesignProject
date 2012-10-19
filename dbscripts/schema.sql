@@ -49,6 +49,13 @@ CREATE CACHED TABLE Users (
 	resident BOOLEAN NOT NULL
 );
 
+CREATE CACHED TABLE Admins (
+	id INTEGER IDENTITY, 
+	username VARCHAR(80) NOT NULL,
+	password VARCHAR(32) NOT NULL,
+	salt VARCHAR(16) NOT NULL,
+);
+
 CREATE CACHED TABLE Buildings (
 	id INTEGER IDENTITY,
 	building_name VARCHAR(80) NOT NULL
@@ -80,3 +87,4 @@ INSERT INTO Enrolled_Courses values(NULL, 0, 1, 0, 85);
 INSERT INTO Enrolled_Courses values(NULL, 0, 2, 2, 100);
 INSERT INTO Enrolled_Courses values(NULL, 2, 1, 1, 65);
 
+INSERT INTO Admins values(NULL, 'TestAdmin', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8');
