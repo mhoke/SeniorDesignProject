@@ -22,6 +22,21 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.HomePageServlet</servlet-class>
 </servlet>
 
+<servlet>
+	<servlet-name>AdminLoginServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.admin2.AdminLoginServlet</servlet-class>
+</servlet>
+
+<servlet>
+	<servlet-name>AdminHomeServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.admin2.AdminHomeServlet</servlet-class>
+</servlet>
+
+<servlet>
+	<servlet-name>AdminApproveCourseServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.admin2.AdminApproveCourseServlet</servlet-class>
+</servlet>
+
 <!-- Servlet Mappings -->
 
 <servlet-mapping>
@@ -35,6 +50,18 @@
 <servlet-mapping>
 	<servlet-name>HomePageServlet</servlet-name>
 	<url-pattern>home</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AdminLoginServlet</servlet-name>
+	<url-pattern>admin/login</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AdminHomeServlet</servlet-name>
+	<url-pattern>admin/home</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AdminApproveCourseServlet</servlet-name>
+	<url-pattern>admin/approveCourse</url-pattern>
 </servlet-mapping>
 
 </web-app>
