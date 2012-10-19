@@ -475,6 +475,46 @@ public class Database {
 		}
 	}
 	
+	public ArrayList<Assignment> getAssignmentsForProfessor(int courseId) throws SQLException{		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ArrayList<Assignment> assignments = new ArrayList<Assignment>(); 
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select distinct name from assignments");
+			resultSet = statement.executeQuery();
+			ArrayList<String> names = new ArrayList<String>();
+			
+			while(resultSet.next()){
+				names.add(resultSet.getString((1)));
+			}
+			
+			statement = connection.prepareStatement("select * from assignments where name = ?");
+			for (String name: names){
+				statement.setString(1, name);
+				resultSet = statement.executeQuery();
+				if (resultSet != null){
+					resultSet.next();
+					Assignment assignment = new Assignment();
+					assignment.loadFrom(resultSet);
+					assignments.add(assignment);
+				} 
+			}
+			if (assignments.isEmpty()){
+				return null;
+			}
+			return assignments;
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
 	/**
 	 * This method adds an entry to the Enrolled_Courses table representing a Course that the given user is enrolled in
 	 * @param courseId the id of the course to add

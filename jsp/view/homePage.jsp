@@ -17,7 +17,7 @@
 				<c:if test="${enrolledCourses != null}">
 					Enrolled Courses: <br/>
 					<c:forEach var="course" items="${enrolledCourses}">
-						<A HREF="course?id=${course.id}">${course.name}</A><br/>
+						<A HREF="scourse?id=${course.id}">${course.name}</A><br/>
 					</c:forEach>
 				</c:if>
 			</c:if>
@@ -25,7 +25,7 @@
 				<c:if test="${taughtCourses != null}">
 					Taught Courses: <br/>
 					<c:forEach var="course" items="${taughtCourses}">
-						<A HREF="course?id=${course.id}">${course.name}</A><br/>
+						<A HREF="pcourse?id=${course.id}">${course.name}</A><br/>
 					</c:forEach>
 				</c:if>
 			</c:if>
