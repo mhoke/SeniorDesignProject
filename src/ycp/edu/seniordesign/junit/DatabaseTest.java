@@ -7,7 +7,6 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
@@ -16,12 +15,11 @@ import ycp.edu.seniordesign.model.persist.Database;
 
 public class DatabaseTest {
 	
-	User testStudent = new User(999999, "username", "password", "salt", "emailAddress", User.STUDENT_PROFILE, "CS", true);
-	User testProfessor = new User(999999, "testProfessor", "password", "salt", "emailAddress", User.PROFESSOR_PROFILE, "None", true);
-	Course testCourse = new Course(999999, "Calc", testProfessor.getId(), "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
+	User testStudent = new User(1, "username", "password", "salt", "emailAddress", User.STUDENT_PROFILE, "CS", true);
+	User testProfessor = new User(2, "testProfessor", "password", "salt", "emailAddress", User.PROFESSOR_PROFILE, "None", true);
+	Course testCourse = new Course(1, "Calc", testProfessor.getId(), "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
 	EnrolledCourse testEnrolledCourse = new EnrolledCourse(1, testStudent.getId(), testProfessor.getId(), testCourse.getId(), 100);
 	Assignment testAssignment = new Assignment(1, testCourse.getId(), testStudent.getId(), "Homework #1", new Date(112, 8, 1), 1, 20, 20);
-	Admin testAdmin = new Admin(0, "TestAdmin", "password", "salt");
 	
 	@Test
 	// This method  tests operations associated with the users table (createAccount, authenticate user, etc.)
@@ -62,12 +60,6 @@ public class DatabaseTest {
 		assertEquals(Database.getInstance().getAssignmentById(id).getName(), testAssignment.getName());
 		Database.getInstance().removeAssignmentForCourse(testAssignment.getId());
 		assertEquals(Database.getInstance().getAssignmentById(id), null);
-	}
-	
-	@Test
-	// This method tests operations associated with the admins table 
-	public void testAdminOperations() throws SQLException{
-		assertTrue(Database.getInstance().authenticateAdmin(testAdmin.getUsername(), testAdmin.getHashedPassword()) != null);
 	}
 
 }

@@ -113,7 +113,7 @@ public class User {
 	
 	public boolean isStudent()
 	{
-		if (type == STUDENT_PROFILE)
+		if (type == STUDENT_PROFILE || type == PROFESSOR_STUDENT_PROFILE)
 		{
 			return true;
 		}
