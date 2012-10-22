@@ -703,5 +703,25 @@ public class Database {
 			DBUtil.closeQuietly(statement);
 		}
 	}
+	
+	public void updateUser(User user) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, resident =? where id =?");
+			statement.setString(1, user.getEmailAddress());
+			statement.setString(2, user.getMajor());
+			statement.setBoolean(3, user.isCommuter());
+			statement.setInt(4, user.getId());
+			statement.execute();
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
 
 }
