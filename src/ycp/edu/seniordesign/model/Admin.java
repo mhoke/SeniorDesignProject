@@ -68,4 +68,16 @@ public class Admin {
 		statement.setString(index++, hashedPassword);
 		statement.setString(index++, salt);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || obj.getClass() != this.getClass()) {
+			return false;
+		}
+		Admin other = (Admin) obj;
+		return id == other.id
+			&& username.equals(other.username)
+			&& hashedPassword.equals(other.hashedPassword)
+			&& salt.equals(other.salt);
+	}
 }
