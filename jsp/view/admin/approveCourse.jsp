@@ -4,6 +4,8 @@
 <html>
 	<head>
 		<title>Admin - Add Course</title>
+		
+		<script type="text/javascript" src="/webroot/static/js/jquery-validate-1.8.1.js"></script>
 	</head>
 	
 	<body>	
@@ -16,7 +18,7 @@
 	
 			<table>
 				<tr><td>Course Name:</td><td><input type="text" name="courseName" size="25"/></td></tr>
-				<tr><td>Professor Id:</td><td><input type="text" name="professorId" size="25" /></td></tr>
+				<tr><td>Professor Id:</td><td><input type="text" class="digits" name="professorId" size="25" /></td></tr>
 				<tr><td>Time:</td><td><input type="text" name="time" size="25" /></td></tr>
 				<tr><td>Course Number:</td><td><input type="text" name="courseNumber" size="25" /></td></tr>
 				<tr><td>Section Number:</td><td><input type="text" name="sectionNumber" size="25" /></td></tr>
