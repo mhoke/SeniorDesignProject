@@ -6,7 +6,7 @@
 
 	<head>
 		<Title>Edit Profile</Title>
-	<head>
+	</head>
 	
 	<body>
 		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="editProfile">Edit Profile</A></div>
@@ -45,7 +45,8 @@
 						</tr>
 					</table>
 				</form>
-			</c:if>			
+			</c:if>
+		</div>			
 		
 		<div class="rightSidebar">
 			<c:if test="${isStudent}">
