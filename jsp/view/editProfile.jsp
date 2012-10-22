@@ -6,11 +6,11 @@
 
 	<head>
 		<Title>Edit Profile</Title>
-	<head>
+	</head>
 	
 	<body>
-		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="editProfile">Edit Profile</A></div>
-		<div class="leftSidebar"><A HREF="home">Home</A> <br/> Bus Schedule <br/> Campus Map</div>
+		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
+		<div class="leftSidebar"> Bus Schedule <br/> Campus Map</div>
 		<div class="body">
 			<c:if test="${isStudent}">
 				UserName: ${user.username} <br/>
@@ -39,13 +39,10 @@
 							<td> <input name="ChangeFieldsButton" type="submit" value="Edit Profile" /></td>
 							<td> <input name="ChangePasswordButton" type="submit" value="Change Password" /></td>
 						</tr>
-						
-						<tr>
-							<td class="error">${user.message}</td>
-						</tr>
 					</table>
 				</form>
-			</c:if>			
+			</c:if>	
+		</div>	
 		
 		<div class="rightSidebar">
 			<c:if test="${isStudent}">

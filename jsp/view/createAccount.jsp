@@ -43,10 +43,6 @@
 				<tr>
 					<td> <input name="createButton" type="submit" value="Create Account" /></td>
 				</tr>
-				
-				<tr>
-					<td class="error">${user.message}</td>
-				</tr>
 			</table>
 		</form>
 	</body>

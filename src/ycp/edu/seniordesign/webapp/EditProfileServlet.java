@@ -16,17 +16,20 @@ private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-		req.getRequestDispatcher("/view/editProfile.jsp").forward(req, resp);
+		if(req.getSession().getAttribute("user") == null)
+		{
+			req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
+		}
+		else
+		{
+			req.getRequestDispatcher("/view/editProfile.jsp").forward(req, resp);
+		}
 	}
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		String emailAddress = req.getParameter("newEmailAddressBox");
 		String major = req.getParameter("newMajorBox");
-		
-		LoginController controller = new LoginController();
-		
-		String errorMessage = null;		
 				
 		if(req.getParameter("ChangeFieldsButton") != null)
 		{
@@ -51,8 +54,6 @@ private static final long serialVersionUID = 1L;
 		{
 			System.out.println("Changing password");
 			req.getRequestDispatcher("/view/changePassword.jsp").forward(req, resp);
-		}
-		
-		req.setAttribute("errorMessage", errorMessage);		
+		}	
 	}
 }

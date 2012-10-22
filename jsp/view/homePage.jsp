@@ -9,9 +9,11 @@
 	</head>
 	
 	<body>
-		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
+		<div class="header"><A HREF="editProfile"> ${user.username}</A> &emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
-		<div class="body">${user.username} <br/> ${user.emailAddress} <br/> <c:if test="${user.commuter}">Commuter</c:if><c:if test="!${user.commuter}">Resident</c:if> <br/> Major: ${user.major} <br/> </div>
+		<div class="body">${user.username} <br/> ${user.emailAddress} <br/> 
+			<c:if test="${user.commuter}">Commuter</c:if><c:if test="!${user.commuter}">Resident</c:if> 
+			<br/> Major: ${user.major} <br/> </div>
 		<div class="rightSidebar">
 			<c:if test="${isStudent}">
 				<c:if test="${enrolledCourses != null}">
