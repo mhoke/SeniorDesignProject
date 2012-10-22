@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ycp.edu.seniordesign.controller.LoginController;
 import ycp.edu.seniordesign.model.User;
+import ycp.edu.seniordesign.model.persist.Database;
 
 public class EditProfileServlet extends HttpServlet
 {
@@ -30,6 +31,8 @@ private static final long serialVersionUID = 1L;
 	{
 		String emailAddress = req.getParameter("newEmailAddressBox");
 		String major = req.getParameter("newMajorBox");
+		User user = (User) req.getSession().getAttribute("user");
+		boolean update = false;
 				
 		if(req.getParameter("ChangeFieldsButton") != null)
 		{
@@ -37,11 +40,22 @@ private static final long serialVersionUID = 1L;
 			{
 				if (emailAddress != null) {
 					//Set new email address
+					user.setEmailAddress(emailAddress);
+					update = true;
 				}
 				
 				if (major != null) {
 					//Set new major
+					user.setMajor(major);
+					update = true;
 				}
+				
+				//Nick is writing the updateUser database method
+//				if (update) {
+//					Database.getInstance().updateUser(user);
+//				}
+				
+				req.getRequestDispatcher("/view/editProfile.jsp").forward(req, resp);
 			}
 			catch(Exception e)
 			{

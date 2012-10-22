@@ -44,7 +44,7 @@
 	</head>
 	
 	<body>
-		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
+		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
 		<div class="body">
 			<table>
