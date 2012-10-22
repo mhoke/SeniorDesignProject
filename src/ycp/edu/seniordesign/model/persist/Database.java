@@ -6,9 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Random;
 
+import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
@@ -67,6 +67,52 @@ public class Database {
 				if (hashedPassword.equals(user.getPassword())){
 					// passwords matched
 					return user;
+				} else {
+					// passwords did not match
+					return null;
+				}
+			} else {
+				// the user does not exist
+				return null;
+			}
+				 	 
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * Authenticate the admin via username and password
+	 * @param username the username of the admin trying to login
+	 * @param password the plain-text password of the admin trying to login
+	 * @return the Admin object associated with the username and password
+	 * @throws SQLException
+	 */
+	public Admin authenticateAdmin(String username, String password) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);	
+			
+			// look up user with the given username
+			statement = connection.prepareStatement("select * from admins where username=?");
+			statement.setString(1, username);
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// there is an admin with the given username
+				Admin admin = new Admin();
+				admin.loadFrom(resultSet);
+				
+				// Check password
+				String hashedPassword = HashPassword.computeHash(password, admin.getSalt());
+				if (hashedPassword.equals(admin.getHashedPassword())){
+					// passwords matched
+					return admin;
 				} else {
 					// passwords did not match
 					return null;
@@ -322,8 +368,8 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public ArrayList<EnrolledCourse> getEnrolledCoursesForStudent(User user) throws SQLException{
-		if (user.isProfessor()){
-			// the user that was passed is a professor and thus does not take any classes 
+		if (!user.isStudent()){
+			// the user that was passed is a professor and thus does not take any classes
 			return null;
 		}
 		
@@ -420,6 +466,46 @@ public class Database {
 				assignments.add(assignment);
 			}
 			
+			return assignments;
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public ArrayList<Assignment> getAssignmentsForProfessor(int courseId) throws SQLException{		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		ArrayList<Assignment> assignments = new ArrayList<Assignment>(); 
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select distinct name from assignments");
+			resultSet = statement.executeQuery();
+			ArrayList<String> names = new ArrayList<String>();
+			
+			while(resultSet.next()){
+				names.add(resultSet.getString((1)));
+			}
+			
+			statement = connection.prepareStatement("select * from assignments where name = ?");
+			for (String name: names){
+				statement.setString(1, name);
+				resultSet = statement.executeQuery();
+				if (resultSet != null){
+					resultSet.next();
+					Assignment assignment = new Assignment();
+					assignment.loadFrom(resultSet);
+					assignments.add(assignment);
+				} 
+			}
+			if (assignments.isEmpty()){
+				return null;
+			}
 			return assignments;
 			
 		} finally {
@@ -617,4 +703,5 @@ public class Database {
 			DBUtil.closeQuietly(statement);
 		}
 	}
+
 }

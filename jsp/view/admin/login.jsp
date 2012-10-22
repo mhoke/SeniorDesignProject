@@ -3,7 +3,7 @@
 
 <html>
 	<head>
-		<title>Create Account</title>
+		<title>Login</title>
 		
 		<style type="text/css">
 			.error
@@ -18,12 +18,12 @@
 		</style>
 	</head>
 	
-	<body style="background-color:#663300">
+	<body style="background-color:#00FF00">
 		<c:if test="${!empty errorMessage }">
 			<div class="error">${errorMessage }</div>
 		</c:if>
 		
-		<form action="${pageContext.servletContext.contextPath}/createAccount" method="post">
+		<form action="${pageContext.servletContext.contextPath}/admin/login" method="post">
 			<table>
 				<tr>
 					<td class="text">Username: </td>
@@ -36,12 +36,11 @@
 				</tr>
 				
 				<tr>
-					<td class="text">Email: </td>
-					<td><input type ="text" name="emailBox" size="12" value="${email}" /></td>
+					<td> <input name="loginButton" type="submit" value="Login" /></td>
 				</tr>
 				
 				<tr>
-					<td> <input name="createButton" type="submit" value="Create Account" /></td>
+					<td class="error">${errorMessage}</td>
 				</tr>
 			</table>
 		</form>
