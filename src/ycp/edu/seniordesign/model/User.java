@@ -22,6 +22,7 @@ public class User {
 	
 	private int id;
 	private String username;
+	private String name;
 	private String emailAddress;
 	private String password; // this password is encrypted
 	private String salt;
@@ -34,9 +35,10 @@ public class User {
 	}
 	
 
-	public User(int id, String username, String emailAddress, String password, String salt, int type, String major, boolean commuter){
+	public User(int id, String username, String name, String emailAddress, String password, String salt, int type, String major, boolean commuter){
 		this.id = id;
 		this.username = username;
+		this.name = name;
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.salt = salt;
@@ -62,6 +64,16 @@ public class User {
 		this.username = username;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
 	public String getEmailAddress() {
 		return emailAddress;
 	}
@@ -136,7 +148,8 @@ public class User {
 	public void loadFrom(ResultSet resultSet) throws SQLException {
 		int index = 1;
 		setId(resultSet.getInt(index++));
-		setUsername (resultSet.getString(index++));
+		setUsername(resultSet.getString(index++));
+		setName(resultSet.getString(index++));
 		setPassword(resultSet.getString(index++));
 		setSalt(resultSet.getString(index++));
 		setEmailAddress(resultSet.getString(index++));
@@ -155,6 +168,7 @@ public class User {
 		int index = 1;
 		statement.setInt(index++, id);
 		statement.setString(index++, username);
+		statement.setString(index++, name);
 		statement.setString(index++, password);
 		statement.setString(index++, salt);
 		statement.setString(index++, emailAddress);
@@ -171,6 +185,7 @@ public class User {
 		User other = (User) obj;
 		return id == other.id
 			&& username.equals(other.username)
+			&& name.equals(other.name)
 			&& password.equals(other.password)
 			&& salt.equals(other.salt)
 			&& emailAddress.equals(other.emailAddress)

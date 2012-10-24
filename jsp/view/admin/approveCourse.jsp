@@ -1,11 +1,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 	<head>
 		<title>Admin - Add Course</title>
 		
-		<script type="text/javascript" src="/webroot/static/js/jquery-validate-1.8.1.js"></script>
+		<script type="text/javascript" src="/static/js/jquery-validate-1.8.1.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+			  	$("#addCourseForm").validate();
+			});
+		</script>
 	</head>
 	
 	<body>	
@@ -13,12 +21,12 @@
 		<a href="/Whiteboard/admin/approveCourse">Add Course</a> <br />
 		<a href="/Whiteboard/admin/login">Logout</a> <p />
 		
-		<form action="${pageContext.servletContext.contextPath}/admin/approveCourse" method="post">
+		<form id="addCourseForm" action="" method="get">
 			<input type="hidden" name="submitted" value="true" />
 	
 			<table>
 				<tr><td>Course Name:</td><td><input type="text" name="courseName" size="25"/></td></tr>
-				<tr><td>Professor Id:</td><td><input type="text" class="digits" name="professorId" size="25" /></td></tr>
+				<tr><td>Professor Id:</td><td><input type="text" class="required" name="professorId" size="25" /></td></tr>
 				<tr><td>Time:</td><td><input type="text" name="time" size="25" /></td></tr>
 				<tr><td>Course Number:</td><td><input type="text" name="courseNumber" size="25" /></td></tr>
 				<tr><td>Section Number:</td><td><input type="text" name="sectionNumber" size="25" /></td></tr>

@@ -138,7 +138,7 @@ public class Database {
 	 * @return false if a username with the username already exists, true if the account is successfully created
 	 * @throws SQLException
 	 */
-	public boolean createAccount(String username, String password, String emailAddress, int type) throws SQLException{
+	public boolean createAccount(String username, String name, String password, String emailAddress, int type) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -165,12 +165,13 @@ public class Database {
 			String hashedPassword = HashPassword.computeHash(password, salt);
 			
 			// add the user to the database
-			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?,'', 'false')");
+			statement = connection.prepareStatement("insert into users values(NULL,?,?,?,?,?,?,'', 'false')");
 			statement.setString(1, username);
-			statement.setString(2, hashedPassword);
-			statement.setString(3, salt);
-			statement.setString(4, emailAddress);
-			statement.setInt(5, type);
+			statement.setString(2, name);
+			statement.setString(3, hashedPassword);
+			statement.setString(4, salt);
+			statement.setString(5, emailAddress);
+			statement.setInt(6, type);
 			statement.execute();
 						
 			return true;
@@ -701,6 +702,98 @@ public class Database {
 		} finally {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	public boolean changePassword(User user) throws Exception{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);		
+			
+			statement = connection.prepareStatement("update users set hashedPassword=? where id=?");  
+			statement.setString(1,  user.getPassword());
+			statement.setInt(2, user.getId());
+			
+			int rowsUpdated = statement.executeUpdate();
+
+			if (rowsUpdated == 1){
+				// Perfect only one user's password was changed
+				return true;
+			} else if (rowsUpdated == 0){
+				// No user found with the given id
+				return false;
+			} else {
+				// This is bad the password for multiple users was changed
+				throw new Exception("Multiple users with the same id (should not be possible)");
+			}
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}   
+
+	}
+	public User getUserByUsername(String username) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from users where username=?");
+			statement.setString(1, username);
+			
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the user exists
+				User user = new User();
+				user.loadFrom(resultSet);
+				return user;
+			}
+			else {
+				// no user exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public User getUserByEmail(String emailAddress) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from users where emailAddress=?");
+			statement.setString(1, emailAddress);
+			
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the user exists
+				User user = new User();
+				user.loadFrom(resultSet);
+				return user;
+			}
+			
+			else {
+				// no user exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 

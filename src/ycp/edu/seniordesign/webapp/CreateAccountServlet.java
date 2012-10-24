@@ -42,7 +42,8 @@ public class CreateAccountServlet extends HttpServlet
 			System.out.println("Enters here");
 			try
 			{
-				result = controller.createAccount(username, password, email);
+				// TODO: should we get a name now that we have added that field to the user class
+				result = controller.createAccount(username, null, password, email);
 				
 				if(!result)
 				{

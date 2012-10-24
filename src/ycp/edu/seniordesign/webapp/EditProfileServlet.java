@@ -52,7 +52,7 @@ private static final long serialVersionUID = 1L;
 				
 				//Nick is writing the updateUser database method
 //				if (update) {
-//					Database.getInstance().updateUser(user);
+//					User newUser = Database.getInstance().updateUser(user);
 //				}
 				
 				req.getRequestDispatcher("/view/editProfile.jsp").forward(req, resp);

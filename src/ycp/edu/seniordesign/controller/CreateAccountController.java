@@ -15,10 +15,10 @@ public class CreateAccountController
 		this.user = model;
 	}
 	
-	public Boolean createAccount(String username, String password, String email) throws SQLException, PersistenceException
+	public Boolean createAccount(String username, String name, String password, String email) throws SQLException, PersistenceException
 	{
 		System.out.println("Attempts to create an account");
-		return Database.getInstance().createAccount(username, password, email, user.STUDENT_PROFILE);
+		return Database.getInstance().createAccount(username, name, password, email, user.STUDENT_PROFILE);
 	}
 }
 
