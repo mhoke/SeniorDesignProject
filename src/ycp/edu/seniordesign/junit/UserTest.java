@@ -8,8 +8,8 @@ import ycp.edu.seniordesign.model.User;
 
 public class UserTest {
 
-	User user = new User(1, "msteppe", "Mike Steppe", "msteppe@ycp.edu" ,"password", "salt", 0, "CS", true);
-	User user2 = new User(1,"msteppe", "Mike Steppe", "msteppe@ycp.edu", "password", "salt", 2, "CS", true);
+	User user = new User(1, "msteppe", "Mike Steppe", "password", "salt", "msteppe@ycp.edu" , 0, "CS", true);
+	User user2 = new User(1,"msteppe", "Mike Steppe", "password", "msteppe@ycp.edu" ,"salt", 2, "CS", true);
 	
 	@Test
 	public void test() {

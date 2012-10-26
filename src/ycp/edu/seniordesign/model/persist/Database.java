@@ -132,13 +132,14 @@ public class Database {
 	/**
 	 * Create an account in the user table
 	 * @param username the username of the new account
+	 * @param name the name of the new user
 	 * @param password the plain-text password of the new account
 	 * @param emailAddress the emailAddress of the new account
 	 * @param type the type of the new account (1 for student, 2 for professor, 3 for both)
-	 * @return false if a username with the username already exists, true if the account is successfully created
+	 * @return the id of the newly inserted row, or -1 if the createAccount failed
 	 * @throws SQLException
 	 */
-	public boolean createAccount(String username, String name, String password, String emailAddress, int type) throws SQLException{
+	public int createAccount(String username, String name, String password, String emailAddress, int type) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -157,7 +158,7 @@ public class Database {
 			 
 			if (resultSet.next()){
 				// the username is already taken
-				return false;
+				return -1;
 			}
 			
 			// generate random salt and hash password
@@ -173,8 +174,14 @@ public class Database {
 			statement.setString(5, emailAddress);
 			statement.setInt(6, type);
 			statement.execute();
-						
-			return true;
+			
+			// get the id of the newly inserted row
+			statement = connection.prepareStatement("select * from users where username=?");
+			statement.setString(1, username);
+			resultSet = statement.executeQuery();
+			
+			resultSet.next();
+			return resultSet.getInt(1);
 		} finally {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
@@ -705,15 +712,17 @@ public class Database {
 		}
 	}
 	
-	public boolean changePassword(User user) throws Exception{
+	public boolean changePassword(User user, String newPassword) throws Exception{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);		
 			
-			statement = connection.prepareStatement("update users set hashedPassword=? where id=?");  
-			statement.setString(1,  user.getPassword());
+			String hashedPassword = HashPassword.computeHash(newPassword, user.getSalt());
+			
+			statement = connection.prepareStatement("update users set password=? where id=?");  
+			statement.setString(1,  hashedPassword);
 			statement.setInt(2, user.getId());
 			
 			int rowsUpdated = statement.executeUpdate();

@@ -35,7 +35,7 @@ public class CreateAccountServlet extends HttpServlet
 		
 		String errorMessage = null;
 		
-		boolean result = false;
+		int result = -1;
 
 		if(req.getParameter("createButton") != null)
 		{
@@ -43,9 +43,9 @@ public class CreateAccountServlet extends HttpServlet
 			try
 			{
 				// TODO: should we get a name now that we have added that field to the user class
-				result = controller.createAccount(username, null, password, email);
+				result = controller.createAccount(username, " ", password, email);
 				
-				if(!result)
+				if(result == -1)
 				{
 					errorMessage = "Create Account failed";
 				}

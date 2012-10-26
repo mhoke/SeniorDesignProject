@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -12,22 +13,32 @@ import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.model.persist.Database;
+import ycp.edu.seniordesign.util.HashPassword;
 
 public class DatabaseTest {
-	
-	User testStudent = new User(999999, "username", "Username", "password", "salt", "emailAddress", User.STUDENT_PROFILE, "CS", true);
-	User testProfessor = new User(999999, "testProfessor", "Test Professor",  "password", "salt", "emailAddress", User.PROFESSOR_PROFILE, "None", true);
+	String testSalt = HashPassword.generateRandomSalt(new Random());
+	String testPassword = HashPassword.computeHash("password", testSalt);
+	User testStudent = new User(999999, "username", "Test Student", testPassword, testSalt, "emailAddress", User.STUDENT_PROFILE, "CS", true);
+	User testProfessor = new User(999999, "testProfessor", "Test Professor",  testPassword, testSalt, "emailAddress", User.PROFESSOR_PROFILE, "None", true);
 	Course testCourse = new Course(999999, "Calc", testProfessor.getId(), "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
 	EnrolledCourse testEnrolledCourse = new EnrolledCourse(999999, testStudent.getId(), testProfessor.getId(), testCourse.getId(), 100);
 	Assignment testAssignment = new Assignment(999999, testCourse.getId(), testStudent.getId(), "Homework #1", new Date(112, 8, 1), 1, 20, 20);
 	
 	@Test
 	// This method  tests operations associated with the users table (createAccount, authenticate user, etc.)
-	public void testUserOperations() throws SQLException {
-		assertTrue(Database.getInstance().createAccount(testStudent.getUsername(), testStudent.getName(), testStudent.getPassword(), testStudent.getEmailAddress(), testStudent.getType()));
+	public void testUserOperations() throws Exception {
+		int id = Database.getInstance().createAccount(testStudent.getUsername(), testStudent.getName(), testStudent.getPassword(), testStudent.getEmailAddress(), testStudent.getType());
+		assertTrue(id != -1);
+		testStudent.setId(id);
 		assertTrue(Database.getInstance().authenticateUser(testStudent.getUsername(), testStudent.getPassword()) != null);
-		assertFalse(Database.getInstance().createAccount(testStudent.getUsername(), testStudent.getName(), testStudent.getPassword(), testStudent.getEmailAddress(), testStudent.getType()));
-		assertTrue(Database.getInstance().deleteAccount(testStudent.getUsername(), testStudent.getPassword()));
+		assertTrue(Database.getInstance().createAccount(testStudent.getUsername(), testStudent.getName(), testStudent.getPassword(), testStudent.getEmailAddress(), testStudent.getType()) == -1);
+		assertEquals(Database.getInstance().getUserByUsername(testStudent.getUsername()).getEmailAddress(), testStudent.getEmailAddress());
+		assertEquals(Database.getInstance().getUserByEmail(testStudent.getEmailAddress()).getName(), testStudent.getName());
+		testStudent = Database.getInstance().getUserById(id);
+		testSalt = testStudent.getSalt();
+		assertTrue(Database.getInstance().changePassword(testStudent, "newPassword"));
+		testStudent.setPassword(HashPassword.computeHash("newPassword", testStudent.getSalt()));
+		assertTrue(Database.getInstance().deleteAccount(testStudent.getUsername(), "newPassword"));
 	}
 	
 	@Test

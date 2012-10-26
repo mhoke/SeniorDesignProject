@@ -35,7 +35,7 @@ public class User {
 	}
 	
 
-	public User(int id, String username, String name, String emailAddress, String password, String salt, int type, String major, boolean commuter){
+	public User(int id, String username, String name, String password, String salt, String emailAddress, int type, String major, boolean commuter){
 		this.id = id;
 		this.username = username;
 		this.name = name;
