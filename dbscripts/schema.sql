@@ -1,3 +1,5 @@
+/*TODO Add the drop table statements here*/
+
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
   course_id INTEGER NOT NULL,
@@ -41,6 +43,7 @@ CREATE CACHED TABLE Enrolled_Courses (
 CREATE CACHED TABLE Users (
 	id INTEGER IDENTITY, 
 	username VARCHAR(80) NOT NULL,
+	name VARCHAR(80) NOT NULL,
 	password VARCHAR(32) NOT NULL,
 	salt VARCHAR(16) NOT NULL,
 	emailAddress VARCHAR(80) NOT NULL,
@@ -75,13 +78,13 @@ INSERT INTO Buildings values(NULL, 'NESC');
 
 /* Test data*/
 /* The password for all the test users is "password"*/
-INSERT INTO Users values(NULL,'TestStudent', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1, 'CS', true);
-INSERT INTO Users values(NULL,'TestProfessor', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false);
-INSERT INTO Users values(NULL,'TestBoth', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true);
-INSERT INTO Users values(NULL,'msteppe', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'msteppe@whiteboard.org', 1, 'CS', false);
-INSERT INTO Users values(NULL,'mhoke', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'mhoke@whiteboard.org', 1, 'CS', true);
-INSERT INTO Users values(NULL,'pvo', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'pvo@whiteboard.org', 1, 'CS', false);
-INSERT INTO Users values(NULL,'nbrady', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'nbrady@whiteboard.org', 1, 'CS', true);
+INSERT INTO Users values(NULL,'TestStudent', 'John Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1, 'CS', true);
+INSERT INTO Users values(NULL,'TestProfessor', 'Bill Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false);
+INSERT INTO Users values(NULL,'TestBoth', 'Ron John', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true);
+INSERT INTO Users values(NULL,'msteppe', 'Mike Steppe', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'msteppe@whiteboard.org', 1, 'CS', false);
+INSERT INTO Users values(NULL,'mhoke', 'Mike Hoke', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'mhoke@whiteboard.org', 1, 'CS', true);
+INSERT INTO Users values(NULL,'pvo', 'Paul Vo', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'pvo@whiteboard.org', 1, 'CS', false);
+INSERT INTO Users values(NULL,'nbrady', 'Nick Brady', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'nbrady@whiteboard.org', 1, 'CS', true);
 
 INSERT INTO Courses values(NULL, 'Calculus I', 1, '12:00-12:50', 101, 101, 4, 'MWF', 'CHM 223', 99999, 'This is a calculus I class.');
 INSERT INTO Courses values(NULL, 'CPADS', 1, '1:00-2:40', 101, 101, 4, 'WF', 'CS 119', 88888, 'This is a CPADS class.');
