@@ -7,8 +7,12 @@
 	<head>
 		<title>Admin - Add Course</title>
 		
-		<script type="text/javascript" src="/static/js/jquery-validate-1.8.1.js"></script>
-		
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+
+		<style type="text/css">
+			label.error {color: red;}
+		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
 			  	$("#addCourseForm").validate();
@@ -21,20 +25,20 @@
 		<a href="/Whiteboard/admin/approveCourse">Add Course</a> <br />
 		<a href="/Whiteboard/admin/login">Logout</a> <p />
 		
-		<form id="addCourseForm" action="" method="get">
+		<form id="addCourseForm" action="${pageContext.servletContext.contextPath}/admin/approveCourse" method="post">
 			<input type="hidden" name="submitted" value="true" />
 	
 			<table>
-				<tr><td>Course Name:</td><td><input type="text" name="courseName" size="25"/></td></tr>
-				<tr><td>Professor Id:</td><td><input type="text" class="required" name="professorId" size="25" /></td></tr>
-				<tr><td>Time:</td><td><input type="text" name="time" size="25" /></td></tr>
-				<tr><td>Course Number:</td><td><input type="text" name="courseNumber" size="25" /></td></tr>
-				<tr><td>Section Number:</td><td><input type="text" name="sectionNumber" size="25" /></td></tr>
-				<tr><td>Credits:</td><td><input type="text" name="credits" size="25" /></td></tr>
-				<tr><td>Days:</td><td><input type="text" name="days" size="25" /></td></tr>
-				<tr><td>Location:</td><td><input type="text" name="location" size="25" /></td></tr>
-				<tr><td>CRN:</td><td><input type="text" name="CRN" size="25" /></td></tr>
-				<tr><td>Description:</td><td><input type="text" name="description" size="25" /></td></tr>
+				<tr><td>Course Name:</td><td><input type="text" class="required" name="courseName" size="25"/></td></tr>
+				<tr><td>Professor Id:</td><td><input type="text" class="required digits" name="professorId" size="25" /></td></tr>
+				<tr><td>Time:</td><td><input type="text" class="required" name="time" size="25" /></td></tr>
+				<tr><td>Course Number:</td><td><input type="text" class="required digits" name="courseNumber" minlength="3" maxlength="3" size="25" /></td></tr>
+				<tr><td>Section Number:</td><td><input type="text" class="required digits" name="sectionNumber" minlength="3" maxlength="3" size="25" /></td></tr>
+				<tr><td>Credits:</td><td><input type="text" class="required digits" name="credits" minlength="1" maxlength="1"size="25" /></td></tr>
+				<tr><td>Days:</td><td><input type="text" class="required" name="days" size="25" /></td></tr>
+				<tr><td>Location:</td><td><input type="text" class="required" name="location" size="25" /></td></tr>
+				<tr><td>CRN:</td><td><input type="text" class="required" name="CRN" maxlength="5" size="25" /></td></tr>
+				<tr><td>Description:</td><td><input type="text"  class="required" name="description" size="25" /></td></tr>
 				<tr><td><input name="addCourseButton" type="submit" value="Add Course" /></td>
 			</table>
 		</form>
