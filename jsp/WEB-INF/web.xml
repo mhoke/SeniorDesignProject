@@ -47,6 +47,11 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.EditProfileServlet</servlet-class>
 </servlet>
 
+<servlet>
+	<servlet-name>ChangePasswordServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.ChangePasswordServlet</servlet-class>
+</servlet>
+
 <!-- Servlet Mappings -->
 
 <servlet-mapping>
@@ -80,6 +85,10 @@
 <servlet-mapping>
 	<servlet-name>EditProfileServlet</servlet-name>
 	<url-pattern>editProfile</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>ChangePasswordServlet</servlet-name>
+	<url-pattern>changePassword</url-pattern>
 </servlet-mapping>
 
 </web-app>

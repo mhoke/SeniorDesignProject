@@ -711,7 +711,7 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 			
-			statement = connection.prepareStatement("update users set emailaddress =?, major =?, resident =? where id =?");
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =? where id =?");
 			statement.setString(1, user.getEmailAddress());
 			statement.setString(2, user.getMajor());
 			statement.setBoolean(3, user.isCommuter());
