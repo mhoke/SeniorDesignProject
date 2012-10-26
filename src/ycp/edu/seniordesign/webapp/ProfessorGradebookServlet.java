@@ -2,6 +2,7 @@ package ycp.edu.seniordesign.webapp;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,10 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ycp.edu.seniordesign.controller.GradebookController;
+import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.User;
 
-public class StudentGradebookServlet extends HttpServlet
+public class ProfessorGradebookServlet extends HttpServlet 
 {
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -24,7 +30,7 @@ public class StudentGradebookServlet extends HttpServlet
 		
 		else
 		{
-			req.getRequestDispatcher("/view/studentGradebook.jsp").forward(req, resp);
+			req.getRequestDispatcher("/view/professorGradebook.jsp").forward(req, resp);
 		}
 	}
 	
@@ -47,12 +53,19 @@ public class StudentGradebookServlet extends HttpServlet
 			try 
 			{
 				req.getSession().setAttribute("course", controller.getCourse(courseID));
-				req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID));
+				ArrayList<Assignment> temp = controller.getProfessorAssignments(courseID);
+				for(Assignment a : temp)
+				{
+					req.getSession().setAttribute(a.getName(), controller.getInstancesofAssignment(a.getCourseId()));
+				}
+				req.getSession().setAttribute("assignments", temp);
+				req.getSession().setAttribute("names", controller.linkStudentNames(temp));
 			} 
-			catch (SQLException e)
+			catch (SQLException e) 
 			{
 				e.printStackTrace();
 			}
 		}
 	}
+
 }
