@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet
 				if(result == null)
 				{ 
 					errorMessage = "Login failed";
+					req.setAttribute("errorMessage", errorMessage);	
 					req.getRequestDispatcher("/view/login.jsp").forward(req, resp);
 				}
 				else
@@ -58,6 +59,7 @@ public class LoginServlet extends HttpServlet
 					
 					System.out.println(result.getUsername());
 					
+					req.setAttribute("errorMessage", errorMessage);	
 					req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
 				}
 			}
@@ -72,8 +74,6 @@ public class LoginServlet extends HttpServlet
 		{
 			System.out.println("Registering a new account");
 			req.getRequestDispatcher("/view/createAccount.jsp").forward(req, resp);
-		}
-		
-		req.setAttribute("errorMessage", errorMessage);		
+		}	
 	}
 }

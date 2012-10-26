@@ -20,7 +20,7 @@
 	
 	<body style="background-color:#003366">
 		<c:if test="${!empty errorMessage }">
-			<div class="error">${errorMessage }</div>
+			<div class="error">${errorMessage}</div>
 		</c:if>
 		
 		<form action="${pageContext.servletContext.contextPath}/login" method="post">
@@ -38,10 +38,6 @@
 				<tr>
 					<td> <input name="loginButton" type="submit" value="Login" /></td>
 					<td> <input name="registerButton" type="submit" value="Register" /></td>
-				</tr>
-				
-				<tr>
-					<td class="error">${user.message}</td>
 				</tr>
 			</table>
 		</form>

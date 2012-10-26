@@ -806,4 +806,106 @@ public class Database {
 		}
 	}
 
+	public ArrayList<Assignment> getInstancesofAssignment(int id, String name) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try 
+		{
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from assignments where id=? and name=?");
+			statement.setInt(1,  id);
+			statement.setString(2, name);
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<Assignment> returnList = new ArrayList<Assignment>();
+
+			while (resultSet.next())
+			{
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				returnList.add(assignment);
+			}
+			
+			if(returnList.isEmpty())
+			{
+				return null;
+			}
+			return returnList;
+
+			
+		} 
+		finally 
+		{
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+			
+	}
+	
+	public ArrayList<Assignment> getInstancesofAssignment(int id) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try 
+		{
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from assignments where id=?");
+			statement.setInt(1,  id);
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<Assignment> returnList = new ArrayList<Assignment>();
+
+			while (resultSet.next())
+			{
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				returnList.add(assignment);
+			}
+			
+			if(returnList.isEmpty())
+			{
+				return null;
+			}
+			return returnList;
+
+			
+		} 
+		finally 
+		{
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void updateUser(User user) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =? where id =?");
+			statement.setString(1, user.getEmailAddress());
+			statement.setString(2, user.getMajor());
+			statement.setBoolean(3, user.isCommuter());
+			statement.setInt(4, user.getId());
+			statement.execute();
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+
+		}
+	}
 }
