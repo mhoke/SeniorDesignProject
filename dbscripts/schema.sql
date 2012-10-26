@@ -49,7 +49,7 @@ CREATE CACHED TABLE Users (
 	emailAddress VARCHAR(80) NOT NULL,
 	userType INTEGER NOT NULL,
 	major VARCHAR(80) NOT NULL,
-	resident BOOLEAN NOT NULL
+	commuter BOOLEAN NOT NULL
 );
 
 CREATE CACHED TABLE Admins (
@@ -95,5 +95,16 @@ INSERT INTO Enrolled_Courses values(NULL, 0, 1, 0, 85);
 INSERT INTO Enrolled_Courses values(NULL, 0, 2, 2, 100);
 INSERT INTO Enrolled_Courses values(NULL, 2, 1, 1, 65);
 INSERT INTO Enrolled_Courses values(NULL, 1, 1, 1, 75);
+
+INSERT INTO Assignments values(NULL, 0, 1, 'Homework 1', '2012-09-08', 1, 100, 100);
+INSERT INTO Assignments values(NULL, 0, 2, 'Homework 1', '2012-09-08', 1, 90, 100);
+INSERT INTO Assignments values(NULL, 1, 12, 'Quiz 3', '2012-12-08', 0, 45, 50);
+INSERT INTO Assignments values(NULL, 2, 20, 'Homework 6', '2015-01-06', 1, 81, 130);
+INSERT INTO Assignments values(NULL, 3, 1, 'Homework 2', '2012-01-19', 1, 7, 10);
+INSERT INTO Assignments values(NULL, 3, 1, 'Test 1', '2012-05-05', 2, 112, 120);
+INSERT INTO Assignments values(NULL, 3, 1, 'Extra Credit 4', '2012-10-10', 3, 89, 100);
+INSERT INTO Assignments values(NULL, 4, 20, 'Homework 1', '2012-11-11', 1, 83, 90);
+INSERT INTO Assignments values(NULL, 5, 12, 'Homework 1', '2012-12-12', 1, 15, 17);
+
 
 INSERT INTO Admins values(NULL, 'TestAdmin', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8');

@@ -15,7 +15,7 @@
 			<c:if test="${isStudent}">
 				UserName: ${user.username} <br/>
 				Current Email Address: ${user.emailAddress} <br/>
-				<c:if test="${user.commuter}">Current Status: Commuter</c:if><c:if test="!${user.commuter}">Current Status: Resident</c:if> <br/>
+				<c:if test="${user.commuter}">Current Status: Commuter</c:if><c:if test="${!user.commuter}">Current Status: Resident</c:if> <br/>
 				Current Major: ${user.major} <br/>				
 				
 				<form action="${pageContext.servletContext.contextPath}/editProfile" method="post">
@@ -27,7 +27,11 @@
 						
 						<tr>
 							<td class="text">New Status: </td>
-							<td> <input type="text" name="newStatusBox" size="12" value="${user.commuter}" /></td>
+							<td> <input type="radio" name="commuterRadioButton" value="Commuter"/> Commuter</td>
+						</tr>
+						
+						<tr>
+							<td> <input type="radio" name="commuterRadioButton" value="Resident"/> Resident</td>
 						</tr>
 						
 						<tr>

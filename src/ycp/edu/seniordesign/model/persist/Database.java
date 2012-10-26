@@ -704,6 +704,7 @@ public class Database {
 		}
 	}
 	
+<<<<<<< HEAD
 	public ArrayList<Assignment> getInstancesofAssignment(int id, String name) throws SQLException
 	{
 		Connection connection = null;
@@ -783,6 +784,25 @@ public class Database {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
+=======
+	public void updateUser(User user) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, resident =? where id =?");
+			statement.setString(1, user.getEmailAddress());
+			statement.setString(2, user.getMajor());
+			statement.setBoolean(3, user.isCommuter());
+			statement.setInt(4, user.getId());
+			statement.execute();
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+>>>>>>> 5afc1a8e3caca206b6442a94592c78bb9f8ea192
 		}
 	}
 
