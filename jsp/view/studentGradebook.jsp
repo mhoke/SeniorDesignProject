@@ -47,15 +47,17 @@
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
 		<div class="body">
-			<table>
+			<table border="1">
 				<tr>
 					<td>${course.name}</td>
+					<td>Earned Points</td>
+					<td>Possible Points</td>
 				</tr>
 				<c:forEach var="assign" items="${assignments}">
 					<tr>
 						<td>${assign.name}</td>
-						<td>${assign.earnedPoints}</td>
-						<td>${assign.possiblePoints}</td>
+						<td align="center">${assign.earnedPoints}</td>
+						<td align="center">${assign.possiblePoints}</td>
 					</tr>
 				</c:forEach>
 			</table>

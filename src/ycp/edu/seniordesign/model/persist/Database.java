@@ -492,7 +492,8 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 						
-			statement = connection.prepareStatement("select distinct name from assignments");
+			statement = connection.prepareStatement("select distinct name from assignments where course_id=?");
+			statement.setInt(1, courseId);
 			resultSet = statement.executeQuery();
 			ArrayList<String> names = new ArrayList<String>();
 			

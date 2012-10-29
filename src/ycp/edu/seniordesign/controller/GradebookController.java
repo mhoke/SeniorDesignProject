@@ -46,7 +46,10 @@ public class GradebookController
 		for(Assignment a : assignments)
 		{
 			String name = Database.getInstance().getUserById(a.getStudentId()).getUsername();
-			returnMap.put(a.getStudentId(), name);
+			if(!returnMap.containsKey(a.getStudentId()))
+			{
+				returnMap.put(a.getStudentId(), name);
+			}
 		}
 		
 		return returnMap;

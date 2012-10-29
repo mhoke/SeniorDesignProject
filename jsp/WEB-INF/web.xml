@@ -43,6 +43,11 @@
 </servlet>
 
 <servlet>
+	<servlet-name>ProfessorGradebookServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.ProfessorGradebookServlet</servlet-class>
+</servlet>
+
+<servlet>
 	<servlet-name>EditProfileServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.EditProfileServlet</servlet-class>
 </servlet>
@@ -88,6 +93,10 @@
 <servlet-mapping>
 	<servlet-name>StudentGradebookServlet</servlet-name>
 	<url-pattern>scourse</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>ProfessorGradebookServlet</servlet-name>
+	<url-pattern>pcourse</url-pattern>
 </servlet-mapping>
 <servlet-mapping>
 	<servlet-name>EditProfileServlet</servlet-name>
