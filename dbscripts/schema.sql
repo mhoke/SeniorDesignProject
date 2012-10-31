@@ -85,6 +85,7 @@ INSERT INTO Users values(NULL,'msteppe', 'Mike Steppe', '075293660cfd83e0644b52d
 INSERT INTO Users values(NULL,'mhoke', 'Mike Hoke', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'mhoke@whiteboard.org', 1, 'CS', true);
 INSERT INTO Users values(NULL,'pvo', 'Paul Vo', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'pvo@whiteboard.org', 1, 'CS', false);
 INSERT INTO Users values(NULL,'nbrady', 'Nick Brady', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'nbrady@whiteboard.org', 1, 'CS', true);
+INSERT INTO Users values(NULL,'TestStudent2', 'Noah Moses', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'whiteboardseniordesign@gmail.com', 1, 'CS', true);
 
 INSERT INTO Courses values(NULL, 'Calculus I', 1, '12:00-12:50', 101, 101, 4, 'MWF', 'CHM 223', 99999, 'This is a calculus I class.');
 INSERT INTO Courses values(NULL, 'CPADS', 1, '1:00-2:40', 101, 101, 4, 'WF', 'CS 119', 88888, 'This is a CPADS class.');

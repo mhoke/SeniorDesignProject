@@ -27,6 +27,13 @@ public class AdminApproveCourseServlet extends HttpServlet{
 	
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		// Must be logged in as an admin to view this page
+		if (req.getSession().getAttribute("admin") == null){
+			getServletContext().getRequestDispatcher("/view/admin/login.jsp").forward(req, resp);
+		} else {
+			req.getRequestDispatcher("/view/admin/approveCourse.jsp").forward(req, resp);
+		}	
+		
 		AdminApproveCourseController controller = new AdminApproveCourseController();
 		
 		if (req.getParameter("addCourseButton") != null){
