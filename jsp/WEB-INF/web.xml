@@ -43,6 +43,11 @@
 </servlet>
 
 <servlet>
+	<servlet-name>ProfessorGradebookServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.ProfessorGradebookServlet</servlet-class>
+</servlet>
+
+<servlet>
 	<servlet-name>EditProfileServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.EditProfileServlet</servlet-class>
 </servlet>
@@ -52,10 +57,7 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.ChangePasswordServlet</servlet-class>
 </servlet>
 
-<servlet>
-	<servlet-name>CampusMapServlet</servlet-name>
-	<servlet-class>ycp.edu.seniordesign.webapp.CampusMapServlet</servlet-class>
-</servlet>
+
 <servlet>
 	<servlet-name>RecoverPassServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.RecoverPassServlet</servlet-class>
@@ -93,6 +95,10 @@
 	<url-pattern>scourse</url-pattern>
 </servlet-mapping>
 <servlet-mapping>
+	<servlet-name>ProfessorGradebookServlet</servlet-name>
+	<url-pattern>pcourse</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
 	<servlet-name>EditProfileServlet</servlet-name>
 	<url-pattern>editProfile</url-pattern>
 </servlet-mapping>
@@ -101,10 +107,7 @@
 	<url-pattern>changePassword</url-pattern>
 </servlet-mapping>
 
-<servlet-mapping>
-	<servlet-name>CampusMapServlet</servlet-name>
-	<url-pattern>campusMap</url-pattern>
-</servlet-mapping>
+
 <servlet-mapping>
 	<servlet-name>RecoverPassServlet</servlet-name>
 	<url-pattern>recoverPass</url-pattern>

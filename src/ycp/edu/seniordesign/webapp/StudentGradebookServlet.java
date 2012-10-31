@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ycp.edu.seniordesign.controller.GradebookController;
+import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.User;
 
 public class StudentGradebookServlet extends HttpServlet
@@ -48,6 +49,11 @@ public class StudentGradebookServlet extends HttpServlet
 			{
 				req.getSession().setAttribute("course", controller.getCourse(courseID));
 				req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID));
+				for(Assignment a : controller.getStudentAssignments(courseID))
+				{
+					System.out.println(a.getName());
+				}
+				
 			} 
 			catch (SQLException e)
 			{

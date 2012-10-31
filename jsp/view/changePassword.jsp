@@ -9,10 +9,14 @@
 	</head>
 	
 	<body>
-		<div class="header">${user.username}&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
+		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar"> Bus Schedule <br/> Campus Map</div>
 		<div class="body">
-			<c:if test="${isStudent}">				
+			<c:if test="${isStudent}">
+				<c:if test="${!empty errorMessage }">
+					<div class="error">${errorMessage}</div>
+				</c:if>
+							
 				<form action="${pageContext.servletContext.contextPath}/changePassword" method="post">
 					<table>
 						<tr>
