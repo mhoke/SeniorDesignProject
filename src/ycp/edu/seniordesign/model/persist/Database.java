@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
+import ycp.edu.seniordesign.model.Registration;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.util.HashPassword;
 
@@ -359,6 +361,33 @@ public class Database {
 				Assignment assignment = new Assignment();
 				assignment.loadFrom(resultSet);
 				return assignment;
+			} else {
+				return null;
+			}
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public Registration getRegistrationById(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from registrations where id=?");
+			statement.setInt(1,  id);
+			
+			resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				Registration registration = new Registration();
+				registration.loadFrom(resultSet);
+				return registration;
 			} else {
 				return null;
 			}
@@ -911,4 +940,97 @@ public class Database {
 
 		}
 	}
+	
+	/**
+	 * This method adds a new registration to the Registrations table in the database
+	 * @param username the username of the user that the registration will create
+	 * @param emailAddress the emailAddress of the user the registration will create
+	 * @param url the secret url
+	 * @return the id of the newly inserted row
+	 * @throws SQLException
+	 */
+	public int addRegistration(String username, String emailAddress, String url) throws SQLException{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		// Calculate the expiration date of the registration
+		Timestamp expiration = new Timestamp(System.currentTimeMillis() + Registration.VALID_DURATION_IN_HOURS);
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into registrations values(NULL,?,?,?,?)");
+			statement.setString(1, username);
+			statement.setString(2, emailAddress);
+			statement.setString(3, url);
+			statement.setTimestamp(4, expiration);
+			statement.execute();
+			
+			// Get the id of the registration that was just added
+			statement = connection.prepareStatement("select id from registrations where username=? and email_address=? and url=? and expiration=?");
+			statement.setString(1, username);
+			statement.setString(2, emailAddress);
+			statement.setString(3, url);
+			statement.setTimestamp(4, expiration);
+			resultSet = statement.executeQuery();
+
+			resultSet.next();
+			return resultSet.getInt(1);						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	/**
+	 * This method removes a registration from the Registrations table in the database
+	 * @param registrationId the id of the registration to remove
+	 * @return a Registration object representing the row that was removed
+	 * @throws Exception 
+	 */
+	public Registration removeRegistration(int registrationId) throws Exception{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Registration registration = new Registration();
+		
+		// Calculate the expiration date of the registration
+		Timestamp expiration = new Timestamp(System.currentTimeMillis() + Registration.VALID_DURATION_IN_HOURS);
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from registrations where id=?");
+			statement.setInt(1, registrationId);
+			resultSet = statement.executeQuery();
+			
+			if (resultSet == null){
+				// No registration was found with the given id
+				return null;
+			} else {
+				resultSet.next();
+				registration.loadFrom(resultSet);
+			}
+			if (resultSet.next()){
+				// multiple matches for the registrationId
+				throw new Exception("Multiple registrations with the same id (should not happen)");
+			} else{
+				// delete the registration
+				statement = connection.prepareStatement("delete from registrations where id=?");
+				statement.setInt(1, registrationId);
+				statement.execute();
+				return registration;
+			}
+
+				
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+		
 }
