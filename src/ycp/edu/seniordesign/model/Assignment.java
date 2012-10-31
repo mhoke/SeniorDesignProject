@@ -112,8 +112,8 @@ public class Assignment {
 		setName(resultSet.getString(index++));
 		setDueDate(resultSet.getDate(index++));
 		setGradeWeightType(resultSet.getInt(index++));
-		setEarnedPoints(index++);
-		setPossiblePoints(index++);
+		setEarnedPoints(resultSet.getInt(index++));
+		setPossiblePoints(resultSet.getInt(index++));
 	}
 	
 	/**
