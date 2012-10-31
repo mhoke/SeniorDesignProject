@@ -38,6 +38,7 @@
 				<tr>
 					<td> <input name="loginButton" type="submit" value="Login" /></td>
 					<td> <input name="registerButton" type="submit" value="Register" /></td>
+					<td> <input name="recoverPassButton" type="submit" value="Recover" /></td>
 				</tr>
 			</table>
 		</form>

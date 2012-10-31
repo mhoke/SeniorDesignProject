@@ -72,6 +72,12 @@ public class LoginServlet extends HttpServlet
 		{
 			System.out.println("Registering a new account");
 			req.getRequestDispatcher("/view/createAccount.jsp").forward(req, resp);
-		}	
+		}
+		
+		else if(req.getParameter("recoverPassButton") != null)
+		{
+			System.out.println("Recovering Password");
+			req.getRequestDispatcher("/view/recoverPass.jsp").forward(req, resp);
+		}
 	}
 }
