@@ -515,6 +515,7 @@ public class Database {
 			if (assignments.isEmpty()){
 				return null;
 			}
+			
 			return assignments;
 			
 		} finally {
