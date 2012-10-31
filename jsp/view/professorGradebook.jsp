@@ -10,15 +10,39 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 		
 		<script>
-			function onButtonPress()
-			{
+		var id;
+		
+		$(document).ready(			
+		function()
+		{
+			var whole = window.location.search.substring(1);
+			var pair = whole.split("=");
+			
+			if(pair[0] == 'id')
+			{				
+				id = pair[1];
+				
 				$.ajax({
-					
-					
-					
+					type: 'POST',
+					url: '/Whiteboard/pcourse',
+					data: {id: ''+id},
+					success:
+						function(data, textStatus, jqXHR)
+						{
+							location.href = '/Whiteboard/pcourse';
+						},
+					error:
+						function(jqXHR, textStatus, errorThrown)
+						{
+							alert("We are hosed");
+						},
+					dataType: 'json'
 				});
 			}
-			
+		});
+		</script>
+		
+		<script>
 			function hide(var id)
 			{
 				document.getElementById('id').style.visibility = "hidden";
@@ -38,7 +62,7 @@
 		<div class="body">
 			<table>
 				<tr>
-					<td>${course.name}</td>
+					<td align="center">${course.name}</td>
 				</tr>
 				<c:forEach var="assign" items="${assignments}">
 					<tr>
@@ -46,14 +70,23 @@
 					</tr>
 					<tr>
 						<td>					
-							<table id="${assign.name}">
+							<table id="${assign.name}" border="1" style="text-align:center; margin-left:auto; margin-right:auto">
 								<tr>
-									<td>Student Name</td>
-									<td>Due Date</td>
-									<td>Weight</td>
-									<td>Earned Points</td>
-									<td>Possible Points</td>
+									<td align="center">Student Name</td>
+									<td align="center">Due Date</td>
+									<td align="center">Weight</td>
+									<td align="center">Earned Points</td>
+									<td align="center">Possible Points</td>
 								</tr>
+								<c:forEach var="name" items="${names}">
+									<tr>
+										<td align="center">Name will go here</td>
+										<td align="center">${assign.dueDate}</td>
+										<td align="center">${assign.gradeWeightType}</td>
+										<td align="center">${assign.earnedPoints}</td>
+										<td align="center">${assign.possiblePoints}</td>
+									</tr>	
+								</c:forEach>
 							</table>
 						</td>
 					</tr>
