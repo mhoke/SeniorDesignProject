@@ -1,6 +1,4 @@
-/*TODO Add the drop table statements here
- * Password for all users is password
- */
+/* Password for all users is password */
 DROP table admins;
 DROP table assignments;
 DROP table buildings;
@@ -8,6 +6,7 @@ DROP table courses;
 DROP table enrolled_courses;
 DROP table grade_weights;
 DROP table users;
+DROP table registrations;
 
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
@@ -71,6 +70,14 @@ CREATE CACHED TABLE Admins (
 CREATE CACHED TABLE Buildings (
 	id INTEGER IDENTITY,
 	building_name VARCHAR(80) NOT NULL
+);
+
+CREATE CACHED TABLE Registrations (
+	id INTEGER IDENTITY, 
+	username VARCHAR(80) NOT NULL,
+	email_address VARCHAR(80) NOT NULL,
+	url VARCHAR(80) NOT NULL,
+	expiration TIMESTAMP NOT NULL
 );
 
 /* Run this after creating all the tables*/
