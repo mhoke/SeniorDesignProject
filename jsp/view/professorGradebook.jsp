@@ -40,37 +40,41 @@
 				});
 			}
 		});
-		</script>
-		
-		<script>
-			function hide(var id)
-			{
-				document.getElementById('id').style.visibility = "hidden";
-			}
-			
-			function show(var id)
-			{
-				document.getElementById('id').style.visibility = "visible";
-			}
-		</script>
-		
+		</script>		
 	</head>
 	
 	<body>
+		<script type="text/javascript">
+			function Switch(id)
+			{
+				var v = document.getElementById(id);
+				if(v.style.display == 'block')
+				{
+					v.style.display = 'none';	
+				}
+				else
+				{
+					v.style.display = 'block';
+				}
+			}
+		</script>
+			
+		<% int counter = 0; %>
+	
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
 		<div class="body">
-			<table>
+			<table style="width:100%">
 				<tr>
 					<td align="center">${course.name}</td>
 				</tr>
 				<c:forEach var="assign" items="${assignments}">
 					<tr>
-						<td><button id="${assign.name}">${assign.name}</button></td>
+						<td><button onclick="Switch(<%=counter%>)" id="${assign.name}">${assign.name}</button></td>
 					</tr>
 					<tr>
 						<td>					
-							<table id="${assign.name}" border="1" style="text-align:center; margin-left:auto; margin-right:auto">
+							<table id="<%=counter%>" border="1" style="text-align:center; display:none;">
 								<tr>
 									<td align="center">Student Name</td>
 									<td align="center">Due Date</td>
@@ -90,6 +94,7 @@
 							</table>
 						</td>
 					</tr>
+					<% counter ++; %>
 				</c:forEach>
 			</table>
 		</div>

@@ -37,6 +37,7 @@
 			{
 				width:50%;
 				height:100%;
+				overflow:auto;
 				float:left;
 				text-align:center;
 				background-color:#00FF00;
