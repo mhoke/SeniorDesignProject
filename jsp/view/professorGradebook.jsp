@@ -64,10 +64,8 @@
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
 		<div class="body">
-			<table style="width:100%">
-				<tr>
-					<td align="center">${course.name}</td>
-				</tr>
+			<div align="center">${course.name}</div>
+			<table>
 				<c:forEach var="assign" items="${assignments}">
 					<tr>
 						<td><button onclick="Switch(<%=counter%>)" id="${assign.name}">${assign.name}</button></td>
@@ -84,7 +82,7 @@
 								</tr>
 								<c:forEach var="name" items="${names}">
 									<tr>
-										<td align="center">Name will go here</td>
+										<td align="center">${name.value}</td>
 										<td align="center">${assign.dueDate}</td>
 										<td align="center">${assign.gradeWeightType}</td>
 										<td align="center">${assign.earnedPoints}</td>

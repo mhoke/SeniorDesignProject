@@ -107,8 +107,8 @@ public class Assignment {
 	public void loadFrom(ResultSet resultSet) throws SQLException {
 		int index = 1;
 		setId(resultSet.getInt(index++));
-		setCourseId(index++);
-		setStudentId(index++);
+		setCourseId(resultSet.getInt(index++));
+		setStudentId(resultSet.getInt(index++));
 		setName(resultSet.getString(index++));
 		setDueDate(resultSet.getDate(index++));
 		setGradeWeightType(resultSet.getInt(index++));
