@@ -59,4 +59,9 @@ public class GradebookController
 	{
 		return Database.getInstance().getInstancesofAssignment(id);
 	}
+	
+	public void updateAssignment(Assignment assign) throws SQLException
+	{
+		Database.getInstance().updateAssignment(assign);
+	}
 }

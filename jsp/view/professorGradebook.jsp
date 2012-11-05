@@ -7,40 +7,7 @@
 	<head>
 		<Title>Gradebook</Title>
 		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-		
-		<script>
-		var id;
-		
-		$(document).ready(			
-		function()
-		{
-			var whole = window.location.search.substring(1);
-			var pair = whole.split("=");
-			
-			if(pair[0] == 'id')
-			{				
-				id = pair[1];
-				
-				$.ajax({
-					type: 'POST',
-					url: '/Whiteboard/pcourse',
-					data: {id: ''+id},
-					success:
-						function(data, textStatus, jqXHR)
-						{
-							location.href = '/Whiteboard/pcourse';
-						},
-					error:
-						function(jqXHR, textStatus, errorThrown)
-						{
-							alert("We are hosed");
-						},
-					dataType: 'json'
-				});
-			}
-		});
-		</script>		
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>	
 	</head>
 	
 	<body>
@@ -65,36 +32,43 @@
 		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
 		<div class="body">
 			<div align="center">${course.name}</div>
-			<table>
-				<c:forEach var="assign" items="${assignments}">
-					<tr>
-						<td><button onclick="Switch(<%=counter%>)" id="${assign.name}">${assign.name}</button></td>
-					</tr>
-					<tr>
-						<td>					
-							<table id="<%=counter%>" border="1" style="text-align:center; display:none;">
-								<tr>
-									<td align="center">Student Name</td>
-									<td align="center">Due Date</td>
-									<td align="center">Weight</td>
-									<td align="center">Earned Points</td>
-									<td align="center">Possible Points</td>
-								</tr>
-								<c:forEach var="name" items="${names}">
+			<c:if test="${!empty errorMessage }">
+					<div class="error" align="left">${errorMessage}</div>
+				</c:if>
+			<form action="${pageContext.servletContext.contextPath}/pcourse" method="post">
+				<table>
+					<c:forEach var="assign" items="${assignments}">
+						<tr>
+							<td><button type="button" onclick="Switch(<%=counter%>)" id="${assign.name}">${assign.name}</button></td>
+						</tr>
+						<tr>
+							<td>					
+								<table id="<%=counter%>" border="1" style="text-align:center; display:none;">
 									<tr>
-										<td align="center">${name.value}</td>
-										<td align="center">${assign.dueDate}</td>
-										<td align="center">${assign.gradeWeightType}</td>
-										<td align="center">${assign.earnedPoints}</td>
-										<td align="center">${assign.possiblePoints}</td>
-									</tr>	
-								</c:forEach>
-							</table>
-						</td>
-					</tr>
-					<% counter ++; %>
-				</c:forEach>
-			</table>
+										<td align="center">Student Name</td>
+										<td align="center">Due Date</td>
+										<td align="center">Weight</td>
+										<td align="center">Earned Points</td>
+										<td align="center">Possible Points</td>
+									</tr>
+									<c:forEach var="name" items="${names}">
+										<tr>
+											<td align="center">${name.value}</td>
+											<td align="center">${assign.dueDate}</td>
+											<td><input type="text" name="Weight<%=counter%>" size="12" value="${assign.gradeWeightType}" /></td>
+											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assign.earnedPoints}" /></td>
+											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assign.possiblePoints}" /></td>
+										</tr>	
+									</c:forEach>
+								</table>
+							</td>
+						</tr>
+						<% counter ++; %>
+					</c:forEach>
+					<% request.getSession().setAttribute("counter", counter); %>
+				</table>
+				<div align="right"><input name="updateGrades" type="submit" value="Update Grades"/></div>
+			</form>
 		</div>
 		<div class="rightSidebar">
 			<c:if test="${isStudent}">
