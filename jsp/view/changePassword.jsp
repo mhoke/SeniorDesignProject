@@ -6,6 +6,15 @@
 
 	<head>
 		<Title>Change Password</Title>
+		
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+			  	$("#changePasswordForm").validate();
+			});
+		</script>
 	</head>
 	
 	<body>
@@ -17,21 +26,21 @@
 					<div class="error">${errorMessage}</div>
 				</c:if>
 							
-				<form action="${pageContext.servletContext.contextPath}/changePassword" method="post">
+				<form id ="changePasswordForm" action="${pageContext.servletContext.contextPath}/changePassword" method="post">
 					<table>
 						<tr>
 							<td class="text">Old Password: </td>
-							<td> <input type="password" name="oldPasswordBox" size="12" value="${password}" /></td>
+							<td> <input class="required" type="password" name="oldPasswordBox" size="12" value="${password}" /></td>
 						</tr>
 						
 						<tr>
 							<td class="text">New Password: </td>
-							<td> <input type="password" name="newPasswordBox" size="12" value="${password}" /></td>
+							<td> <input id="newPasswordBox" class="required" type="password" name="newPasswordBox" size="12" value="${password}" minlength="8"/></td>
 						</tr>
 						
 						<tr>
 							<td class="text">Confirm New Password: </td>
-							<td> <input type="password" name="confirmNewPasswordBox" size="12" value="${password}" /></td>
+							<td> <input name="confirmNewPasswordBox" class="required" type="password" name="confirmNewPasswordBox" size="12" value="${password}" minlength="8" /></td>
 						</tr>
 						
 						<tr>
