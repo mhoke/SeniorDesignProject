@@ -991,7 +991,7 @@ public class Database {
 	 * @return a Registration object representing the row that was removed
 	 * @throws Exception 
 	 */
-	public Registration removeRegistration(int registrationId) throws Exception{
+	public Registration removeRegistration(String url) throws Exception{
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -1004,8 +1004,8 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);			
 			
-			statement = connection.prepareStatement("select * from registrations where id=?");
-			statement.setInt(1, registrationId);
+			statement = connection.prepareStatement("select * from registrations where url=?");
+			statement.setString(1, url);
 			resultSet = statement.executeQuery();
 			
 			if (resultSet == null){
@@ -1020,8 +1020,8 @@ public class Database {
 				throw new Exception("Multiple registrations with the same id (should not happen)");
 			} else{
 				// delete the registration
-				statement = connection.prepareStatement("delete from registrations where id=?");
-				statement.setInt(1, registrationId);
+				statement = connection.prepareStatement("delete from registrations where url=?");
+				statement.setString(1, url);
 				statement.execute();
 				return registration;
 			}
@@ -1057,6 +1057,58 @@ public class Database {
 		{
 			DBUtil.close(conn);
 			DBUtil.closeQuietly(stmt);
+		}
+	}
+	public Registration getRegistrationCode(String url) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select * from registrations where url=?");
+			statement.setString(1,  url);
+			
+			resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				Registration registration = new Registration();
+				registration.loadFrom(resultSet);
+				return registration;
+			} else {
+				return null;
+			}
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public int getGradeWeightForAssignment(int assignmentId) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("select weight from grade_weights where id=?");
+			statement.setInt(1,  assignmentId);
+			
+			resultSet = statement.executeQuery();
+			
+			if (resultSet.next()){
+				return resultSet.getInt(1);	
+			} else {
+				return -1;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 		
