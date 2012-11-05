@@ -45,7 +45,7 @@ public class GradebookController
 		
 		for(Assignment a : assignments)
 		{
-			String name = Database.getInstance().getUserById(a.getStudentId()).getUsername();
+			String name = Database.getInstance().getUserById(a.getStudentId()).getName();
 			if(!returnMap.containsKey(a.getStudentId()))
 			{
 				returnMap.put(a.getStudentId(), name);
@@ -58,5 +58,10 @@ public class GradebookController
 	public ArrayList<Assignment> getInstancesofAssignment(int id) throws SQLException
 	{
 		return Database.getInstance().getInstancesofAssignment(id);
+	}
+	
+	public void updateAssignment(Assignment assign) throws SQLException
+	{
+		Database.getInstance().updateAssignment(assign);
 	}
 }

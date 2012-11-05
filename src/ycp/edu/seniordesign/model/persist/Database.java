@@ -1,6 +1,7 @@
 package ycp.edu.seniordesign.model.persist;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1030,6 +1031,32 @@ public class Database {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public void updateAssignment(Assignment assign) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("UPDATE ASSIGNMENTS SET grade_weight_type=?, earned_points=?, possible_points=? WHERE name=? AND student_id=?");
+			
+			stmt.setInt(1, assign.getGradeWeightType());
+			stmt.setInt(2, assign.getEarnedPoints());
+			stmt.setInt(3, assign.getPossiblePoints());
+			stmt.setString(4, assign.getName());
+			stmt.setInt(5, assign.getStudentId());
+			
+			stmt.executeUpdate();
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
 		}
 	}
 		
