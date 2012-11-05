@@ -1,3 +1,6 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <html>
 
 	<head>
@@ -63,7 +66,6 @@
 				background-color:#000000;
 			}
 		</style>
-	</head>
 	</head>
 	
 	<body background = "https://cas.ycp.edu/cas/images/cas-bg.jpg">
