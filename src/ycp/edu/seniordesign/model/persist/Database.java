@@ -1051,8 +1051,6 @@ public class Database {
 			stmt.setString(4, assign.getName());
 			stmt.setInt(5, assign.getStudentId());
 			
-			System.out.println(stmt);
-			
 			stmt.executeUpdate();
 		}
 		finally
