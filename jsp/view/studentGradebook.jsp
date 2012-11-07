@@ -6,50 +6,15 @@
 
 	<head>
 		<Title>Gradebook</Title>
-		
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-		
-		<script type="text/javascript">
-			var id;
-		
-			$(document).ready(			
-			function()
-			{
-				var whole = window.location.search.substring(1);
-				var pair = whole.split("=");
-				
-				if(pair[0] == 'id')
-				{				
-					id = pair[1];
-					
-					$.ajax({
-						type: 'POST',
-						url: '/Whiteboard/scourse',
-						data: {id: ''+id},
-						success:
-							function(data, textStatus, jqXHR)
-							{
-								location.href = '/Whiteboard/scourse';
-							},
-						error:
-							function(jqXHR, textStatus, errorThrown)
-							{
-								alert("We are hosed");
-							},
-						dataType: 'json'
-					});
-				}
-			});
-		</script>
 	</head>
 	
 	<body>
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
-		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
+		<div class="leftSidebar">Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
 		<div class="body">
 			<div style="text-align:center">${course.name}</div>
 			<br/>
-			<table border="1" style="text-align:center; margin-left:auto; margin-right:auto">
+			<table border="1" style="text-align:center; margin-left:auto; margin-right:auto; empty-cells:hide;">
 				<tr>
 					<td>Assignment</td>
 					<td>Due Date</td>
@@ -64,6 +29,10 @@
 						<td align="center">${assign.possiblePoints}</td>
 					</tr>
 				</c:forEach>
+				<tr>
+					<td colspan="3" align="center">Course Average: </td>
+					<td>${grade}</td>
+				</tr>
 			</table>
 		</div>
 		<div class="rightSidebar">

@@ -1,4 +1,6 @@
-/* Password for all users is password */
+/* Password for all users is password 
+ * Every student in every course MUST have an entry in the enrolled_courses table
+ * */
 DROP table admins;
 DROP table assignments;
 DROP table buildings;

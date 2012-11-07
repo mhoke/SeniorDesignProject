@@ -63,6 +63,11 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.RecoverPassServlet</servlet-class>
 </servlet>
 
+<servlet>
+	<servlet-name>CampusMapServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.CampusMapServlet</servlet-class>
+</servlet>
+
 
 <!-- Servlet Mappings -->
 
@@ -111,6 +116,10 @@
 <servlet-mapping>
 	<servlet-name>RecoverPassServlet</servlet-name>
 	<url-pattern>recoverPass</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>CampusMapServlet</servlet-name>
+	<url-pattern>campusMap</url-pattern>
 </servlet-mapping>
 
 </web-app>

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import ycp.edu.seniordesign.controller.GradebookController;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.User;
+import ycp.edu.seniordesign.model.persist.Database;
 
 public class StudentGradebookServlet extends HttpServlet
 {
@@ -25,39 +26,51 @@ public class StudentGradebookServlet extends HttpServlet
 		
 		else
 		{
-			req.getRequestDispatcher("/view/studentGradebook.jsp").forward(req, resp);
-		}
-	}
-	
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
-		User user = (User) req.getSession().getAttribute("user");
-		
-		if(user == null)
-		{
-			req.getRequestDispatcher("/view/login.jsp");
-		}
-		GradebookController controller = new GradebookController();
-		
-		controller.setModel(user);
-		resp.setContentType("application/json");
-		
-		if(!req.getParameter("id").equals("undefined"))
-		{
-			int courseID = Integer.parseInt(req.getParameter("id"));
-			try 
+			User user = (User) req.getSession().getAttribute("user");
+			
+			if(user == null)
 			{
-				req.getSession().setAttribute("course", controller.getCourse(courseID));
-				req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID));
-				for(Assignment a : controller.getStudentAssignments(courseID))
+				req.getRequestDispatcher("/view/login.jsp");
+			}
+			else
+			{
+				GradebookController controller = new GradebookController();
+				
+				controller.setModel(user);
+				resp.setContentType("application/json");
+				
+				int courseID = -1;
+				if(req.getQueryString() != null && req.getQueryString().contains("id="))
 				{
-					System.out.println(a.getName());
+					courseID = Integer.parseInt(req.getQueryString().split("=")[1]);
 				}
 				
-			} 
-			catch (SQLException e)
-			{
-				e.printStackTrace();
+				if(courseID != -1)
+				{
+					try 
+					{
+						if(controller.isStudent(user.getId(), courseID))
+						{
+							req.getSession().setAttribute("course", controller.getCourse(courseID));
+							req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID));
+							req.getSession().setAttribute("grade", controller.getGrade(controller.getCourse(courseID), user));
+						
+							req.getRequestDispatcher("/view/studentGradebook.jsp").forward(req, resp);
+						}
+						else
+						{
+							req.getRequestDispatcher("view/homePage.jsp").forward(req, resp);
+						}
+					} 
+					catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				else
+				{
+					req.getRequestDispatcher("/view/homePage.jsp").forward(req, resp);
+				}
 			}
 		}
 	}

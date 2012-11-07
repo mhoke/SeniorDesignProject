@@ -29,7 +29,7 @@
 		<% int counter = 0; %>
 	
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
-		<div class="leftSidebar">Bus Schedule <br/> Campus Map</div>
+		<div class="leftSidebar">Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
 		<div class="body">
 			<div align="center">${course.name}</div>
 			<c:if test="${!empty errorMessage }">
@@ -58,8 +58,16 @@
 											<td><input type="text" name="Weight<%=counter%>" size="12" value="${assign.gradeWeightType}" /></td>
 											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assign.earnedPoints}" /></td>
 											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assign.possiblePoints}" /></td>
-										</tr>	
+										</tr>
 									</c:forEach>
+									<tr>
+										<c:forEach var="i" items="${Grades}">
+											<c:if test="${i.key == assign.name}">
+												<td colspan="4" align="center">Class Average: </td>
+												<td>${i.value}</td>
+											</c:if>
+										</c:forEach>
+									</tr>
 								</table>
 							</td>
 						</tr>

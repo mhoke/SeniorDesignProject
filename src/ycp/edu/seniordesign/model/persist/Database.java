@@ -848,7 +848,7 @@ public class Database {
 		{
 			connection = DriverManager.getConnection(JDBC_URL);
 			
-			statement = connection.prepareStatement("select * from assignments where id=? and name=?");
+			statement = connection.prepareStatement("select * from assignments where course_id=? and name=?");
 			statement.setInt(1,  id);
 			statement.setString(2, name);
 			
@@ -878,46 +878,6 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 			
-	}
-	
-	public ArrayList<Assignment> getInstancesofAssignment(int id) throws SQLException
-	{
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		
-		try 
-		{
-			connection = DriverManager.getConnection(JDBC_URL);
-			
-			statement = connection.prepareStatement("select * from assignments where id=?");
-			statement.setInt(1,  id);
-			
-			resultSet = statement.executeQuery();
-			
-			ArrayList<Assignment> returnList = new ArrayList<Assignment>();
-
-			while (resultSet.next())
-			{
-				Assignment assignment = new Assignment();
-				assignment.loadFrom(resultSet);
-				returnList.add(assignment);
-			}
-			
-			if(returnList.isEmpty())
-			{
-				return null;
-			}
-			return returnList;
-
-			
-		} 
-		finally 
-		{
-			DBUtil.close(connection);
-			DBUtil.closeQuietly(statement);
-			DBUtil.closeQuietly(resultSet);
-		}
 	}
 
 	public void updateUser(User user) throws SQLException{
@@ -1043,7 +1003,7 @@ public class Database {
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
 			
-			stmt = conn.prepareStatement("UPDATE ASSIGNMENTS SET grade_weight_type=?, earned_points=?, possible_points=? WHERE name=? AND student_id=?");
+			stmt = conn.prepareStatement("UPDATE ASSIGNMENTS SET grade_weight_id=?, earned_points=?, possible_points=? WHERE name=? AND student_id=?");
 			
 			stmt.setInt(1, assign.getGradeWeightType());
 			stmt.setInt(2, assign.getEarnedPoints());
@@ -1109,6 +1069,69 @@ public class Database {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
 			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public boolean isStudentinClass(int userID, int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select * from enrolled_courses where student_id=? and course_id=?");
+			stmt.setInt(1, userID);
+			stmt.setInt(2, courseID);
+			
+			result = stmt.executeQuery();
+			
+			if(result.next())
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(result);
+		}
+	}
+	
+	public boolean isProfessorinClass(int userID, int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select * from courses where professor_id=? and id=?");
+			
+			stmt.setInt(1, userID);
+			stmt.setInt(2, courseID);
+			
+			result = stmt.executeQuery();
+			
+			if(result.next())
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(stmt);
 		}
 	}
 		

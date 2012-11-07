@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import ycp.edu.seniordesign.model.Assignment;
+import ycp.edu.seniordesign.model.ComputeGrade;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.model.persist.PersistenceException;
@@ -55,13 +56,32 @@ public class GradebookController
 		return returnMap;
 	}
 	
-	public ArrayList<Assignment> getInstancesofAssignment(int id) throws SQLException
+	public ArrayList<Assignment> getAssignments(int courseID, String name) throws SQLException
 	{
-		return Database.getInstance().getInstancesofAssignment(id);
+		return Database.getInstance().getInstancesofAssignment(courseID, name);
 	}
 	
 	public void updateAssignment(Assignment assign) throws SQLException
 	{
 		Database.getInstance().updateAssignment(assign);
+	}
+
+	public double getGrade(Course c, User u) throws SQLException 
+	{
+		ComputeGrade returnGrade = new ComputeGrade(c, u);
+		
+		returnGrade.computeScore();
+		
+		return returnGrade.getScore();
+	}
+
+	public boolean isProfessor(int id, int courseID) throws SQLException 
+	{
+		return Database.getInstance().isProfessorinClass(id, courseID);
+	}
+	
+	public boolean isStudent(int id, int courseID) throws SQLException
+	{
+		return Database.getInstance().isStudentinClass(id, courseID);
 	}
 }

@@ -14,10 +14,9 @@ public class ComputeGrade {
 		
 	}
 	
-	public ComputeGrade(Course course, User student, double score){
+	public ComputeGrade(Course course, User student){
 		this.course = course;
 		this.student = student;
-		this.score = score;
 	}
 	
 	public Course getCourse() {

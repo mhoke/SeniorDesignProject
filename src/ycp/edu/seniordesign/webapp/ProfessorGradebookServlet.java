@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import ycp.edu.seniordesign.controller.GradebookController;
 import ycp.edu.seniordesign.model.Assignment;
+import ycp.edu.seniordesign.model.ComputeGrade;
+import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.User;
+import ycp.edu.seniordesign.model.persist.Database;
 
 public class ProfessorGradebookServlet extends HttpServlet 
 {
@@ -36,33 +40,65 @@ public class ProfessorGradebookServlet extends HttpServlet
 		{
 			User user = (User) req.getSession().getAttribute("user");
 			
+			if(!user.isProfessor())
+			{
+				
+			}
+			
 			GradebookController controller = new GradebookController();
 			
 			controller.setModel(user);
 			resp.setContentType("application/json");
 			
 			int courseID = -1;
-			courseID = Integer.parseInt(req.getQueryString().split("=")[1]);
+			if(req.getQueryString() != null && req.getQueryString().contains("id="))
+			{
+				courseID = Integer.parseInt(req.getQueryString().split("=")[1]);
+			}
 			
 			if(courseID != -1)
 			{
 				try 
 				{
-					req.getSession().setAttribute("course", controller.getCourse(courseID));
-					ArrayList<Assignment> temp = controller.getProfessorAssignments(courseID);
-					req.getSession().setAttribute("assignments", temp);
-					req.getSession().setAttribute("names", controller.linkStudentNames(temp));
+					if(controller.isProfessor(user.getId(), courseID))
+					{
+						req.getSession().setAttribute("course", controller.getCourse(courseID));
+						ArrayList<Assignment> temp = controller.getProfessorAssignments(courseID);
+						ArrayList<Assignment> passList;
+						ComputeGrade cg = new ComputeGrade();
+						TreeMap<String, Integer> att = new TreeMap<String, Integer>();
+						
+						for(Assignment a : temp)
+						{
+							passList = controller.getAssignments(a.getCourseId(), a.getName());
+							cg.computeScoreForAssignments(passList);
+							att.put(a.getName(), (int) cg.getScore());
+						}
+						
+						req.getSession().setAttribute("Grades", att);
+						req.getSession().setAttribute("assignments", temp);
+						req.getSession().setAttribute("names", controller.linkStudentNames(temp));
+						
+						req.getRequestDispatcher("/view/professorGradebook.jsp").forward(req, resp);
+					}
+					else
+					{
+						req.getRequestDispatcher("/view/homePage.jsp").forward(req, resp);
+					}
 				} 
 				catch (SQLException e) 
 				{
 					e.printStackTrace();
 				}
 			}
-			
-			req.getRequestDispatcher("/view/professorGradebook.jsp").forward(req, resp);
+			else
+			{
+				req.getRequestDispatcher("/view/homePage.jsp").forward(req, resp);
+			}
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
 		if(req.getParameter("updateGrades") != null)
@@ -99,6 +135,15 @@ public class ProfessorGradebookServlet extends HttpServlet
 					{
 						controller.updateAssignment(assign);
 						req.getSession().setAttribute("errorMessage", "Update Successful");
+						
+						Course c = (Course) req.getSession().getAttribute("course");
+						TreeMap<String, Integer> temp = new TreeMap<String, Integer>();
+						ComputeGrade cg = new ComputeGrade(c, (User) req.getSession().getAttribute("user"));
+						cg.computeScoreForAssignments(controller.getAssignments(c.getId(), assign.getName()));
+						int avg = (int) cg.getScore();
+						temp = (TreeMap<String, Integer>) req.getSession().getAttribute("Grades");
+						temp.remove(assign.getName());
+						temp.put(assign.getName(), avg);
 					} 
 					catch (SQLException e) 
 					{
