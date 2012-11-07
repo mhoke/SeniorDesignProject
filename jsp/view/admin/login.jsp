@@ -5,44 +5,42 @@
 	<head>
 		<title>Login</title>
 		
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+
 		<style type="text/css">
-			.error
-			{
-				color: red;
-			}
-			
-			.text
-			{
-				color: white;
-			}
+			label.error, .error {color: red;}
 		</style>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+			  	$("#loginForm").validate();
+			});
+		</script>
+
 	</head>
 	
-	<body style="background-color:#00FF00">
-		<c:if test="${!empty errorMessage }">
-			<div class="error">${errorMessage }</div>
-		</c:if>
-		
-		<form action="${pageContext.servletContext.contextPath}/admin/login" method="post">
+	<body style="background-color:#00FF00">		
+		<form id="loginForm" action="${pageContext.servletContext.contextPath}/admin/login" method="post">
 			<table>
 				<tr>
 					<td class="text">Username: </td>
-					<td> <input type="text" name="usernameBox" size="12" value="${username}" /></td>
+					<td> <input type="text" name="usernameBox" size="12" value="${username}" class="required"/></td>
 				</tr>
 				
 				<tr>
 					<td class="text">Password: </td>
-					<td><input type="password" name="passwordBox" size="12" value="${password}" /></td>
+					<td><input type="password" name="passwordBox" size="12" value="${password}" class="required"/></td>
 				</tr>
 				
 				<tr>
 					<td> <input name="loginButton" type="submit" value="Login" /></td>
 				</tr>
-				
-				<tr>
-					<td class="error">${errorMessage}</td>
-				</tr>
 			</table>
 		</form>
+		
+		<c:if test="${! empty errorMessage }">
+			<p class="error">${errorMessage }</p>
+		</c:if>
 	</body>
 </html>

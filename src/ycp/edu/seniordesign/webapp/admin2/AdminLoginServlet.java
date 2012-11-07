@@ -15,6 +15,7 @@ public class AdminLoginServlet extends HttpServlet{
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		req.getSession().invalidate();
 		req.getRequestDispatcher("/view/admin/login.jsp").forward(req, resp);
 	}
 	
@@ -24,35 +25,23 @@ public class AdminLoginServlet extends HttpServlet{
 		String password = req.getParameter("passwordBox");
 		
 		AdminLoginController controller = new AdminLoginController();
-		
-		String errorMessage = null;		
-		
-		Admin admin = null;
 						
 		if(req.getParameter("loginButton") != null){
 			try{
-				admin = controller.login(username, password);
+				Admin admin = controller.login(username, password);
 				
-				if(admin == null){ 
-					errorMessage = "Login failed.";
+				if (admin == null){ 
+					req.setAttribute("errorMessage", "Invalid username/password");
 					req.getRequestDispatcher("/view//admin/login.jsp").forward(req, resp);
-				}
-				else{
-					errorMessage = "Login successful";
+				} else{
 					req.getSession().setAttribute("admin", admin);
+					req.getRequestDispatcher("/view/admin/home.jsp").forward(req,resp);
 				}
 			}
 			catch(Exception e){
-				System.out.println("Login database fail");
+				req.setAttribute("errorMessage", "Invalid username/password");
 				e.printStackTrace();
 			}
-		}
-		
-		req.setAttribute("errorMessage", errorMessage);
-		
-		if(admin != null){
-			//Moves the page forward
-			req.getRequestDispatcher("/view/admin/home.jsp").forward(req,resp);
-		}			
+		}		
 	}
 }

@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 
 		<style type="text/css">
-			label.error {color: red;}
+			label.error, .error {color: red;}
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
@@ -23,6 +23,7 @@
 	<body>	
 		<a href="/Whiteboard/admin/home">Admin Home</a> <br />
 		<a href="/Whiteboard/admin/approveCourse">Add Course</a> <br />
+		<a href="/Whiteboard/admin/changeUserType">Change User Type</a> <br />
 		<a href="/Whiteboard/admin/login">Logout</a> <p />
 		
 		<form id="addCourseForm" action="${pageContext.servletContext.contextPath}/admin/approveCourse" method="post">
@@ -30,7 +31,8 @@
 	
 			<table>
 				<tr><td>Course Name:</td><td><input type="text" class="required" name="courseName" size="25"/></td></tr>
-				<tr><td>Professor Id:</td><td><input type="text" class="required digits" name="professorId" size="25" /></td></tr>
+				<tr><td>Professor Name:</td><td><input type="text" class="required" name="professorName" size="25" /></td></tr>
+				<tr><td>Email Address:</td><td><input type="text" class="required email" name="emailAddress" size="25" /></td></tr>
 				<tr><td>Time:</td><td><input type="text" class="required" name="time" size="25" /></td></tr>
 				<tr><td>Course Number:</td><td><input type="text" class="required digits" name="courseNumber" minlength="3" maxlength="3" size="25" /></td></tr>
 				<tr><td>Section Number:</td><td><input type="text" class="required digits" name="sectionNumber" minlength="3" maxlength="3" size="25" /></td></tr>

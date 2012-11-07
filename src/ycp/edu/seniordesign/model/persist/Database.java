@@ -1,7 +1,6 @@
 package ycp.edu.seniordesign.model.persist;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -957,10 +956,7 @@ public class Database {
 		ResultSet resultSet = null;
 		
 		Registration registration = new Registration();
-		
-		// Calculate the expiration date of the registration
-		Timestamp expiration = new Timestamp(System.currentTimeMillis() + Registration.VALID_DURATION_IN_HOURS);
-		
+	
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);			
 			
@@ -1133,6 +1129,28 @@ public class Database {
 			DBUtil.closeQuietly(stmt);
 			DBUtil.closeQuietly(stmt);
 		}
+	}
+	
+	public void changeUserType(User user) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+			
+			statement = connection.prepareStatement("update users set usertype=? where id=?");
+			statement.setInt(1,  user.getType());
+			statement.setInt(2, user.getId());
+			
+			statement.executeUpdate();
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+
+		}
+		
+
 	}
 		
 }

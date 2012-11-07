@@ -57,7 +57,6 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.ChangePasswordServlet</servlet-class>
 </servlet>
 
-
 <servlet>
 	<servlet-name>RecoverPassServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.RecoverPassServlet</servlet-class>
@@ -66,6 +65,11 @@
 <servlet>
 	<servlet-name>CampusMapServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.CampusMapServlet</servlet-class>
+</servlet>
+
+<servlet>
+	<servlet-name>AdminChangeUserTypeServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.admin2.AdminChangeUserTypeServlet</servlet-class>
 </servlet>
 
 
@@ -111,8 +115,6 @@
 	<servlet-name>ChangePasswordServlet</servlet-name>
 	<url-pattern>changePassword</url-pattern>
 </servlet-mapping>
-
-
 <servlet-mapping>
 	<servlet-name>RecoverPassServlet</servlet-name>
 	<url-pattern>recoverPass</url-pattern>
@@ -120,6 +122,10 @@
 <servlet-mapping>
 	<servlet-name>CampusMapServlet</servlet-name>
 	<url-pattern>campusMap</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AdminChangeUserTypeServlet</servlet-name>
+	<url-pattern>admin/changeUserType</url-pattern>
 </servlet-mapping>
 
 </web-app>
