@@ -30,9 +30,9 @@ public class GradebookController
 		return Database.getInstance().getCourseById(id);
 	}
 	
-	public ArrayList<Assignment> getStudentAssignments (int id) throws SQLException
+	public ArrayList<Assignment> getStudentAssignments (int courseID, int studentID) throws SQLException
 	{
-		return Database.getInstance().getAssignmentsForCourse(id, user.getId());
+		return Database.getInstance().getAssignmentsForCourse(courseID, studentID);
 	}
 	
 	public ArrayList<Assignment> getProfessorAssignments(int id) throws SQLException
@@ -49,6 +49,7 @@ public class GradebookController
 			String name = Database.getInstance().getUserById(a.getStudentId()).getName();
 			if(!returnMap.containsKey(a.getStudentId()))
 			{
+				System.out.println(name);
 				returnMap.put(a.getStudentId(), name);
 			}
 		}
@@ -83,5 +84,10 @@ public class GradebookController
 	public boolean isStudent(int id, int courseID) throws SQLException
 	{
 		return Database.getInstance().isStudentinClass(id, courseID);
+	}
+	
+	public ArrayList<Integer> getNamesForCourse(int courseID) throws SQLException
+	{
+		return Database.getInstance().getNamesforCourse(courseID);
 	}
 }

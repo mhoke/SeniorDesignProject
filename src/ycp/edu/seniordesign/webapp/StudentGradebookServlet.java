@@ -52,8 +52,14 @@ public class StudentGradebookServlet extends HttpServlet
 						if(controller.isStudent(user.getId(), courseID))
 						{
 							req.getSession().setAttribute("course", controller.getCourse(courseID));
-							req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID));
-							req.getSession().setAttribute("grade", controller.getGrade(controller.getCourse(courseID), user));
+							req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID, user.getId()));
+							
+							float result = (float) controller.getGrade(controller.getCourse(courseID), user);
+							result *= 100;
+							result = Math.round(result);
+							result /= 100;
+							
+							req.getSession().setAttribute("grade", result);
 						
 							req.getRequestDispatcher("/view/studentGradebook.jsp").forward(req, resp);
 						}

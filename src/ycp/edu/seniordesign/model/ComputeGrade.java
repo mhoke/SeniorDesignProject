@@ -100,4 +100,25 @@ public class ComputeGrade {
 		score = currentScore;
 		System.out.println("Score: " + score);
 	}
+	
+	public void computePercentNoGW(ArrayList<Assignment> assignments)
+	{
+		double totalPoints = 0.0;
+		double maxPoints = 0.0;
+		for(Assignment assign : assignments)
+		{
+			totalPoints += assign.getEarnedPoints();
+			maxPoints += assign.getPossiblePoints();
+		}
+		
+		if(maxPoints == 0.0)
+		{
+			score = 0.0;
+		}
+		else
+		{
+			score = totalPoints/maxPoints;
+			score *= 100;
+		}
+	}
 }

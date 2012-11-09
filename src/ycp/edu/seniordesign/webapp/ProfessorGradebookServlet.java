@@ -62,8 +62,21 @@ public class ProfessorGradebookServlet extends HttpServlet
 				{
 					if(controller.isProfessor(user.getId(), courseID))
 					{
+						ArrayList<Integer> idList = controller.getNamesForCourse(courseID);
+						ArrayList<String> names = new ArrayList<String>();
+						
+						req.getSession().setAttribute("idList", idList);
+						
+						for(int i : idList)
+						{
+							names.add(Database.getInstance().getUserById(i).getName());
+							req.getSession().setAttribute("Values" + i, controller.getStudentAssignments(courseID, i));
+						}
+						
+						req.getSession().setAttribute("names", names);
+						
 						req.getSession().setAttribute("course", controller.getCourse(courseID));
-						ArrayList<Assignment> temp = controller.getProfessorAssignments(courseID);
+						ArrayList<Assignment> temp = controller.getStudentAssignments(courseID, idList.get(0));
 						ArrayList<Assignment> passList;
 						ComputeGrade cg = new ComputeGrade();
 						TreeMap<String, Integer> att = new TreeMap<String, Integer>();
@@ -71,13 +84,12 @@ public class ProfessorGradebookServlet extends HttpServlet
 						for(Assignment a : temp)
 						{
 							passList = controller.getAssignments(a.getCourseId(), a.getName());
-							cg.computeScoreForAssignments(passList);
+							cg.computePercentNoGW(passList);
 							att.put(a.getName(), (int) cg.getScore());
 						}
 						
 						req.getSession().setAttribute("Grades", att);
 						req.getSession().setAttribute("assignments", temp);
-						req.getSession().setAttribute("names", controller.linkStudentNames(temp));
 						
 						req.getRequestDispatcher("/view/professorGradebook.jsp").forward(req, resp);
 					}
@@ -139,7 +151,7 @@ public class ProfessorGradebookServlet extends HttpServlet
 						Course c = (Course) req.getSession().getAttribute("course");
 						TreeMap<String, Integer> temp = new TreeMap<String, Integer>();
 						ComputeGrade cg = new ComputeGrade(c, (User) req.getSession().getAttribute("user"));
-						cg.computeScoreForAssignments(controller.getAssignments(c.getId(), assign.getName()));
+						cg.computePercentNoGW(controller.getAssignments(c.getId(), assign.getName()));
 						int avg = (int) cg.getScore();
 						temp = (TreeMap<String, Integer>) req.getSession().getAttribute("Grades");
 						temp.remove(assign.getName());

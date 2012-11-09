@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ include file="Skeleton.jsp" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="ycp.edu.seniordesign.model.Assignment" %>
 
 <html>
 
@@ -51,20 +53,29 @@
 										<td align="center">Earned Points</td>
 										<td align="center">Possible Points</td>
 									</tr>
+									<% int idCount = 0; %>
 									<c:forEach var="name" items="${names}">
+										<% 
+											ArrayList<Integer> temp = (ArrayList<Integer>) request.getSession().getAttribute("idList");
+											int curVal = temp.get(idCount); 
+											ArrayList<Assignment> a = (ArrayList<Assignment>) request.getSession().getAttribute("Values"+curVal);
+											Assignment assignment = a.get(counter);
+											request.setAttribute("assignment", assignment);
+										%>
 										<tr>
-											<td align="center">${name.value}</td>
+											<td align="center">${name}</td>
 											<td align="center">${assign.dueDate}</td>
-											<td><input type="text" name="Weight<%=counter%>" size="12" value="${assign.gradeWeightType}" /></td>
-											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assign.earnedPoints}" /></td>
-											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assign.possiblePoints}" /></td>
+											<td><input type="text" name="Weight<%=counter%>" size="12" value="${assignment.gradeWeightType}" /></td>
+											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assignment.earnedPoints}" /></td>
+											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assignment.possiblePoints}" /></td>
 										</tr>
+										<% idCount ++; %>
 									</c:forEach>
 									<tr>
 										<c:forEach var="i" items="${Grades}">
 											<c:if test="${i.key == assign.name}">
 												<td colspan="4" align="center">Class Average: </td>
-												<td>${i.value}</td>
+												<td>${i.value}%</td>
 											</c:if>
 										</c:forEach>
 									</tr>

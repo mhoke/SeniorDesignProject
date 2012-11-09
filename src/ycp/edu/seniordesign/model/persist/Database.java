@@ -707,7 +707,7 @@ public class Database {
 			statement.execute();
 			
 			// Get the id that the assignment was added with
-			statement = connection.prepareStatement("select id from assignments where course_id=? and student_id=? and name=? and due_date=? and grade_weight_type=? and earned_points=? and possible_points=?");
+			statement = connection.prepareStatement("select id from assignments where course_id=? and student_id=? and name=? and due_date=? and grade_weight_id=? and earned_points=? and possible_points=?");
 			statement.setInt(1, assignment.getCourseId());
 			statement.setInt(2, assignment.getStudentId());
 			statement.setString(3, assignment.getName());
@@ -1151,6 +1151,38 @@ public class Database {
 		}
 		
 
+	}
+	
+	public ArrayList<Integer> getNamesforCourse(int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select distinct student_id from assignments where course_id=?");
+			stmt.setInt(1, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			ArrayList<Integer> returnList = new ArrayList<Integer>();
+			
+			while(resultSet.next())
+			{
+				returnList.add(resultSet.getInt(1));
+			}
+			
+			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
 	}
 		
 }
