@@ -13,6 +13,7 @@ import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
+import ycp.edu.seniordesign.model.PendingCourse;
 import ycp.edu.seniordesign.model.Registration;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.util.HashPassword;
@@ -1183,6 +1184,29 @@ public class Database {
 			DBUtil.closeQuietly(stmt);
 			DBUtil.closeQuietly(resultSet);
 		}
+	}
+
+	public void addPendingCourse(PendingCourse pendingCourse) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into pending_courses values(NULL,?,?,?,?,?,?,?,?,?,?,?)");
+			
+			
+			pendingCourse.storeTo(statement);
+			statement.execute();
+			
+			// TODO: have this method return the id of the newly inserted row
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+		
 	}
 		
 }

@@ -72,7 +72,10 @@
 	<servlet-class>ycp.edu.seniordesign.webapp.admin2.AdminChangeUserTypeServlet</servlet-class>
 </servlet>
 
-
+<servlet>
+	<servlet-name>AddCourseServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.AddCourseServlet</servlet-class>
+</servlet>
 <!-- Servlet Mappings -->
 
 <servlet-mapping>
@@ -126,6 +129,10 @@
 <servlet-mapping>
 	<servlet-name>AdminChangeUserTypeServlet</servlet-name>
 	<url-pattern>admin/changeUserType</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AddCourseServlet</servlet-name>
+	<url-pattern>addCourse</url-pattern>
 </servlet-mapping>
 
 </web-app>

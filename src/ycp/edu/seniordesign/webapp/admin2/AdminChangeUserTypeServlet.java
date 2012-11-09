@@ -36,8 +36,7 @@ public class AdminChangeUserTypeServlet extends HttpServlet{
 			
 			AdminChangeUserTypeController controller = new AdminChangeUserTypeController();
 							
-			if (req.getParameter("acceptButton") != null)
-			{
+			if (req.getParameter("acceptButton") != null){
 				try {
 					if (controller.changeUserType(name, emailAddress, userType)){
 						req.setAttribute("updateMessage", "User type changed successfully");

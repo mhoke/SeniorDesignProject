@@ -39,7 +39,7 @@
 				<tr><td>Credits:</td><td><input type="text" class="required digits" name="credits" minlength="1" maxlength="1"size="25" /></td></tr>
 				<tr><td>Days:</td><td><input type="text" class="required" name="days" size="25" /></td></tr>
 				<tr><td>Location:</td><td><input type="text" class="required" name="location" size="25" /></td></tr>
-				<tr><td>CRN:</td><td><input type="text" class="required" name="CRN" maxlength="5" size="25" /></td></tr>
+				<tr><td>CRN:</td><td><input type="text" class="required digits" name="CRN" maxlength="5" size="25" /></td></tr>
 				<tr><td>Description:</td><td><input type="text"  class="required" name="description" size="25" /></td></tr>
 				<tr><td><input name="addCourseButton" type="submit" value="Add Course" /></td>
 			</table>
