@@ -1196,8 +1196,18 @@ public class Database {
 			
 			statement = connection.prepareStatement("insert into pending_courses values(NULL,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			// TODO : set the question marks
-			pendingCourse.storeTo(statement);
+			statement.setString(1, pendingCourse.getCourseName());
+			statement.setString(2, pendingCourse.getProfessorName());
+			statement.setString(3, pendingCourse.getEmailAddress());
+			statement.setString(4, pendingCourse.getTime());
+			statement.setInt(5, pendingCourse.getCourseNumber());
+			statement.setInt(6, pendingCourse.getCourseSection());
+			statement.setInt(7, pendingCourse.getCredits());
+			statement.setString(8, pendingCourse.getDays());
+			statement.setString(9, pendingCourse.getLocation());
+			statement.setInt(10, pendingCourse.getCRN());		
+			statement.setString(11, pendingCourse.getDescription());
+			
 			statement.execute();
 			
 			// TODO: have this method return the id of the newly inserted row
@@ -1207,6 +1217,57 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 		
+	}
+
+	public ArrayList<PendingCourse> getPendingCourses() throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from pending_courses");
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<PendingCourse> pendingCourses = new ArrayList<PendingCourse>();
+						
+			while (resultSet.next()){
+				PendingCourse pendingCourse = new PendingCourse();
+				pendingCourse.loadFrom(resultSet);
+				pendingCourses.add(pendingCourse);
+			}
+			
+			if (pendingCourses.isEmpty()){
+				return null;
+			} else {
+				return pendingCourses;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void removePendingCourse(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from pending_courses where id=?");
+			statement.setInt(1,  id);
+			
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
 	}
 		
 }

@@ -14,9 +14,26 @@
 			label.error, .error {color: red;}
 		</style>
 		<script type="text/javascript">
+			var requestId;
+						
 			$(document).ready(function() {
-			  	$("#addCourseForm").validate();
+			  	$("#approveCourseForm").validate();
+			  	
+				$(".approve").click(function() {
+					requestId = $(this).attr('id').match(/(\d+)$/)[1];
+					$("#requestIdElt").attr('value', requestId);
+					$("#actionElt").attr('value', 'approve');
+					$("approveCourseForm").submit();
+				});
+				
+				$(".reject").click(function() {
+					requestId = $(this).attr('id').match(/(\d+)$/)[1];
+					$("#requestIdElt").attr('value', requestId);
+					$("#actionElt").attr('value', 'reject');
+					$("approveCourseForm").submit();
+				});
 			});
+
 		</script>
 	</head>
 	
@@ -26,23 +43,33 @@
 		<a href="/Whiteboard/admin/changeUserType">Change User Type</a> <br />
 		<a href="/Whiteboard/admin/login">Logout</a> <p />
 		
-		<form id="addCourseForm" action="${pageContext.servletContext.contextPath}/admin/approveCourse" method="post">
+		<form id="approveCourseForm" action="${pageContext.servletContext.contextPath}/admin/approveCourse" method="post">
 			<input type="hidden" name="submitted" value="true" />
-	
-			<table>
-				<tr><td>Course Name:</td><td><input type="text" class="required" name="courseName" size="25"/></td></tr>
-				<tr><td>Professor Name:</td><td><input type="text" class="required" name="professorName" size="25" /></td></tr>
-				<tr><td>Email Address:</td><td><input type="text" class="required email" name="emailAddress" size="25" /></td></tr>
-				<tr><td>Time:</td><td><input type="text" class="required" name="time" size="25" /></td></tr>
-				<tr><td>Course Number:</td><td><input type="text" class="required digits" name="courseNumber" minlength="3" maxlength="3" size="25" /></td></tr>
-				<tr><td>Section Number:</td><td><input type="text" class="required digits" name="sectionNumber" minlength="3" maxlength="3" size="25" /></td></tr>
-				<tr><td>Credits:</td><td><input type="text" class="required digits" name="credits" minlength="1" maxlength="1"size="25" /></td></tr>
-				<tr><td>Days:</td><td><input type="text" class="required" name="days" size="25" /></td></tr>
-				<tr><td>Location:</td><td><input type="text" class="required" name="location" size="25" /></td></tr>
-				<tr><td>CRN:</td><td><input type="text" class="required digits" name="CRN" maxlength="5" size="25" /></td></tr>
-				<tr><td>Description:</td><td><input type="text"  class="required" name="description" size="25" /></td></tr>
-				<tr><td><input name="addCourseButton" type="submit" value="Add Course" /></td>
-			</table>
+			<input id="requestIdElt" type="hidden" name="requestId" value="-1" />
+			<input id="actionElt" type="hidden" name="action" value="" />
+			
+			<c:if test="${empty pendingCourses}">
+				There are currently no requests to add courses.
+			</c:if>
+			
+			<c:if test="${! empty pendingCourses}">
+				<c:forEach var="pendingCourse" items="${pendingCourses}">
+					<table>
+						<tr><td>Course Name:</td><td><input type="text" class="required" name="courseName${pendingCourse.id}" size="25" value="${pendingCourse.courseName}"/></td></tr>
+						<tr><td>Professor Name:</td><td><input type="text" class="required" name="professorName${pendingCourse.id}" size="25" value="${pendingCourse.professorName}"/></td></tr>
+						<tr><td>Email Address:</td><td><input type="text" class="required email" name="emailAddress${pendingCourse.id}" size="25" value="${pendingCourse.emailAddress}"/></td></tr>
+						<tr><td>Time:</td><td><input type="text" class="required" name="time${pendingCourse.id}" size="25" value="${pendingCourse.time}"/></td></tr>
+						<tr><td>Course Number:</td><td><input type="text" class="required digits" name="courseNumber${pendingCourse.id}" minlength="3" maxlength="3" size="25" value="${pendingCourse.courseNumber}"/></td></tr>
+						<tr><td>Section Number:</td><td><input type="text" class="required digits" name="sectionNumber${pendingCourse.id}" minlength="3" maxlength="3" size="25" value="${pendingCourse.courseSection}"/></td></tr>
+						<tr><td>Credits:</td><td><input type="text" class="required digits" name="credits${pendingCourse.id}" minlength="1" maxlength="1"size="25" value="${pendingCourse.credits}"/></td></tr>
+						<tr><td>Days:</td><td><input type="text" class="required" name="days${pendingCourse.id}" size="25" value="${pendingCourse.days}"/></td></tr>
+						<tr><td>Location:</td><td><input type="text" class="required" name="location${pendingCourse.id}" size="25" value="${pendingCourse.location}"/></td></tr>
+						<tr><td>CRN:</td><td><input type="text" class="required digits" name="CRN${pendingCourse.id}" maxlength="5" size="25" value="${pendingCourse.CRN}"/></td></tr>
+						<tr><td>Description:</td><td><input type="text"  class="required" name="description${pendingCourse.id}" size="25" value="${pendingCourse.description}"/></td></tr>
+						<tr><td><input id="approveCourseButton${pendingCourse.id}" class="approve" type="submit" value="Accept" /></td><td><input id="rejectCourseButton${pendingCourse.id}" class="reject" type="submit" value="Reject" /></td></tr>
+					</table>
+				</c:forEach>
+			</c:if>
 		</form>
 		
 		<c:if test="${! empty errorMessage }">
