@@ -128,16 +128,16 @@ INSERT INTO Enrolled_Courses values(NULL, 2, 1, 1, 65);
 INSERT INTO Enrolled_Courses values(NULL, 1, 1, 1, 75);
 INSERT INTO Enrolled_Courses values(NULL, 3, 1, 0, 50);
 
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 1', '2012-09-08', 1, 10, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 2', '2012-09-15', 1, 9, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 3', '2012-09-22', 1, 8, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Exam 1', '2012-09-01', 3, 80, 100);
-INSERT INTO Assignments values(NULL, 0, 0, 'Exam 2', '2012-09-29', 3, 95, 100);
-INSERT INTO Assignments values(NULL, 0, 3, 'Homework 1', '2012-09-08', 1, 7, 10);
-INSERT INTO Assignments values(NULL, 0, 3, 'Homework 2', '2012-09-15', 1, 4, 10);
-INSERT INTO Assignments values(NULL, 0, 3, 'Homework 3', '2012-09-22', 1, 5, 10);
-INSERT INTO Assignments values(NULL, 0, 3, 'Exam 1', '2012-09-01', 3, 75, 100);
-INSERT INTO Assignments values(NULL, 0, 3, 'Exam 2', '2012-09-29', 3, 85, 100);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 1', '2012-09-08', 0, 10, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 2', '2012-09-15', 0, 9, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 3', '2012-09-22', 0, 8, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Exam 1', '2012-09-01', 1, 80, 100);
+INSERT INTO Assignments values(NULL, 0, 0, 'Exam 2', '2012-09-29', 1, 95, 100);
+INSERT INTO Assignments values(NULL, 0, 3, 'Homework 1', '2012-09-08', 0, 7, 10);
+INSERT INTO Assignments values(NULL, 0, 3, 'Homework 2', '2012-09-15', 0, 4, 10);
+INSERT INTO Assignments values(NULL, 0, 3, 'Homework 3', '2012-09-22', 0, 5, 10);
+INSERT INTO Assignments values(NULL, 0, 3, 'Exam 1', '2012-09-01', 1, 75, 100);
+INSERT INTO Assignments values(NULL, 0, 3, 'Exam 2', '2012-09-29', 1, 85, 100);
 
 INSERT INTO Grade_weights values(NULL, 20);
 INSERT INTO Grade_weights values(NULL, 80);
