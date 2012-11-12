@@ -1196,7 +1196,7 @@ public class Database {
 			
 			statement = connection.prepareStatement("insert into pending_courses values(NULL,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			
+			// TODO : set the question marks
 			pendingCourse.storeTo(statement);
 			statement.execute();
 			
