@@ -58,6 +58,9 @@ public class LoginServlet extends HttpServlet
 					System.out.println(result.getUsername());
 					
 					req.setAttribute("errorMessage", errorMessage);	
+					
+					// Create a session attribute storing upcoming assignments and the course they are due in
+					req.getSession().setAttribute("upcomingAssignments", controller.getUpcomingAssignments(result.getId()));
 					req.getRequestDispatcher("/view/homePage.jsp").forward(req,resp);
 				}
 			}

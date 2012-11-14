@@ -24,11 +24,26 @@
 					</c:forEach>
 				</c:if>
 			</c:if>
+			<p />
 			<c:if test="${isProfessor}">
 				<c:if test="${taughtCourses != null}">
 					Taught Courses: <br/>
 					<c:forEach var="course" items="${taughtCourses}">
 						<A HREF="pcourse?id=${course.id}">${course.name}</A><br/>
+					</c:forEach>
+				</c:if>
+			</c:if>
+			<p />
+			<c:if test="${isStudent}">
+				Upcoming Assignments: <br />
+				<c:if test="${upcomingAssignments == null}">
+					No upcoming assignments.<br />
+				</c:if>
+				<c:if test="${upcomingAssignments != null}">
+					<c:forEach var="assignment" items="${upcomingAssignments}">
+						<b>${assignment.key.name}</b> <br />
+						Class: ${assignment.value} <br />
+						Due Date: ${assignment.key.dueDate} <p />
 					</c:forEach>
 				</c:if>
 			</c:if>

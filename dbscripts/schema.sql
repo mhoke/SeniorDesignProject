@@ -9,7 +9,7 @@ DROP table enrolled_courses;
 DROP table grade_weights;
 DROP table users;
 DROP table registrations;
-Drop table pending_courses;
+DROP table pending_courses;
 
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
@@ -128,10 +128,10 @@ INSERT INTO Enrolled_Courses values(NULL, 2, 1, 1, 65);
 INSERT INTO Enrolled_Courses values(NULL, 1, 1, 1, 75);
 INSERT INTO Enrolled_Courses values(NULL, 3, 1, 0, 50);
 
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 1', '2012-09-08', 0, 10, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 2', '2012-09-15', 0, 9, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 3', '2012-09-22', 0, 8, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Exam 1', '2012-09-01', 1, 80, 100);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 1', '2012-11-24', 0, 10, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 2', '2012-11-20', 0, 9, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Homework 3', '2012-11-19', 0, 8, 10);
+INSERT INTO Assignments values(NULL, 0, 0, 'Exam 1', '2012-11-22', 1, 80, 100);
 INSERT INTO Assignments values(NULL, 0, 0, 'Exam 2', '2012-09-29', 1, 95, 100);
 INSERT INTO Assignments values(NULL, 0, 3, 'Homework 1', '2012-09-08', 0, 7, 10);
 INSERT INTO Assignments values(NULL, 0, 3, 'Homework 2', '2012-09-15', 0, 4, 10);

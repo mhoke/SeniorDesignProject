@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import ycp.edu.seniordesign.model.Admin;
@@ -1267,6 +1269,60 @@ public class Database {
 		} finally {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	/**
+	 * This method returns all assignments for the user with the given id that are due within the next week
+	 * @param id
+	 * @return an ArrayList of all assignments that are due within the next week 
+	 * @throws SQLException
+	 */
+	public HashMap<Assignment, String> getUpcomingAssignments(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from assignments where student_id=?");
+			statement.setInt(1, id);
+			
+			resultSet = statement.executeQuery();
+			
+			HashMap<Assignment, String> upcomingAssignments = new HashMap<Assignment, String>();
+						
+			while (resultSet.next()){
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				
+				// This date is one week ahead of the current time
+				Date weekAhead = new Date(System.currentTimeMillis() + (7 * 1000 * 60 * 60 * 24));
+				
+				if (!assignment.isOverdue() && assignment.getDueDate().before(weekAhead)){
+					// Only add the assignment to the list if it is due within the next week and is not currently overdue
+					
+					// Lookup the course name the assignment is due for
+					statement = connection.prepareStatement("select * from courses where id=?");
+					statement.setInt(1, assignment.getCourseId());
+					ResultSet resultSet2 = statement.executeQuery();
+					resultSet2.next();
+					String courseName = resultSet2.getString(2);
+					upcomingAssignments.put(assignment, courseName);
+				}
+			}
+			
+			if (upcomingAssignments.isEmpty()){
+				return null;
+			} else {
+				return upcomingAssignments;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
 		}
 	}
 		
