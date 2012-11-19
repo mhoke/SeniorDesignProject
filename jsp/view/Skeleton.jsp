@@ -12,7 +12,7 @@
 			
 			.text
 			{
-				color: white;
+				color: black;
 			}
 			
 			.header
