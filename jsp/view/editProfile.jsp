@@ -122,7 +122,7 @@
 				<c:if test="${isProfessor&&isStudent}">Current Major: ${user.major}<br/></c:if>			
 				Current Phone Number: ${user.phoneNumber} <br/>
 				Current Office Number: ${user.officeNumber} <br/>
-				Current Bio: ${user.biography} <br/>
+				Current Biography: ${user.biography} <br/>
 				
 				<%
 					User user = (User) request.getSession().getAttribute("user");
@@ -157,8 +157,8 @@
 						</tr>
 						
 						<tr>
-							<td class="test">New Bio: </td>
-							<td> <textarea class="FormElement" name="term" id="term" cols="40" rows="4"></textarea></td>
+							<td class="test">New Biography: </td>
+							<td> <textarea class="FormElement" name="newBiographyBox" id="term" cols="40" rows="4"></textarea></td>
 						<tr>
 						
 						

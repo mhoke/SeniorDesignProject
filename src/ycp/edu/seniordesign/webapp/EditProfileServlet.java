@@ -34,6 +34,9 @@ private static final long serialVersionUID = 1L;
 			{
 				String emailAddress = req.getParameter("newEmailAddressBox");
 				String major = req.getParameter("newMajorBox");
+				String phoneNumber = req.getParameter("newPhoneNumberBox");
+				String officeNumber = req.getParameter("newOfficNumberBox");
+				String biography = req.getParameter("newBiographyBox");
 				User user = (User) req.getSession().getAttribute("user");
 				boolean update = false;
 				
@@ -48,18 +51,35 @@ private static final long serialVersionUID = 1L;
 					update = true;
 				}
 				
-				if (emailAddress != null) {
+				if (emailAddress != null && !emailAddress.equals("")) {
 					//Set new email address
 					user.setEmailAddress(emailAddress);
 					update = true;
 				}
 				
-				if (major != null) {
+				if (major != null && !major.equals("")) {
 					//Set new major
 					user.setMajor(major);
 					update = true;
 				}
 				
+				if (phoneNumber != null && !phoneNumber.equals("")) {
+					//Set new number
+					user.setPhoneNumber(phoneNumber);
+					update = true;
+				}
+				
+				if (officeNumber != null && !officeNumber.equals("")) {
+					//Set new number
+					user.setOfficeNumber(officeNumber);
+					update = true;
+				}
+				
+				if (biography != null && !biography.equals("")) {
+					//Set new biography
+					user.setBiography(biography);
+					update = true;
+				}
 
 				if (update) {
 					Database.getInstance().updateUser(user);
