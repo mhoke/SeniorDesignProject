@@ -129,7 +129,6 @@ INSERT INTO Enrolled_Courses values(NULL, 1, 1, 1, 75);
 INSERT INTO Enrolled_Courses values(NULL, 3, 1, 0, 50);
 
 INSERT INTO Assignments values(NULL, 0, 0, 'Homework 1', '2012-11-24', 0, 10, 10);
-INSERT INTO Assignments values(NULL, 0, 0, 'Homework 2', '2012-11-20', 0, 9, 10);
 INSERT INTO Assignments values(NULL, 0, 0, 'Homework 3', '2012-11-19', 0, 8, 10);
 INSERT INTO Assignments values(NULL, 0, 0, 'Exam 1', '2012-11-22', 1, 80, 100);
 INSERT INTO Assignments values(NULL, 0, 0, 'Exam 2', '2012-09-29', 1, 95, 100);
