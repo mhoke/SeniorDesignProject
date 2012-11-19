@@ -5,9 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GradeWeight {
-	int id;
-	String name;
-	int courseId;
+	private int id;
+	private String name;
+	private int courseId;
 	
 	public int getId() {
 		return id;
