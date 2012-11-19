@@ -24,9 +24,7 @@ CREATE CACHED TABLE Assignments(
 
 CREATE CACHED TABLE Grade_Weights (
 	id INTEGER IDENTITY,
-	name VARCHAR(80) NOT NULL,
   	weight INTEGER NOT NULL,
-  	course_id INTEGER NOT NULL
 );
 
 CREATE CACHED TABLE Courses (
@@ -60,7 +58,10 @@ CREATE CACHED TABLE Users (
 	emailAddress VARCHAR(80) NOT NULL,
 	userType INTEGER NOT NULL,
 	major VARCHAR(80) NOT NULL,
-	commuter BOOLEAN NOT NULL
+	commuter BOOLEAN NOT NULL,
+	phoneNumber VARCHAR (20) NOT NULL,
+	officeNumber VARCHAR (20) NOT NULL,
+	biography VARCHAR (250) NOT NULL
 );
 
 CREATE CACHED TABLE Admins (
@@ -110,14 +111,14 @@ INSERT INTO Buildings values(NULL, 'MKH');
 INSERT INTO Buildings values(NULL, 'LIBRY');
 INSERT INTO Buildings values(NULL, 'NESC');
 
-INSERT INTO Users values(NULL,'TestStudent', 'John Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1, 'CS', true);
-INSERT INTO Users values(NULL,'TestProfessor', 'Bill Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false);
-INSERT INTO Users values(NULL,'TestBoth', 'Ron John', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true);
-INSERT INTO Users values(NULL,'msteppe', 'Mike Steppe', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'msteppe@whiteboard.org', 1, 'CS', false);
-INSERT INTO Users values(NULL,'mhoke', 'Mike Hoke', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'mhoke@whiteboard.org', 1, 'CS', true);
-INSERT INTO Users values(NULL,'pvo', 'Paul Vo', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'pvo@whiteboard.org', 1, 'CS', false);
-INSERT INTO Users values(NULL,'nbrady', 'Nick Brady', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'nbrady@whiteboard.org', 1, 'CS', true);
-INSERT INTO Users values(NULL,'TestStudent2', 'Noah Moses', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'whiteboardseniordesign@gmail.com', 1, 'CS', true);
+INSERT INTO Users values(NULL,'TestStudent', 'John Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'teststudent@whiteboard.org', 1, 'CS', true, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'TestProfessor', 'Bill Smith', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testprofessor@whiteboard.org', 2, 'NONE', false, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'TestBoth', 'Ron John', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'testboth@whiteboard.org', 3, 'CS', true, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'msteppe', 'Mike Steppe', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'msteppe@whiteboard.org', 1, 'CS', false, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'mhoke', 'Mike Hoke', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'mhoke@whiteboard.org', 1, 'CS', true, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'pvo', 'Paul Vo', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'pvo@whiteboard.org', 1, 'CS', false, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'nbrady', 'Nick Brady', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'nbrady@whiteboard.org', 1, 'CS', true, '1111111111', 'HUM 111', 'Biography goes here');
+INSERT INTO Users values(NULL,'TestStudent2', 'Noah Moses', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8', 'whiteboardseniordesign@gmail.com', 1, 'CS', true, '1111111111', 'HUM 111', 'Biography goes here');
 
 INSERT INTO Courses values(NULL, 'Calculus I', 1, '12:00-12:50', 101, 101, 4, 'MWF', 'CHM 223', 99999, 'This is a calculus I class.');
 INSERT INTO Courses values(NULL, 'CPADS', 1, '1:00-2:40', 101, 101, 4, 'WF', 'CS 119', 88888, 'This is a CPADS class.');
@@ -141,8 +142,8 @@ INSERT INTO Assignments values(NULL, 0, 3, 'Homework 3', '2012-09-22', 0, 5, 10)
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 1', '2012-09-01', 1, 75, 100);
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 2', '2012-09-29', 1, 85, 100);
 
-INSERT INTO Grade_weights values(NULL, 'Homework', 20, 0);
-INSERT INTO Grade_weights values(NULL, 'Exams', 80, 0);
+INSERT INTO Grade_weights values(NULL, 20);
+INSERT INTO Grade_weights values(NULL, 80);
 
 
 INSERT INTO Admins values(NULL, 'TestAdmin', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8');

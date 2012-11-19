@@ -1,11 +1,72 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ include file="Skeleton.jsp" %>
+<%@ page import="ycp.edu.seniordesign.model.User" %>
 
 <html>
 
 	<head>
 		<Title>Edit Profile</Title>
+		
+		<style type="text/css">
+		
+			.error
+			{
+				color: red;
+			}
+			
+			.text
+			{
+				color: black;
+			}
+			
+			.header
+			{
+				width:100%;
+				height:10%;
+				clear:both;
+				text-align:center;
+				background-color:#C2D6D6;
+			}
+			
+			.leftSidebar
+			{
+				width:25%;
+				height:100%;
+				float:left;
+				text-align:center;
+				background-color:#FF0000;
+			}
+			
+			.body
+			{
+				width:50%;
+				height:100%;
+				overflow:auto;
+				float:left;
+				text-align:center;
+				background-color:#00FF00;
+			}
+			
+			.rightSidebar
+			{
+				width:25%;
+				height:100%;
+				float:right;
+				text-align:center;
+				background-color:#FFFFFF;
+			}
+			
+			.footer
+			{
+				color:red;
+				width:100%;
+				height:10%;
+				clear:both;
+				text-align:center;
+				background-color:#000000;
+			}
+		</style>
 	</head>
 	
 	<body>
@@ -58,10 +119,18 @@
 							
 				UserName: ${user.username} <br/>
 				Current Email Address: ${user.emailAddress} <br/>
-				<c:if test="${isProfessor&&isStudent}">Current Major: ${user.major}<br/></c:if>
-				Current	Phone Number: COMING SOON <br/>
-				Current Office Number: COMING SOON <br/>
-				Current Bio: COMING SOON <br/>			
+				<c:if test="${isProfessor&&isStudent}">Current Major: ${user.major}<br/></c:if>			
+				Current Phone Number: ${user.phoneNumber} <br/>
+				Current Office Number: ${user.officeNumber} <br/>
+				Current Bio: ${user.biography} <br/>
+				
+				<%
+					User user = (User) request.getSession().getAttribute("user");
+					System.out.println(user.getName());
+					System.out.println(user.getPhoneNumber());
+					System.out.println(user.getOfficeNumber());
+					System.out.println(user.getEmailAddress());
+				%>
 				
 				<form action="${pageContext.servletContext.contextPath}/editProfile" method="post">
 					<table>
@@ -79,18 +148,19 @@
 						
 						<tr>
 							<td class="text">New Phone Number: </td>
-							<td> <input type="text" name="newPhoneNumberBox" size="12"/></td>
+							<td> <input type="text" name="newPhoneNumberBox" size="12" value="${user.phoneNumber}" /></td>
 						</tr>
 						
 						<tr>
 							<td class="text">New Office Number: </td>
-							<td> <input type="text" name="newOfficeNumberBox" size="12"/></td>
-						</tr>						
+							<td> <input type="text" name="newOfficeNumberBox" size="12" value="${user.officeNumber}" /></td>
+						</tr>
 						
 						<tr>
-							<td class="text">New Bio: </td>
-							<td> <input type="text" name="newBioBox" size="50"/></td>
-						</tr>
+							<td class="test">New Bio: </td>
+							<td> <textarea class="FormElement" name="term" id="term" cols="40" rows="4"></textarea></td>
+						<tr>
+						
 						
 						<tr>
 							<td> <input name="ChangeFieldsButton" type="submit" value="Edit Profile" /></td>
