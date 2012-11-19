@@ -40,11 +40,6 @@ public class ProfessorGradebookServlet extends HttpServlet
 		{
 			User user = (User) req.getSession().getAttribute("user");
 			
-			if(!user.isProfessor())
-			{
-				
-			}
-			
 			GradebookController controller = new GradebookController();
 			
 			controller.setModel(user);
@@ -62,6 +57,8 @@ public class ProfessorGradebookServlet extends HttpServlet
 				{
 					if(controller.isProfessor(user.getId(), courseID))
 					{
+						req.getSession().setAttribute("ListofGrades", controller.getGrades(courseID));
+						
 						ArrayList<Integer> idList = controller.getNamesForCourse(courseID);
 						ArrayList<String> names = new ArrayList<String>();
 						

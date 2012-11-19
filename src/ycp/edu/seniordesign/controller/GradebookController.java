@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.ComputeGrade;
 import ycp.edu.seniordesign.model.Course;
+import ycp.edu.seniordesign.model.GradeWeight;
 import ycp.edu.seniordesign.model.User;
 import ycp.edu.seniordesign.model.persist.PersistenceException;
 import ycp.edu.seniordesign.model.persist.Database;
@@ -89,5 +90,10 @@ public class GradebookController
 	public ArrayList<Integer> getNamesForCourse(int courseID) throws SQLException
 	{
 		return Database.getInstance().getNamesforCourse(courseID);
+	}
+	
+	public ArrayList<GradeWeight> getGrades(int courseID) throws SQLException
+	{
+		return Database.getInstance().getGradesforCourse(courseID);
 	}
 }

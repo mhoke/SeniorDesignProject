@@ -7,12 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
+import ycp.edu.seniordesign.model.GradeWeight;
 import ycp.edu.seniordesign.model.PendingCourse;
 import ycp.edu.seniordesign.model.Registration;
 import ycp.edu.seniordesign.model.User;
@@ -1196,8 +1199,18 @@ public class Database {
 			
 			statement = connection.prepareStatement("insert into pending_courses values(NULL,?,?,?,?,?,?,?,?,?,?,?)");
 			
-			// TODO : set the question marks
-			pendingCourse.storeTo(statement);
+			statement.setString(1, pendingCourse.getCourseName());
+			statement.setString(2, pendingCourse.getProfessorName());
+			statement.setString(3, pendingCourse.getEmailAddress());
+			statement.setString(4, pendingCourse.getTime());
+			statement.setInt(5, pendingCourse.getCourseNumber());
+			statement.setInt(6, pendingCourse.getCourseSection());
+			statement.setInt(7, pendingCourse.getCredits());
+			statement.setString(8, pendingCourse.getDays());
+			statement.setString(9, pendingCourse.getLocation());
+			statement.setInt(10, pendingCourse.getCRN());		
+			statement.setString(11, pendingCourse.getDescription());
+			
 			statement.execute();
 			
 			// TODO: have this method return the id of the newly inserted row
@@ -1207,6 +1220,145 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 		
+	}
+
+	public ArrayList<PendingCourse> getPendingCourses() throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from pending_courses");
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<PendingCourse> pendingCourses = new ArrayList<PendingCourse>();
+						
+			while (resultSet.next()){
+				PendingCourse pendingCourse = new PendingCourse();
+				pendingCourse.loadFrom(resultSet);
+				pendingCourses.add(pendingCourse);
+			}
+			
+			if (pendingCourses.isEmpty()){
+				return null;
+			} else {
+				return pendingCourses;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void removePendingCourse(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from pending_courses where id=?");
+			statement.setInt(1,  id);
+			
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+	
+	/**
+	 * This method returns all assignments for the user with the given id that are due within the next week
+	 * @param id
+	 * @return an ArrayList of all assignments that are due within the next week 
+	 * @throws SQLException
+	 */
+	public HashMap<Assignment, String> getUpcomingAssignments(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+				
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from assignments where student_id=?");
+			statement.setInt(1, id);
+			
+			resultSet = statement.executeQuery();
+			
+			HashMap<Assignment, String> upcomingAssignments = new HashMap<Assignment, String>();
+						
+			while (resultSet.next()){
+				Assignment assignment = new Assignment();
+				assignment.loadFrom(resultSet);
+				
+				// This date is one week ahead of the current time
+				Date weekAhead = new Date(System.currentTimeMillis() + (7 * 1000 * 60 * 60 * 24));
+				
+				if (!assignment.isOverdue() && assignment.getDueDate().before(weekAhead)){
+					// Only add the assignment to the list if it is due within the next week and is not currently overdue
+					
+					// Lookup the course name the assignment is due for
+					statement = connection.prepareStatement("select * from courses where id=?");
+					statement.setInt(1, assignment.getCourseId());
+					ResultSet resultSet2 = statement.executeQuery();
+					resultSet2.next();
+					String courseName = resultSet2.getString(2);
+					upcomingAssignments.put(assignment, courseName);
+				}
+			}
+			
+			if (upcomingAssignments.isEmpty()){
+				return null;
+			} else {
+				return upcomingAssignments;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public ArrayList<GradeWeight> getGradesforCourse(int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			stmt = conn.prepareStatement("Select * from grade_weights where course_id=?");
+			
+			stmt.setInt(1, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			ArrayList<GradeWeight> returnList = new ArrayList<GradeWeight>();
+			
+			while(resultSet.next())
+			{
+				GradeWeight g = new GradeWeight();
+				g.loadFrom(resultSet);
+				returnList.add(g);
+			}
+			
+			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
 	}
 		
 }

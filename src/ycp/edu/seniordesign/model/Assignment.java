@@ -6,14 +6,14 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class Assignment {
-	int id;
-	int courseId;
-	int studentId;
-	String name;
-	Date dueDate;
-	int gradeWeightType;
-	int earnedPoints;
-	int possiblePoints;
+	private int id;
+	private int courseId;
+	private int studentId;
+	private String name;
+	private Date dueDate;
+	private int gradeWeightType;
+	private int earnedPoints;
+	private int possiblePoints;
 
 	public Assignment(){
 		

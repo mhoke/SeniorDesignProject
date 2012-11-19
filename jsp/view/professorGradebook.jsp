@@ -3,6 +3,7 @@
 <%@ include file="Skeleton.jsp" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="ycp.edu.seniordesign.model.Assignment" %>
+<%@ page import="ycp.edu.seniordesign.model.GradeWeight" %>
 
 <html>
 
@@ -28,7 +29,7 @@
 			}
 		</script>
 			
-		<% int counter = 0; %>
+		<% int counter = 0;%>
 	
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar">Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
@@ -49,7 +50,7 @@
 									<tr>
 										<td align="center">Student Name</td>
 										<td align="center">Due Date</td>
-										<td align="center">Weight</td>
+										<td align="center">Category</td>
 										<td align="center">Earned Points</td>
 										<td align="center">Possible Points</td>
 									</tr>
@@ -61,11 +62,21 @@
 											ArrayList<Assignment> a = (ArrayList<Assignment>) request.getSession().getAttribute("Values"+curVal);
 											Assignment assignment = a.get(counter);
 											request.setAttribute("assignment", assignment);
+											
+											ArrayList<GradeWeight> gradeList = (ArrayList<GradeWeight>) request.getSession().getAttribute("ListofGrades");
+											
+											for(GradeWeight g : gradeList)
+											{
+												if(g.getId() == assignment.getGradeWeightType())
+												{
+													request.setAttribute("Type", g.getName());
+												}
+											}
 										%>
 										<tr>
 											<td align="center">${name}</td>
 											<td align="center">${assign.dueDate}</td>
-											<td><input type="text" name="Weight<%=counter%>" size="12" value="${assignment.gradeWeightType}" /></td>
+											<td>${Type}</td>
 											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assignment.earnedPoints}" /></td>
 											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assignment.possiblePoints}" /></td>
 										</tr>
@@ -98,11 +109,26 @@
 					</c:forEach>
 				</c:if>
 			</c:if>
+			<p />
 			<c:if test="${isProfessor}">
 				<c:if test="${taughtCourses != null}">
 					Taught Courses: <br/>
 					<c:forEach var="course" items="${taughtCourses}">
 						<A HREF="pcourse?id=${course.id}">${course.name}</A><br/>
+					</c:forEach>
+				</c:if>
+			</c:if>
+			<p />
+			<c:if test="${isStudent}">
+				Upcoming Assignments: <br />
+				<c:if test="${upcomingAssignments == null}">
+					No upcoming assignments.<br />
+				</c:if>
+				<c:if test="${upcomingAssignments != null}">
+					<c:forEach var="assignment" items="${upcomingAssignments}">
+						<b>${assignment.key.name}</b> <br />
+						Class: ${assignment.value} <br />
+						Due Date: ${assignment.key.dueDate} <p />
 					</c:forEach>
 				</c:if>
 			</c:if>
