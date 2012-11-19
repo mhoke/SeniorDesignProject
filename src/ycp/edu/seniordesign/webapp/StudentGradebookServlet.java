@@ -51,6 +51,7 @@ public class StudentGradebookServlet extends HttpServlet
 					{
 						if(controller.isStudent(user.getId(), courseID))
 						{
+							req.getSession().setAttribute("grades", controller.getGrades(courseID));
 							req.getSession().setAttribute("course", controller.getCourse(courseID));
 							req.getSession().setAttribute("assignments", controller.getStudentAssignments(courseID, user.getId()));
 							

@@ -15,6 +15,7 @@ import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
+import ycp.edu.seniordesign.model.GradeWeight;
 import ycp.edu.seniordesign.model.PendingCourse;
 import ycp.edu.seniordesign.model.Registration;
 import ycp.edu.seniordesign.model.User;
@@ -1322,6 +1323,40 @@ public class Database {
 		} finally {
 			DBUtil.close(connection);
 			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public ArrayList<GradeWeight> getGradesforCourse(int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			stmt = conn.prepareStatement("Select * from grade_weights where course_id=?");
+			
+			stmt.setInt(1, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			ArrayList<GradeWeight> returnList = new ArrayList<GradeWeight>();
+			
+			while(resultSet.next())
+			{
+				GradeWeight g = new GradeWeight();
+				g.loadFrom(resultSet);
+				returnList.add(g);
+			}
+			
+			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
 			DBUtil.closeQuietly(resultSet);
 		}
 	}

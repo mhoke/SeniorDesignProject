@@ -24,7 +24,9 @@ CREATE CACHED TABLE Assignments(
 
 CREATE CACHED TABLE Grade_Weights (
 	id INTEGER IDENTITY,
+	name VARCHAR(80) NOT NULL,
   	weight INTEGER NOT NULL,
+  	course_id INTEGER NOT NULL
 );
 
 CREATE CACHED TABLE Courses (
@@ -139,8 +141,8 @@ INSERT INTO Assignments values(NULL, 0, 3, 'Homework 3', '2012-09-22', 0, 5, 10)
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 1', '2012-09-01', 1, 75, 100);
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 2', '2012-09-29', 1, 85, 100);
 
-INSERT INTO Grade_weights values(NULL, 20);
-INSERT INTO Grade_weights values(NULL, 80);
+INSERT INTO Grade_weights values(NULL, 'Homework', 20, 0);
+INSERT INTO Grade_weights values(NULL, 'Exams', 80, 0);
 
 
 INSERT INTO Admins values(NULL, 'TestAdmin', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8');
