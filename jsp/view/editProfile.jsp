@@ -12,7 +12,7 @@
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar"> Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
 		<div class="body">
-			<c:if test="${isStudent}">
+			<c:if test="${isStudent&&(!isProfessor)}">
 				<c:if test="${!empty errorMessage }">
 					<div class="error">${errorMessage}</div>
 				</c:if>
@@ -41,6 +41,55 @@
 						<tr>
 							<td class="text">New Major: </td>
 							<td> <input type="text" name="newMajorBox" size="12" value="${user.major}" /></td>
+						</tr>
+						
+						<tr>
+							<td> <input name="ChangeFieldsButton" type="submit" value="Edit Profile" /></td>
+							<td> <input name="ChangePasswordButton" type="submit" value="Change Password" /></td>
+						</tr>
+					</table>
+				</form>				
+			</c:if>
+			
+			<c:if test="${isProfessor}">
+				<c:if test="${!empty errorMessage }">
+					<div class="error">${errorMessage}</div>
+				</c:if>
+							
+				UserName: ${user.username} <br/>
+				Current Email Address: ${user.emailAddress} <br/>
+				<c:if test="${isProfessor&&isStudent}">Current Major: ${user.major}<br/></c:if>
+				Current	Phone Number: COMING SOON <br/>
+				Current Office Number: COMING SOON <br/>
+				Current Bio: COMING SOON <br/>			
+				
+				<form action="${pageContext.servletContext.contextPath}/editProfile" method="post">
+					<table>
+						<tr>
+							<td class="text">New Email Address: </td>
+							<td> <input type="text" name="newEmailAddressBox" size="12" value="${user.emailAddress}" /></td>
+						</tr>
+						
+						<c:if test="${isProfessor&&isStudent}">
+							<tr>
+								<td class="text">New Major: </td>
+								<td> <input type="text" name="newMajorBox" size="12" value="${user.major}" /></td>
+							</tr>
+						</c:if>
+						
+						<tr>
+							<td class="text">New Phone Number: </td>
+							<td> <input type="text" name="newPhoneNumberBox" size="12"/></td>
+						</tr>
+						
+						<tr>
+							<td class="text">New Office Number: </td>
+							<td> <input type="text" name="newOfficeNumberBox" size="12"/></td>
+						</tr>						
+						
+						<tr>
+							<td class="text">New Bio: </td>
+							<td> <input type="text" name="newBioBox" size="50"/></td>
 						</tr>
 						
 						<tr>
