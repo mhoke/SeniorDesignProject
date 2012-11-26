@@ -1,12 +1,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ include file="Skeleton.jsp" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="ycp.edu.seniordesign.model.Assignment" %>
+<%@ page import="ycp.edu.seniordesign.model.GradeWeight" %>
 
 <html>
 
 	<head>
 		<Title>Gradebook</Title>
 	</head>
+	
+	<% int counter = 0; %>
 	
 	<body>
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
@@ -18,16 +23,32 @@
 				<tr>
 					<td>Assignment</td>
 					<td>Due Date</td>
+					<td>Category</td>
 					<td>Earned Points</td>
 					<td>Possible Points</td>
 				</tr>
 				<c:forEach var="assign" items="${assignments}">
+					<%
+						ArrayList<Assignment> assignments = (ArrayList<Assignment>) request.getSession().getAttribute("assignments");
+						Assignment assignment = assignments.get(counter);
+						ArrayList<GradeWeight> gradeList = (ArrayList<GradeWeight>) request.getSession().getAttribute("grades");
+						
+						for(GradeWeight g : gradeList)
+						{
+							if(g.getId() == assignment.getGradeWeightType())
+							{
+								request.setAttribute("Type", g.getName());
+							}
+						}
+					%>
 					<tr>
 						<td>${assign.name}</td>
 						<td>${assign.dueDate}</td>
+						<td>${Type}</td>
 						<td align="center">${assign.earnedPoints}</td>
 						<td align="center">${assign.possiblePoints}</td>
 					</tr>
+					<% counter++; %>
 				</c:forEach>
 				<tr>
 					<td colspan="3" align="center">Course Average: </td>
