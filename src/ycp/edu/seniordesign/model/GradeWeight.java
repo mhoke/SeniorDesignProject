@@ -41,7 +41,6 @@ public class GradeWeight {
 		int index = 1;
 		setId(resultSet.getInt(index++));
 		setName(resultSet.getString(index++));
-		setCourseId(resultSet.getInt(index++));
 	}
 	
 	/**

@@ -1396,7 +1396,7 @@ public class Database {
 		}
 	}
 
-	public int getGradeWeight(int courseId, int gradeWeight) throws SQLException {
+	public int addGradeWeight(int gradeWeight) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
@@ -1404,11 +1404,15 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
-			stmt = conn.prepareStatement("select * from grade_weights where course_id=? and weight=?");
+		
+			// Insert the new row
+			stmt = conn.prepareStatement("insert into grade_weights values(NULL, ?)");
+			stmt.setInt(1, gradeWeight);	
+			stmt.execute();
 			
-			stmt.setInt(1, courseId);
-			stmt.setInt(2, gradeWeight);
-			
+			// Return the id of the newly inserted row
+			stmt = conn.prepareStatement("select * from grade_weights where weight=?");
+			stmt.setInt(1, gradeWeight);
 			resultSet = stmt.executeQuery();
 			
 			if(resultSet.next()) {
