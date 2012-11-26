@@ -778,6 +778,7 @@ public class Database {
 		}   
 
 	}
+	
 	public User getUserByUsername(String username) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -795,6 +796,40 @@ public class Database {
 				// the user exists
 				User user = new User();
 				user.loadFrom(resultSet);
+				return user;
+			}
+			else {
+				// no user exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public User getUserByName(String name) throws Exception{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from users where name=?");
+			statement.setString(1, name);
+			
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the user exists
+				User user = new User();
+				user.loadFrom(resultSet);
+				if (resultSet.next()){
+					throw new Exception("Multiple users with the same name. Fix this method.");
+				}
 				return user;
 			}
 			else {
@@ -890,15 +925,12 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 			
-			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =?, phonenumber =?, officenumber =?, biography =? where id =?");
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =? where id =?");
 			statement.setString(1, user.getEmailAddress());
 			statement.setString(2, user.getMajor());
 			statement.setBoolean(3, user.isCommuter());
 			statement.setString(4, user.getPassword());
-			statement.setString(5, user.getPhoneNumber());
-			statement.setString(6, user.getOfficeNumber());
-			statement.setString(7, user.getBiography());
-			statement.setInt(8, user.getId());
+			statement.setInt(5, user.getId());
 			statement.execute();
 			
 		} finally {
@@ -1363,5 +1395,37 @@ public class Database {
 			DBUtil.closeQuietly(resultSet);
 		}
 	}
+
+	public int getGradeWeight(int courseId, int gradeWeight) throws SQLException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			stmt = conn.prepareStatement("select * from grade_weights where course_id=? and weight=?");
+			
+			stmt.setInt(1, courseId);
+			stmt.setInt(2, gradeWeight);
+			
+			resultSet = stmt.executeQuery();
+			
+			if(resultSet.next()) {
+				GradeWeight grade = new GradeWeight();
+				grade.loadFrom(resultSet);
+				return grade.getId();
+			}
+			
+			return -1;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
 		
 }
+
