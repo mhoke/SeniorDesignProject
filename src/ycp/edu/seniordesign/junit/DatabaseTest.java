@@ -18,8 +18,8 @@ import ycp.edu.seniordesign.util.HashPassword;
 public class DatabaseTest {
 	String testSalt = HashPassword.generateRandomSalt(new Random());
 	String testPassword = HashPassword.computeHash("password", testSalt);
-	User testStudent = new User(999999, "username", "Test Student", testPassword, testSalt, "emailAddress", User.STUDENT_PROFILE, "CS", true);
-	User testProfessor = new User(999999, "testProfessor", "Test Professor",  testPassword, testSalt, "emailAddress", User.PROFESSOR_PROFILE, "None", true);
+	User testStudent = new User(999999, "username", "Test Student", testPassword, testSalt, "emailAddress", User.STUDENT_PROFILE, "CS", true, "1111111111", "HUM 111", "Biography");
+	User testProfessor = new User(999999, "testProfessor", "Test Professor",  testPassword, testSalt, "emailAddress", User.PROFESSOR_PROFILE, "None", true, "1111111111", "HUM 111", "Biography");
 	Course testCourse = new Course(999999, "Calc", testProfessor.getId(), "8AM - 9AM", 320, 101, 4, "MWF", "KEC 119", 123456, "This is a math class.");
 	EnrolledCourse testEnrolledCourse = new EnrolledCourse(999999, testStudent.getId(), testProfessor.getId(), testCourse.getId(), 100);
 	Assignment testAssignment = new Assignment(999999, testCourse.getId(), testStudent.getId(), "Homework #1", new Date(112, 8, 1), 1, 20, 20);

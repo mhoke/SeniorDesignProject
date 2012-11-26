@@ -890,12 +890,15 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 			
-			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =? where id =?");
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =?, phonenumber =?, officenumber =?, biography =? where id =?");
 			statement.setString(1, user.getEmailAddress());
 			statement.setString(2, user.getMajor());
 			statement.setBoolean(3, user.isCommuter());
 			statement.setString(4, user.getPassword());
-			statement.setInt(5, user.getId());
+			statement.setString(5, user.getPhoneNumber());
+			statement.setString(6, user.getOfficeNumber());
+			statement.setString(7, user.getBiography());
+			statement.setInt(8, user.getId());
 			statement.execute();
 			
 		} finally {

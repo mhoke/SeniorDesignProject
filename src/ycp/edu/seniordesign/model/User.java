@@ -28,14 +28,17 @@ public class User {
 	private String salt;
 	private int type;
 	private String major;
-	private boolean commuter; 
+	private boolean commuter;
+	private String phoneNumber;
+	private String officeNumber;
+	private String biography;
 	
 	public User(){
 		
 	}
 	
 
-	public User(int id, String username, String name, String password, String salt, String emailAddress, int type, String major, boolean commuter){
+	public User(int id, String username, String name, String password, String salt, String emailAddress, int type, String major, boolean commuter, String phoneNumber, String officeNumber, String biography){
 		this.id = id;
 		this.username = username;
 		this.name = name;
@@ -45,6 +48,9 @@ public class User {
 		this.type = type;
 		this.major = major;
 		this.commuter = commuter;
+		this.phoneNumber = phoneNumber;
+		this.officeNumber = officeNumber;
+		this.biography = biography;
 	}
 	
 	public int getId() {
@@ -115,6 +121,31 @@ public class User {
 		this.major = major;
 	}
 	
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
+	public String getOfficeNumber() {
+		return officeNumber;
+	}
+	
+	public void setOfficeNumber(String officeNumber) {
+		this.officeNumber = officeNumber;
+	}
+	
+	public String getBiography() {
+		return biography;
+	}
+	
+	public void setBiography(String biography) {
+		this.biography = biography;
+	}
+	
 	public boolean isProfessor(){
 		if (type == PROFESSOR_PROFILE || type == PROFESSOR_STUDENT_PROFILE){
 			return true;
@@ -156,6 +187,9 @@ public class User {
 		setType(resultSet.getInt(index++));
 		setMajor(resultSet.getString(index++));
 		setCommuter(resultSet.getBoolean(index++));
+		setPhoneNumber(resultSet.getString(index++));
+		setOfficeNumber(resultSet.getString(index++));
+		setBiography(resultSet.getString(index++));
 	}
 	
 	/**
@@ -175,6 +209,9 @@ public class User {
 		statement.setInt(index++, type);
 		statement.setString(index++, major);
 		statement.setBoolean(index++, commuter);
+		statement.setString(index++, phoneNumber);
+		statement.setString(index++, officeNumber);
+		statement.setString(index++, biography);
 	}
 
 	@Override
@@ -191,7 +228,10 @@ public class User {
 			&& emailAddress.equals(other.emailAddress)
 			&& type == other.type
 			&& major.equals(other.major)
-			&& commuter == other.commuter;
+			&& commuter == other.commuter
+			&& phoneNumber == other.phoneNumber
+			&& officeNumber == other.officeNumber
+			&& biography == other.biography;
 	}
 
 }
