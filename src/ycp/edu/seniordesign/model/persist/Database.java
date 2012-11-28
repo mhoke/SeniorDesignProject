@@ -13,6 +13,7 @@ import java.util.Random;
 
 import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
+import ycp.edu.seniordesign.model.ChangeUserTypeRequest;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
 import ycp.edu.seniordesign.model.GradeWeight;
@@ -1428,6 +1429,82 @@ public class Database {
 			DBUtil.close(conn);
 			DBUtil.closeQuietly(stmt);
 			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void addChangeUserTypeRequest(ChangeUserTypeRequest changeUserTypeRequest) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into User_Type_Changes values(NULL,?,?,?)");
+			
+			statement.setString(1, changeUserTypeRequest.getUsername());
+			statement.setString(2, changeUserTypeRequest.getEmailAddress());
+			statement.setString(3, changeUserTypeRequest.getNewUserType());
+			
+			statement.execute();
+			
+			// TODO: have this method return the id of the newly inserted row
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+		
+	}
+
+	public ArrayList<ChangeUserTypeRequest> getChangeUserTypeRequests() throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from user_type_changes");
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<ChangeUserTypeRequest> changeUserTypeRequests = new ArrayList<ChangeUserTypeRequest>();
+						
+			while (resultSet.next()){
+				ChangeUserTypeRequest changeUserTypeRequest = new ChangeUserTypeRequest();
+				changeUserTypeRequest.loadFrom(resultSet);
+				changeUserTypeRequests.add(changeUserTypeRequest);
+			}
+			
+			if (changeUserTypeRequests.isEmpty()){
+				return null;
+			} else {
+				return changeUserTypeRequests;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void removeChangeUserType(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from user_type_changes where id=?");
+			statement.setInt(1,  id);
+			
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
 		}
 	}
 		

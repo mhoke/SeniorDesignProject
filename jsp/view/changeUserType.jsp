@@ -5,7 +5,7 @@
 <html>
 
 	<head>
-		<Title>Add Course</Title>
+		<Title>Change User Type</Title>
 		
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
@@ -15,7 +15,7 @@
 		</style>
 		<script type="text/javascript">
 			$(document).ready(function() {
-			  	$("#addCourseForm").validate();
+			  	$("#changeUserTypeForm").validate();
 			});
 		</script>
 	</head>
@@ -25,20 +25,20 @@
 		<div class="leftSidebar"> Bus Schedule <br/> Campus Map</div>
 		
 		<div class="body">
-			<form id="addCourseForm" action="${pageContext.servletContext.contextPath}/addCourse" method="post">
+			<form id="changeUserTypeForm" action="${pageContext.servletContext.contextPath}/changeUserType" method="post">
 				<input type="hidden" name="submitted" value="true" />
 		
 				<table>
-					<tr><td>Course Name:</td><td><input type="text" class="required" name="courseName" size="25"/></td></tr>
-					<tr><td>Time:</td><td><input type="text" class="required" name="time" size="25" /></td></tr>
-					<tr><td>Course Number:</td><td><input type="text" class="required digits" name="courseNumber" minlength="3" maxlength="3" size="25" /></td></tr>
-					<tr><td>Section Number:</td><td><input type="text" class="required digits" name="sectionNumber" minlength="3" maxlength="3" size="25" /></td></tr>
-					<tr><td>Credits:</td><td><input type="text" class="required digits" name="credits" minlength="1" maxlength="1"size="25" /></td></tr>
-					<tr><td>Days:</td><td><input type="text" class="required" name="days" size="25" /></td></tr>
-					<tr><td>Location:</td><td><input type="text" class="required" name="location" size="25" /></td></tr>
-					<tr><td>CRN:</td><td><input type="text" class="required digits" name="CRN" maxlength="5" size="25" /></td></tr>
-					<tr><td>Description:</td><td><input type="text"  class="required" name="description" size="25" /></td></tr>
-					<tr><td><input name="addCourseButton" type="submit" value="Submit" /></td>
+					<tr><td>Name:</td><td><input type="text" class="required" name="name" size="25" /></td></tr>
+					<tr><td>Email address:</td><td><input type="text" class="required email" name="emailAddress" size="25" /></td></tr>
+					<tr><td>User Type:</td>
+						<td><select name="userType">
+		 						<option>Student</option>
+		 						<option>Teacher</option>
+						 		<option>Both</option>
+						</select></td>
+					</tr>
+					<tr><td><input name="changeUserTypeButton" type="submit" value="Submit" /></td></tr>
 				</table>
 			</form>
 			

@@ -10,6 +10,7 @@ DROP table grade_weights;
 DROP table users;
 DROP table registrations;
 DROP table pending_courses;
+DROP table user_type_changes;
 
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
@@ -98,6 +99,13 @@ CREATE CACHED TABLE Pending_Courses (
 	location VARCHAR(80) NOT NULL,
 	crn INTEGER NOT NULL,
 	description VARCHAR(80) NOT NULL
+);
+
+CREATE CACHED TABLE User_Type_Changes (
+	id INTEGER IDENTITY,
+	user_name VARCHAR(80) NOT NULL,
+	email_address VARCHAR(80) NOT NULL,
+	new_user_type VARCHAR(80) NOT NULL
 );
 
 /* Run this after creating all the tables*/

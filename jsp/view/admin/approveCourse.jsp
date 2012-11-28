@@ -37,7 +37,7 @@
 		</script>
 	</head>
 	
-	<body>	
+	<body style="background-color:#00FF00">	
 		<a href="/Whiteboard/admin/home">Admin Home</a> <br />
 		<a href="/Whiteboard/admin/approveCourse">Add Course</a> <br />
 		<a href="/Whiteboard/admin/changeUserType">Change User Type</a> <br />
@@ -68,6 +68,7 @@
 						<tr><td>Description:</td><td><input type="text"  class="required" name="description${pendingCourse.id}" size="25" value="${pendingCourse.description}"/></td></tr>
 						<tr><td><input id="approveCourseButton${pendingCourse.id}" class="approve" type="submit" value="Accept" /></td><td><input id="rejectCourseButton${pendingCourse.id}" class="reject" type="submit" value="Reject" /></td></tr>
 					</table>
+					<br />
 				</c:forEach>
 			</c:if>
 		</form>
