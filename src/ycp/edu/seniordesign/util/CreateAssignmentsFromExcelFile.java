@@ -80,7 +80,7 @@ public class CreateAssignmentsFromExcelFile {
 				int studentId = Database.getInstance().getUserByName(studentName).getId(); // FIXME: this will not work if there are multiple students with the same name
 			
 				// Look up the id of the grade weight associated with this course and grade weight
-				int gradeWeightId = Database.getInstance().addGradeWeight(gradeWeight); //FIXME: currently this adds a new grade weight for each row, this should not be the case
+				int gradeWeightId = Database.getInstance().addGradeWeight(gradeWeight, courseId); //FIXME: currently this adds a new grade weight for each row, this should not be the case
 				
 				// Create the assignment object
 				Assignment assignment = new Assignment(-1, courseId, studentId, assignmentName, dueDate, gradeWeightId, earnedPoints, possiblePoints); 
