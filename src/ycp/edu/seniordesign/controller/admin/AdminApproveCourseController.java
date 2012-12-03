@@ -23,12 +23,16 @@ public class AdminApproveCourseController {
 		// Look up the professor id for the given professor
 		User user = Database.getInstance().getUserByEmail(req.getParameter("emailAddress" + requestId));
 		if (user == null){
+			System.out.println("break1");
 			// No such user
 			return null;
-		} else if (user.getId() == User.STUDENT_PROFILE){
+		} else if (user.getId() != 1){
+			//FIXME:
+			System.out.println("break2");
 			// The user found was a student, they are not allowed to create course
 			return null;
 		} else if (!user.getName().equals(req.getParameter("professorName" + requestId))){
+			System.out.println("break3");
 			// The name field for the user did not match what was given
 			return null;
 		}

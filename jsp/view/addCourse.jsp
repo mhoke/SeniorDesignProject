@@ -38,7 +38,7 @@
 					<tr><td>Location:</td><td><input type="text" class="required" name="location" size="25" /></td></tr>
 					<tr><td>CRN:</td><td><input type="text" class="required digits" name="CRN" maxlength="5" size="25" /></td></tr>
 					<tr><td>Description:</td><td><input type="text"  class="required" name="description" size="25" /></td></tr>
-					<tr><td><input name="addCourseButton" type="submit" value="Add Course" /></td>
+					<tr><td><input name="addCourseButton" type="submit" value="Submit" /></td>
 				</table>
 			</form>
 			
@@ -82,6 +82,9 @@
 					</c:forEach>
 				</c:if>
 			</c:if>
+			<p />
+			<A HREF="addCourse">Add Course</A><br/>
+			<A HREF="changeUserType">Change User Type</A><br/>
 		</div>
 		<div class="footer">Random Copyright info goes here</div>
 				

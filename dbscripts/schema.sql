@@ -10,6 +10,7 @@ DROP table grade_weights;
 DROP table users;
 DROP table registrations;
 DROP table pending_courses;
+DROP table user_type_changes;
 
 CREATE CACHED TABLE Assignments(
   id INTEGER IDENTITY, 
@@ -25,6 +26,7 @@ CREATE CACHED TABLE Assignments(
 CREATE CACHED TABLE Grade_Weights (
 	id INTEGER IDENTITY,
   	weight INTEGER NOT NULL,
+  	course_id INTEGER 
 );
 
 CREATE CACHED TABLE Courses (
@@ -99,6 +101,13 @@ CREATE CACHED TABLE Pending_Courses (
 	description VARCHAR(80) NOT NULL
 );
 
+CREATE CACHED TABLE User_Type_Changes (
+	id INTEGER IDENTITY,
+	user_name VARCHAR(80) NOT NULL,
+	email_address VARCHAR(80) NOT NULL,
+	new_user_type VARCHAR(80) NOT NULL
+);
+
 /* Run this after creating all the tables*/
 INSERT INTO Buildings values(NULL, 'KEC');
 INSERT INTO Buildings values(NULL, 'HUM');
@@ -142,8 +151,8 @@ INSERT INTO Assignments values(NULL, 0, 3, 'Homework 3', '2012-09-22', 0, 5, 10)
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 1', '2012-09-01', 1, 75, 100);
 INSERT INTO Assignments values(NULL, 0, 3, 'Exam 2', '2012-09-29', 1, 85, 100);
 
-INSERT INTO Grade_weights values(NULL, 20);
-INSERT INTO Grade_weights values(NULL, 80);
+INSERT INTO Grade_weights values(NULL, 20, 0);
+INSERT INTO Grade_weights values(NULL, 80, 0);
 
 
 INSERT INTO Admins values(NULL, 'TestAdmin', '075293660cfd83e0644b52d5703243cc ', '7c99cda63beb37f8');

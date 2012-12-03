@@ -68,6 +68,22 @@
 					</c:forEach>
 				</c:if>
 			</c:if>
+			<c:if test="${isStudent}">
+				Upcoming Assignments: <br />
+				<c:if test="${upcomingAssignments == null}">
+					No upcoming assignments.<br />
+				</c:if>
+				<c:if test="${upcomingAssignments != null}">
+					<c:forEach var="assignment" items="${upcomingAssignments}">
+						<b>${assignment.key.name}</b> <br />
+						Class: ${assignment.value} <br />
+						Due Date: ${assignment.key.dueDate} <p />
+					</c:forEach>
+				</c:if>
+			</c:if>
+			<p />
+			<A HREF="addCourse">Add Course</A><br/>
+			<A HREF="changeUserType">Change User Type</A><br/>
 		</div>
 		<div class="footer">Random Copyright info goes here</div>
 				

@@ -13,6 +13,7 @@ import java.util.Random;
 
 import ycp.edu.seniordesign.model.Admin;
 import ycp.edu.seniordesign.model.Assignment;
+import ycp.edu.seniordesign.model.ChangeUserTypeRequest;
 import ycp.edu.seniordesign.model.Course;
 import ycp.edu.seniordesign.model.EnrolledCourse;
 import ycp.edu.seniordesign.model.GradeWeight;
@@ -778,6 +779,7 @@ public class Database {
 		}   
 
 	}
+	
 	public User getUserByUsername(String username) throws SQLException{
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -795,6 +797,40 @@ public class Database {
 				// the user exists
 				User user = new User();
 				user.loadFrom(resultSet);
+				return user;
+			}
+			else {
+				// no user exist with the given id
+				return null;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public User getUserByName(String name) throws Exception{
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);
+						
+			statement = connection.prepareStatement("select * from users where name=?");
+			statement.setString(1, name);
+			
+			resultSet = statement.executeQuery();
+			 
+			if (resultSet.next()){
+				// the user exists
+				User user = new User();
+				user.loadFrom(resultSet);
+				if (resultSet.next()){
+					throw new Exception("Multiple users with the same name. Fix this method.");
+				}
 				return user;
 			}
 			else {
@@ -890,15 +926,12 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
 			
-			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =?, phonenumber =?, officenumber =?, biography =? where id =?");
+			statement = connection.prepareStatement("update users set emailaddress =?, major =?, commuter =?, password =? where id =?");
 			statement.setString(1, user.getEmailAddress());
 			statement.setString(2, user.getMajor());
 			statement.setBoolean(3, user.isCommuter());
 			statement.setString(4, user.getPassword());
-			statement.setString(5, user.getPhoneNumber());
-			statement.setString(6, user.getOfficeNumber());
-			statement.setString(7, user.getBiography());
-			statement.setInt(8, user.getId());
+			statement.setInt(5, user.getId());
 			statement.execute();
 			
 		} finally {
@@ -1352,6 +1385,196 @@ public class Database {
 				GradeWeight g = new GradeWeight();
 				g.loadFrom(resultSet);
 				returnList.add(g);
+			}
+			
+			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public int addGradeWeight(int gradeWeight) throws SQLException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+		
+			// Insert the new row
+			stmt = conn.prepareStatement("insert into grade_weights values(NULL, ?)");
+			stmt.setInt(1, gradeWeight);	
+			stmt.execute();
+			
+			// Return the id of the newly inserted row
+			stmt = conn.prepareStatement("select * from grade_weights where weight=?");
+			stmt.setInt(1, gradeWeight);
+			resultSet = stmt.executeQuery();
+			
+			if(resultSet.next()) {
+				GradeWeight grade = new GradeWeight();
+				grade.loadFrom(resultSet);
+				return grade.getId();
+			}
+			
+			return -1;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void addChangeUserTypeRequest(ChangeUserTypeRequest changeUserTypeRequest) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("insert into User_Type_Changes values(NULL,?,?,?)");
+			
+			statement.setString(1, changeUserTypeRequest.getUsername());
+			statement.setString(2, changeUserTypeRequest.getEmailAddress());
+			statement.setString(3, changeUserTypeRequest.getNewUserType());
+			
+			statement.execute();
+			
+			// TODO: have this method return the id of the newly inserted row
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+		
+	}
+
+	public ArrayList<ChangeUserTypeRequest> getChangeUserTypeRequests() throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("select * from user_type_changes");
+			
+			resultSet = statement.executeQuery();
+			
+			ArrayList<ChangeUserTypeRequest> changeUserTypeRequests = new ArrayList<ChangeUserTypeRequest>();
+						
+			while (resultSet.next()){
+				ChangeUserTypeRequest changeUserTypeRequest = new ChangeUserTypeRequest();
+				changeUserTypeRequest.loadFrom(resultSet);
+				changeUserTypeRequests.add(changeUserTypeRequest);
+			}
+			
+			if (changeUserTypeRequests.isEmpty()){
+				return null;
+			} else {
+				return changeUserTypeRequests;
+			}
+			
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public void removeChangeUserType(int id) throws SQLException {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DriverManager.getConnection(JDBC_URL);			
+			
+			statement = connection.prepareStatement("delete from user_type_changes where id=?");
+			statement.setInt(1,  id);
+			
+			statement.execute();
+						
+		} finally {
+			DBUtil.close(connection);
+			DBUtil.closeQuietly(statement);
+		}
+	}
+
+	public void createAssignment(int userID, int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			ArrayList<Integer> student_List = getStudentsinCourse(courseID);
+			
+			//FIXME: Need special handling for this?? earned points of 0 will throw grades off - special value?? -1 maybe
+				//that will display a 0 on the grade page but not be taken into account on the grade calculation
+			stmt = conn.prepareStatement("insert into assignments values (NULL, ?, ?, ?, ?, ?, 0, ?)"); 
+			
+			stmt.setInt(1, courseID);
+			//statically set Name, Due Date, grade_weight_id, earned_points, possible_points
+			
+			//foreach student in the class, set the student id and execute
+			for(int i : student_List)
+			{
+				stmt.setInt(2, i);
+				stmt.execute();
+			}
+			
+			//foreach student, add entry to enrolled_courses table
+			stmt = conn.prepareStatement("insert into enrolled_courses values (NULL, ?, ?, ?, 0)");
+			stmt.setInt(2, userID);
+			stmt.setInt(3, courseID);
+			
+			for(int i : student_List)
+			{
+				stmt.setInt(1, i);
+				stmt.execute();
+			}
+			
+			//determine whether or not to add a category to the grade_weight table
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public ArrayList<Integer> getStudentsinCourse(int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select distinct student_id from assignments where course_id=?");
+			stmt.setInt(1, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			ArrayList<Integer> returnList = new ArrayList<Integer>();
+			
+			while(resultSet.next())
+			{
+				returnList.add(resultSet.getInt(1));
 			}
 			
 			return returnList;
