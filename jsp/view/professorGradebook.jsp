@@ -13,7 +13,7 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>	
 	</head>
 	
-	<body>
+	<body background="https://cas.ycp.edu/cas/images/cas-bg.jpg">
 		<script type="text/javascript">
 			function Switch(id)
 			{
