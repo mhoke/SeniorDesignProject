@@ -1507,5 +1507,84 @@ public class Database {
 			DBUtil.closeQuietly(statement);
 		}
 	}
+
+	public void createAssignment(int userID, int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			ArrayList<Integer> student_List = getStudentsinCourse(courseID);
+			
+			//FIXME: Need special handling for this?? earned points of 0 will throw grades off - special value?? -1 maybe
+				//that will display a 0 on the grade page but not be taken into account on the grade calculation
+			stmt = conn.prepareStatement("insert into assignments values (NULL, ?, ?, ?, ?, ?, 0, ?)"); 
+			
+			stmt.setInt(1, courseID);
+			//statically set Name, Due Date, grade_weight_id, earned_points, possible_points
+			
+			//foreach student in the class, set the student id and execute
+			for(int i : student_List)
+			{
+				stmt.setInt(2, i);
+				stmt.execute();
+			}
+			
+			//foreach student, add entry to enrolled_courses table
+			stmt = conn.prepareStatement("insert into enrolled_courses values (NULL, ?, ?, ?, 0)");
+			stmt.setInt(2, userID);
+			stmt.setInt(3, courseID);
+			
+			for(int i : student_List)
+			{
+				stmt.setInt(1, i);
+				stmt.execute();
+			}
+			
+			//determine whether or not to add a category to the grade_weight table
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+	
+	public ArrayList<Integer> getStudentsinCourse(int courseID) throws SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select distinct student_id from assignments where course_id=?");
+			stmt.setInt(1, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			ArrayList<Integer> returnList = new ArrayList<Integer>();
+			
+			while(resultSet.next())
+			{
+				returnList.add(resultSet.getInt(1));
+			}
+			
+			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
 		
 }

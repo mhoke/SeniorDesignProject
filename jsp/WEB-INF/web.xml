@@ -81,6 +81,11 @@
 	<servlet-name>ChangeUserTypeServlet</servlet-name>
 	<servlet-class>ycp.edu.seniordesign.webapp.ChangeUserTypeServlet</servlet-class>
 </servlet>
+
+<servlet>
+	<servlet-name>AddAssignmentServlet</servlet-name>
+	<servlet-class>ycp.edu.seniordesign.webapp.AddAssignmentServlet</servlet-class>
+</servlet>
 <!-- Servlet Mappings -->
 
 <servlet-mapping>
@@ -142,6 +147,10 @@
 <servlet-mapping>
 	<servlet-name>ChangeUserTypeServlet</servlet-name>
 	<url-pattern>changeUserType</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+	<servlet-name>AddAssignmentServlet</servlet-name>
+	<url-pattern>addAssignment</url-pattern>
 </servlet-mapping>
 
 </web-app>
