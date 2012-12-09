@@ -259,6 +259,7 @@ public class Database {
 		
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
+			connection.setAutoCommit(false);
 						
 			statement = connection.prepareStatement("select * from users where id=?");
 			statement.setInt(1, id);
@@ -291,6 +292,7 @@ public class Database {
 		
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
+			connection.setAutoCommit(false);
 						
 			statement = connection.prepareStatement("select * from courses where id=?");
 			statement.setInt(1, id);
@@ -495,6 +497,7 @@ public class Database {
 		
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
+			connection.setAutoCommit(false);
 						
 			statement = connection.prepareStatement("select * from assignments where course_id=? and student_id=?");
 			statement.setInt(1, courseId);
@@ -525,6 +528,7 @@ public class Database {
 		
 		try {
 			connection = DriverManager.getConnection(JDBC_URL);
+			connection.setAutoCommit(false);
 						
 			statement = connection.prepareStatement("select distinct name from assignments where course_id=?");
 			statement.setInt(1, courseId);
@@ -886,6 +890,7 @@ public class Database {
 		try 
 		{
 			connection = DriverManager.getConnection(JDBC_URL);
+			connection.setAutoCommit(false);
 			
 			statement = connection.prepareStatement("select * from assignments where course_id=? and name=?");
 			statement.setInt(1,  id);
@@ -1038,6 +1043,7 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
+			conn.setAutoCommit(false);
 			
 			stmt = conn.prepareStatement("UPDATE ASSIGNMENTS SET grade_weight_id=?, earned_points=?, possible_points=? WHERE name=? AND student_id=?");
 			
@@ -1117,6 +1123,7 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
+			conn.setAutoCommit(false);
 			
 			stmt = conn.prepareStatement("select * from enrolled_courses where student_id=? and course_id=?");
 			stmt.setInt(1, userID);
@@ -1148,6 +1155,7 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
+			conn.setAutoCommit(false);
 			
 			stmt = conn.prepareStatement("select * from courses where professor_id=? and id=?");
 			
@@ -1202,6 +1210,7 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
+			conn.setAutoCommit(false);
 			
 			stmt = conn.prepareStatement("select distinct student_id from assignments where course_id=?");
 			stmt.setInt(1, courseID);
@@ -1372,6 +1381,7 @@ public class Database {
 		try
 		{
 			conn = DriverManager.getConnection(JDBC_URL);
+			conn.setAutoCommit(false);
 			stmt = conn.prepareStatement("Select * from grade_weights where course_id=?");
 			
 			stmt.setInt(1, courseID);
@@ -1509,7 +1519,7 @@ public class Database {
 		}
 	}
 
-	public void createAssignment(int userID, int courseID) throws SQLException
+	public void createAssignment(int userID, int courseID, String name, Date date, int possible) throws SQLException
 	{
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -1523,10 +1533,13 @@ public class Database {
 			
 			//FIXME: Need special handling for this?? earned points of 0 will throw grades off - special value?? -1 maybe
 				//that will display a 0 on the grade page but not be taken into account on the grade calculation
-			stmt = conn.prepareStatement("insert into assignments values (NULL, ?, ?, ?, ?, ?, 0, ?)"); 
+			stmt = conn.prepareStatement("insert into assignments values (NULL, ?, ?, ?, ?, ?, -1, ?)"); 
 			
 			stmt.setInt(1, courseID);
 			//statically set Name, Due Date, grade_weight_id, earned_points, possible_points
+			stmt.setString(3, name);
+			stmt.setDate(4, (java.sql.Date) date);
+			stmt.setInt(6, possible);
 			
 			//foreach student in the class, set the student id and execute
 			for(int i : student_List)

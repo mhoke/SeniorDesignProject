@@ -5,7 +5,7 @@
 <html>
 
 	<head>
-		<Title>Change Password</Title>
+		<Title>Add Assignment</Title>
 		
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
@@ -28,19 +28,45 @@
 			<form id ="addAssignmentForm" action="${pageContext.servletContext.contextPath}/addAssignment" method="post">
 				<table>
 					<tr>
-						<td class="text">Name: </td>
-						<td> <input class="required" type="text" name="nameBox" size="12" /></td>
-					</tr>
-					<tr>
-						<td class="text">Due Date: </td>
-						<td> <input class="required" type="text" name="dateBox" size="12" /></td>
-					</tr>
-					<tr>
-						<td class="text">Possible Points: </td>
-						<td> <input class="required" type="text" name="possibleBox" size="12" /></td>
-					</tr>
-					<tr>
-						<td> <input name="AddAssignmentButton" type="submit" value="Add Assignment" /></td>
+						<td>
+							<table>
+								<tr>
+									<td class="text">Name: </td>
+									<td><input class="required" type="text" name="nameBox" size="12"/></td>
+								</tr>
+								<tr>
+									<td class="text">Year: </td>
+									<td> <input class="required" type="text" name="yearBox" size="12"/></td>
+								</tr>
+								<tr>
+									<td class="text">Month: </td>
+									<td> <input class="required" type="text" name="monthBox" size="12"/> </td>
+								</tr>
+								<tr>
+									<td class="text">Day: </td>
+									<td> <input class="required" type="text" name="dayBox" size="12"/> </td>
+								</tr>
+								<tr>
+									<td class="text">Possible Points: </td>
+									<td><input class="required" type="text" name="possibleBox" size="12"/></td>
+								</tr>
+								<tr>
+									<td>
+										<select name="grade_weights">
+											<% int grade_count = 0; %>
+											<c:forEach var="item" items="${ListofGrades}">
+												<option value="<%=grade_count%>">${item.name}</option>
+												<% grade_count++; %>
+											</c:forEach>
+											<option value="<%=grade_count%>">New Category</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td> <input name="AddAssignmentButton" type="submit" value="Add Assignment" /></td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 				</table>
 			</form>

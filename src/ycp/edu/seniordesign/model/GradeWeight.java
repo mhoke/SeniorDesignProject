@@ -7,6 +7,7 @@ import java.sql.SQLException;
 public class GradeWeight {
 	private int id;
 	private String name;
+	private int weight;
 	private int courseId;
 	
 	public int getId() {
@@ -32,6 +33,16 @@ public class GradeWeight {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getWeight()
+	{
+		return weight;
+	}
+	
+	public void setWeight(int weight)
+	{
+		this.weight = weight;
+	}
 	/**
 	 * This method can be used to load the fields of a grade from a resultSet to a Grade object
 	 * @param resultSet the resultSet to load the fields from
@@ -41,6 +52,8 @@ public class GradeWeight {
 		int index = 1;
 		setId(resultSet.getInt(index++));
 		setName(resultSet.getString(index++));
+		setWeight(resultSet.getInt(index++));
+		setCourseId(resultSet.getInt(index++));
 	}
 	
 	/**
@@ -52,6 +65,7 @@ public class GradeWeight {
 		int index = 1;
 		statement.setInt(index++, id);
 		statement.setString(index++, name);
+		statement.setInt(index++, weight);
 		statement.setInt(index++, courseId);
 	}
 	
