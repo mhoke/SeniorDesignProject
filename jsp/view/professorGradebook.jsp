@@ -32,7 +32,7 @@
 		<% int counter = 0;%>
 	
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
-		<div class="leftSidebar">Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
+		<div class="leftSidebar"><br>Campus Utilities <br/><p><A HREF="campusMap">Campus Map</A></p><A HREF="campusShuttleMap">Campus Shuttle Map</A></div>
 		<div class="body">
 			<div align="center">${course.name}</div>
 			<c:if test="${!empty errorMessage }">

@@ -22,7 +22,7 @@
 	
 	<body background="https://cas.ycp.edu/cas/images/cas-bg.jpg">
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
-		<div class="leftSidebar"> Bus Schedule <br/> Campus Map</div>
+		<div class="leftSidebar"><br>Campus Utilities <br/><p><A HREF="campusMap">Campus Map</A></p><A HREF="campusShuttleMap">Campus Shuttle Map</A></div>
 		
 		<div class="body">
 			<form id="changeUserTypeForm" action="${pageContext.servletContext.contextPath}/changeUserType" method="post">
