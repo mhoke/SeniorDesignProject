@@ -5,7 +5,7 @@
 <html>
 
 	<head>
-		<Title>Change Password</Title>
+		<Title>Add Assignment</Title>
 		
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>

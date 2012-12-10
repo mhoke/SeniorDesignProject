@@ -21,7 +21,7 @@
 		<div class="header"><A HREF="editProfile"> ${user.username}</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="home">Home</A>&emsp;&emsp;&emsp;&emsp;&emsp;<A HREF="login">Logout</A></div>
 		<div class="leftSidebar"> Bus Schedule <br/><A HREF="campusMap">Campus Map</A></div>
 		<div class="body">
-			<c:if test="${isStudent}">
+			<c:if test="${isStudent||isProfessor}">
 				<c:if test="${!empty errorMessage }">
 					<div class="error">${errorMessage}</div>
 				</c:if>
