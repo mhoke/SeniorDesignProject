@@ -11,10 +11,11 @@
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$("#uploadForm").validate();
-				$("#addAssignmentForm").validate();
-			
-				$("#uploadDialog").dialog({
+				document.getElementById('uploadForm').validate;
+				document.getElementById('addAssignmentForm').validate();
+				
+				document.getElementById('uploadDialog').dialog({
+					alert("We're still hosed!!");
 					autoOpen: false,
 					title: "Select file to upload",
 						buttons: [
@@ -29,13 +30,13 @@
 					width: 600,
 					height: 300,
 				});
-				
-				$("#uploadButton").click(
-					function()
-					{
-						$("#uploadDialog").dialog('open');
-					});
 			});
+			
+			function ShowDialog()
+			{
+				document.getElementById('uploadDialog').style.display = 'block';
+				document.getElementById('uploadDialog').dialog('open');
+			}
 		</script>
 	</head>
 	
@@ -92,9 +93,9 @@
 					</tr>
 				</table>
 			</form>
-			<div> Click to upload a file: <button id="uploadButton">Upload file</button></div>
+			<div> Click to upload a file: <button id="uploadButton" onclick="ShowDialog()">Upload file</button></div>
 		
-			<div class="hidden" id="uploadDialog">
+			<div id="uploadDialog" style="display:none">
 	            <form id="uploadForm" action="${pageContext.servletContext.contextPath}/addAssignment?id=${courseID}" method="post" enctype="multipart/form-data">
                 	<input class="required" type="file" name="file" size="40" /> <br/>
                 </form>
