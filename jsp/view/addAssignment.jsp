@@ -3,7 +3,6 @@
 <%@ include file="Skeleton.jsp" %>
 
 <html>
-
 	<head>
 		<Title>Add Assignment</Title>
 		
@@ -12,7 +11,30 @@
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
-			  	$("#addAssignmentForm").validate();
+				$("#uploadForm").validate();
+				$("#addAssignmentForm").validate();
+			
+				$("#uploadDialog").dialog({
+					autoOpen: false,
+					title: "Select file to upload",
+						buttons: [
+							{ text: "Cancel", click: function() { $(this).dialog("close"); } },
+							{ text: "Submit",
+								click: function() {
+									$(this).dialog("close");
+									$("#uploadForm").submit();
+								}
+							}
+						],
+					width: 600,
+					height: 300,
+				});
+				
+				$("#uploadButton").click(
+					function()
+					{
+						$("#uploadDialog").dialog('open');
+					});
 			});
 		</script>
 	</head>
@@ -70,9 +92,14 @@
 					</tr>
 				</table>
 			</form>
-		</div>	
+			<div> Click to upload a file: <button id="uploadButton">Upload file</button></div>
 		
-		<!-- Button and code goes here for uploading -->
+			<div class="hidden" id="uploadDialog">
+	            <form id="uploadForm" action="${pageContext.servletContext.contextPath}/addAssignment?id=${courseID}" method="post" enctype="multipart/form-data">
+                	<input class="required" type="file" name="file" size="40" /> <br/>
+                </form>
+	        </div>
+		</div>	
 		
 		<div class="rightSidebar">
 			<c:if test="${isStudent}">

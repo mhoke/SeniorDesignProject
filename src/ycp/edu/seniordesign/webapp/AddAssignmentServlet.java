@@ -37,6 +37,7 @@ public class AddAssignmentServlet extends HttpServlet
 				try 
 				{
 					req.setAttribute("ListofGrades", Database.getInstance().getGradesforCourse(courseID));
+					req.setAttribute("courseID", courseID);
 					req.getRequestDispatcher("/view/addAssignment.jsp").forward(req, resp);
 				}
 				catch (SQLException e) 
