@@ -18,9 +18,14 @@
                                 
                         }
                         
+                        body
+                        {
+                        		background-size: 100%;
+                        }
+                        
                         .header
                         {
-                                width:80%;
+                                width:90%;
                                 height:10%;
                                 clear:both;
                                 text-align:center;
@@ -32,7 +37,7 @@
                         
                         .leftSidebar
                         {
-                                width:20%;
+                                width:22.5%;
                                 height:80%;
                                 float:left;
                                 text-align:center;
@@ -44,7 +49,7 @@
                         
                         .body
                         {
-                                width:40%;
+                                width:45%;
                                 height:80%;
                                 overflow:auto;
                                 float:left;
@@ -57,7 +62,7 @@
                         
                         .rightSidebar
                         {
-                                width:20%;
+                                width:22.5%;
                                 height:80%;
                                 float:left;
                                 text-align:center;
@@ -70,7 +75,7 @@
                         .footer
                         {
                                 color:red;
-                                width:80%;
+                                width:90%;
                                 height:5%;
                                 clear:both;
                                 text-align:center;
