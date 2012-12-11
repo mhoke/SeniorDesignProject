@@ -2,6 +2,7 @@ package ycp.edu.seniordesign.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -22,8 +23,8 @@ import ycp.edu.seniordesign.model.persist.Database;
 
 public class CreateAssignmentsFromExcelFile {
 	
-	public static void createAssignmentsFromExcelSheet(String filename, int courseId) throws Exception{		
-		String [][] assignmentInfo = generateAssignmentInfo(filename);
+	public static void createAssignmentsFromExcelSheet(InputStream stream, int courseId) throws Exception{		
+		String [][] assignmentInfo = generateAssignmentInfo(stream);
 		
 		// Determine which row in the excel sheet is which based on the headings
 		int studentNameColumn = -1;
@@ -91,7 +92,7 @@ public class CreateAssignmentsFromExcelFile {
 		}
 	}
 	
-	private static String[][] generateAssignmentInfo (String filename) throws SQLException, ParseException, IOException {
+	private static String[][] generateAssignmentInfo (InputStream stream) throws SQLException, ParseException, IOException {
 		// Create a blank two dimensional array to store the information
 		String [][]assignmentInfo = new String[100][100]; // Note: the sheet must be 100 X 100 or less
 		for (int i = 0; i < 100; i++){
@@ -102,11 +103,8 @@ public class CreateAssignmentsFromExcelFile {
 		
 		FileInputStream fileInputStream = null;
 		try {
-			// Create a FileInputStream that will be use to read the excel file.
-			fileInputStream = new FileInputStream(filename);
-
 			// Create an excel workbook from the file system.
-			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+			HSSFWorkbook workbook = new HSSFWorkbook(stream);
 			
 			// Get the first sheet on the workbook.
 			HSSFSheet sheet = workbook.getSheetAt(0);

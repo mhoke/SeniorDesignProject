@@ -37,7 +37,8 @@
 			<div align="center">${course.name}</div>
 			<c:if test="${!empty errorMessage }">
 					<div class="error" align="left">${errorMessage}</div>
-				</c:if>
+			</c:if>
+			<A HREF="addAssignment?id=${course.id}">Add assignment for this course</A>
 			<form action="${pageContext.servletContext.contextPath}/pcourse" method="post">
 				<table>
 					<c:forEach var="assign" items="${assignments}">

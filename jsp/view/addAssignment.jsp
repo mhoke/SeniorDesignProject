@@ -13,30 +13,7 @@
 			$(document).ready(function() {
 				document.getElementById('uploadForm').validate;
 				document.getElementById('addAssignmentForm').validate();
-				
-				document.getElementById('uploadDialog').dialog({
-					alert("We're still hosed!!");
-					autoOpen: false,
-					title: "Select file to upload",
-						buttons: [
-							{ text: "Cancel", click: function() { $(this).dialog("close"); } },
-							{ text: "Submit",
-								click: function() {
-									$(this).dialog("close");
-									$("#uploadForm").submit();
-								}
-							}
-						],
-					width: 600,
-					height: 300,
-				});
 			});
-			
-			function ShowDialog()
-			{
-				document.getElementById('uploadDialog').style.display = 'block';
-				document.getElementById('uploadDialog').dialog('open');
-			}
 		</script>
 	</head>
 	
@@ -48,7 +25,7 @@
 				<div class="error">${errorMessage}</div>
 			</c:if>
 						
-			<form id ="addAssignmentForm" action="${pageContext.servletContext.contextPath}/addAssignment" method="post">
+			<form id ="addAssignmentForm" action="${pageContext.servletContext.contextPath}/addAssignment?id=${courseID}" method="post">
 				<table>
 					<tr>
 						<td>
@@ -93,11 +70,11 @@
 					</tr>
 				</table>
 			</form>
-			<div> Click to upload a file: <button id="uploadButton" onclick="ShowDialog()">Upload file</button></div>
 		
-			<div id="uploadDialog" style="display:none">
+			<div id="uploadDialog">
 	            <form id="uploadForm" action="${pageContext.servletContext.contextPath}/addAssignment?id=${courseID}" method="post" enctype="multipart/form-data">
-                	<input class="required" type="file" name="file" size="40" /> <br/>
+                	<input class="required" type="file" name="file"/> <br/>
+                	<input name="UploadButton" type="submit" value="Upload File" />
                 </form>
 	        </div>
 		</div>	
