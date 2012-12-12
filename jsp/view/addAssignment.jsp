@@ -11,8 +11,8 @@
 		
 		<script type="text/javascript">
 			$(document).ready(function() {
-				document.getElementById('uploadForm').validate;
-				document.getElementById('addAssignmentForm').validate();
+				$("#uploadForm").validate();
+				$("#addAssignmentForm").validate();
 			});
 		</script>
 	</head>

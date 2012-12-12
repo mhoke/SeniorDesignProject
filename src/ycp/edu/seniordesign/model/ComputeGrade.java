@@ -58,7 +58,7 @@ public class ComputeGrade {
 			// determine the number of assignments in this category
 			int count = 0;
 			for(Assignment assignment2 : assignments){
-				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType() && assignment.getEarnedPoints() != -1){
+				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType() && assignment2.getEarnedPoints() != -1){
 					count++;
 				}
 			}

@@ -1407,7 +1407,7 @@ public class Database {
 		}
 	}
 
-	public int addGradeWeight(int gradeWeight, int courseId) throws SQLException {
+	public int addGradeWeight(int gradeWeight, int courseId, String name) throws SQLException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
@@ -1417,9 +1417,10 @@ public class Database {
 			conn = DriverManager.getConnection(JDBC_URL);
 		
 			// Insert the new row
-			stmt = conn.prepareStatement("insert into grade_weights values(NULL, ?, ?)");
-			stmt.setInt(1, gradeWeight);	
-			stmt.setInt(2, courseId);
+			stmt = conn.prepareStatement("insert into grade_weights values(NULL, ?, ?, ?)");
+			stmt.setString(1, name);
+			stmt.setInt(2, gradeWeight);	
+			stmt.setInt(3, courseId);
 			stmt.execute();
 			
 			// Return the id of the newly inserted row
@@ -1538,7 +1539,7 @@ public class Database {
 			stmt.setInt(1, courseID);
 			//statically set Name, Due Date, grade_weight_id, earned_points, possible_points
 			stmt.setString(3, name);
-			stmt.setDate(4, (java.sql.Date) date);
+			stmt.setDate(4, new java.sql.Date(date.getTime()));
 			stmt.setInt(5, weight_id);
 			stmt.setInt(6, possible);
 			
@@ -1548,18 +1549,6 @@ public class Database {
 				stmt.setInt(2, i);
 				stmt.execute();
 			}
-			
-			//foreach student, add entry to enrolled_courses table
-			stmt = conn.prepareStatement("insert into enrolled_courses values (NULL, ?, ?, ?, 0)");
-			stmt.setInt(2, userID);
-			stmt.setInt(3, courseID);
-			
-			for(int i : student_List)
-			{
-				stmt.setInt(1, i);
-				stmt.execute();
-			}
-			
 			//determine whether or not to add a category to the grade_weight table
 		}
 		finally

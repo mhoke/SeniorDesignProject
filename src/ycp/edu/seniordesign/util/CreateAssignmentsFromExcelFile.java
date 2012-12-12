@@ -33,6 +33,7 @@ public class CreateAssignmentsFromExcelFile {
 		int possiblePointsColumn = -1;
 		int dueDateColumn = -1; // FIXME: Are professor really going to have such a column in their gradebook?
 		int gradeWeightColumn = -1; // FIXME: Are professor really going to have such a column in their gradebook?
+		int nameColumn = -1;
 		
 		for(int i = 0; i < 100; i++){
 			String heading = assignmentInfo[0][i];
@@ -48,7 +49,9 @@ public class CreateAssignmentsFromExcelFile {
 				dueDateColumn = i;
 			} else if (heading.toLowerCase().equals("grade weight")){
 				gradeWeightColumn = i;
-			} 
+			} else if (heading.toLowerCase().equals("weight name")){
+				nameColumn = i;
+			}
 		}
 				
 		for(int i = 1; i < 100; i++){			
@@ -72,6 +75,8 @@ public class CreateAssignmentsFromExcelFile {
 			    String tempGradeWeight = assignmentInfo[i][gradeWeightColumn];
 				int gradeWeight = Integer.parseInt(tempGradeWeight.substring(0, tempGradeWeight.length() - 2));
 				
+				String name = assignmentInfo[i][nameColumn];
+				
 				if (assignmentName.equals("")){
 					// No assignment name, use "Unnamed Assignment" as default
 					assignmentName = "Unnamed Assignment";
@@ -81,7 +86,7 @@ public class CreateAssignmentsFromExcelFile {
 				int studentId = Database.getInstance().getUserByName(studentName).getId(); // FIXME: this will not work if there are multiple students with the same name
 			
 				// Look up the id of the grade weight associated with this course and grade weight
-				int gradeWeightId = Database.getInstance().addGradeWeight(gradeWeight, courseId); //FIXME: currently this adds a new grade weight for each row, this should not be the case
+				int gradeWeightId = Database.getInstance().addGradeWeight(gradeWeight, courseId, name); //FIXME: currently this adds a new grade weight for each row, this should not be the case
 				
 				// Create the assignment object
 				Assignment assignment = new Assignment(-1, courseId, studentId, assignmentName, dueDate, gradeWeightId, earnedPoints, possiblePoints); 

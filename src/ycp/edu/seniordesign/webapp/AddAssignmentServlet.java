@@ -17,7 +17,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import ycp.edu.seniordesign.controller.AssignmentController;
 import ycp.edu.seniordesign.model.User;
-import ycp.edu.seniordesign.model.persist.Database;
 import ycp.edu.seniordesign.util.CreateAssignmentsFromExcelFile;
 
 public class AddAssignmentServlet extends HttpServlet
@@ -89,6 +88,7 @@ public class AddAssignmentServlet extends HttpServlet
 			//Get text fields
 			if(req.getParameter("AddAssignmentButton") != null)
 			{
+				System.out.println("We're really hosed");
 				String Name = req.getParameter("nameBox");
 				int Year = Integer.parseInt(req.getParameter("yearBox"));
 				int Month = Integer.parseInt(req.getParameter("monthBox"));
@@ -96,7 +96,7 @@ public class AddAssignmentServlet extends HttpServlet
 				int Possible = Integer.parseInt(req.getParameter("possibleBox"));
 				int Weight = Integer.parseInt(req.getParameter("grade_weights"));
 				
-				Date date = new Date(Year - 1900, Month, Day);
+				Date date = new Date(Year - 1901, Month, Day);
 				
 				//Update Database
 				try 
@@ -110,8 +110,9 @@ public class AddAssignmentServlet extends HttpServlet
 					e.printStackTrace();
 				}
 			}
-			else if(req.getParameter("UploadButton") != null)
+			else
 			{
+				System.out.println("We're hosed");
 				// Create a factory for disk-based file items
 				FileItemFactory factory = new DiskFileItemFactory();
 
@@ -121,12 +122,12 @@ public class AddAssignmentServlet extends HttpServlet
 				// Parse the request
 				try 
 				{
-					List<FileItem> items = upload.parseRequest(req);
-					for(FileItem f : items)
+					List<?> items = upload.parseRequest(req);
+					for(Object f : items)
 					{
-						if(!f.isFormField())
+						if(!((FileItem)f).isFormField())
 						{
-							CreateAssignmentsFromExcelFile.createAssignmentsFromExcelSheet(f.getInputStream(), courseID);
+							CreateAssignmentsFromExcelFile.createAssignmentsFromExcelSheet(((FileItem) f).getInputStream(), courseID);
 						}
 					}
 				} 
@@ -135,7 +136,6 @@ public class AddAssignmentServlet extends HttpServlet
 					e.printStackTrace();
 				}
 			}
-			req.getRequestDispatcher("/view/addAssignment.jsp").forward(req, resp);
 		}
 	}
 }
