@@ -45,7 +45,14 @@
 						<td>${assign.name}</td>
 						<td>${assign.dueDate}</td>
 						<td>${Type}</td>
-						<td align="center">${assign.earnedPoints}</td>
+						<c:choose>
+							<c:when test="${assign.earnedPoints == -1}">
+								<td align="center">-</td>
+							</c:when>
+							<c:otherwise>
+								<td align="center">${assign.earnedPoints}</td>
+							</c:otherwise>
+						</c:choose>
 						<td align="center">${assign.possiblePoints}</td>
 					</tr>
 					<% counter++; %>

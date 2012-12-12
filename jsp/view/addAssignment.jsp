@@ -58,7 +58,6 @@
 												<option value="<%=grade_count%>">${item.name}</option>
 												<% grade_count++; %>
 											</c:forEach>
-											<option value="<%=grade_count%>">New Category</option>
 										</select>
 									</td>
 								</tr>

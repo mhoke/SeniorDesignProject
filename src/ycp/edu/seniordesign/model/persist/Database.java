@@ -1519,7 +1519,7 @@ public class Database {
 		}
 	}
 
-	public void createAssignment(int userID, int courseID, String name, Date date, int possible) throws SQLException
+	public void createAssignment(int userID, int courseID, String name, Date date, int possible, int weight_id) throws SQLException
 	{
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -1527,9 +1527,9 @@ public class Database {
 		
 		try
 		{
-			conn = DriverManager.getConnection(JDBC_URL);
-			
 			ArrayList<Integer> student_List = getStudentsinCourse(courseID);
+			
+			conn = DriverManager.getConnection(JDBC_URL);
 			
 			//FIXME: Need special handling for this?? earned points of 0 will throw grades off - special value?? -1 maybe
 				//that will display a 0 on the grade page but not be taken into account on the grade calculation
@@ -1539,6 +1539,7 @@ public class Database {
 			//statically set Name, Due Date, grade_weight_id, earned_points, possible_points
 			stmt.setString(3, name);
 			stmt.setDate(4, (java.sql.Date) date);
+			stmt.setInt(5, weight_id);
 			stmt.setInt(6, possible);
 			
 			//foreach student in the class, set the student id and execute
@@ -1592,6 +1593,39 @@ public class Database {
 			}
 			
 			return returnList;
+		}
+		finally
+		{
+			DBUtil.close(conn);
+			DBUtil.closeQuietly(stmt);
+			DBUtil.closeQuietly(resultSet);
+		}
+	}
+
+	public int getWeightfromName(String name, int courseID) throws SQLException 
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		
+		try
+		{
+			conn = DriverManager.getConnection(JDBC_URL);
+			
+			stmt = conn.prepareStatement("select id from grade_weights where name=? and course_id=?");
+			stmt.setString(1, name);
+			stmt.setInt(2, courseID);
+			
+			resultSet = stmt.executeQuery();
+			
+			if(resultSet.next())
+			{
+				return resultSet.getInt(1);
+			}
+			else
+			{
+				return -1;
+			}
 		}
 		finally
 		{

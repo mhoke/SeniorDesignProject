@@ -58,14 +58,17 @@ public class ComputeGrade {
 			// determine the number of assignments in this category
 			int count = 0;
 			for(Assignment assignment2 : assignments){
-				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType()){
+				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType() && assignment.getEarnedPoints() != -1){
 					count++;
 				}
 			}
 			
 			// Add this assignments grade to the running total grade for the course
-			System.out.println("Using a score of " + assignment.getEarnedPoints() + "/" + assignment.getPossiblePoints() + " with a grade weight of " + gradeWeight);
-			currentScore = currentScore + (((double) assignment.getEarnedPoints()/assignment.getPossiblePoints()) * gradeWeight)/count;
+			if(assignment.getEarnedPoints() != -1)
+			{
+				System.out.println("Using a score of " + assignment.getEarnedPoints() + "/" + assignment.getPossiblePoints() + " with a grade weight of " + gradeWeight);
+				currentScore = currentScore + (((double) assignment.getEarnedPoints()/assignment.getPossiblePoints()) * gradeWeight)/count;
+			}
 		}
 				
 		score = currentScore;
@@ -87,14 +90,16 @@ public class ComputeGrade {
 			// determine the number of assignments in this category
 			int count = 0;
 			for(Assignment assignment2 : assignments){
-				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType()){
+				if (assignment.getGradeWeightType() == assignment2.getGradeWeightType() && assignment.getEarnedPoints() != -1){
 					count++;
 				}
 			}
-			
-			// Add this assignments grade to the running total grade for the course
-			System.out.println("Using a score of " + assignment.getEarnedPoints() + "/" + assignment.getPossiblePoints() + " with a grade weight of " + gradeWeight);
-			currentScore = currentScore + (((double) assignment.getEarnedPoints()/assignment.getPossiblePoints()) * gradeWeight)/count;
+			if(assignment.getEarnedPoints() != -1)
+			{
+				// Add this assignments grade to the running total grade for the course
+				System.out.println("Using a score of " + assignment.getEarnedPoints() + "/" + assignment.getPossiblePoints() + " with a grade weight of " + gradeWeight);
+				currentScore = currentScore + (((double) assignment.getEarnedPoints()/assignment.getPossiblePoints()) * gradeWeight)/count;
+			}
 		}
 				
 		score = currentScore;
@@ -107,8 +112,11 @@ public class ComputeGrade {
 		double maxPoints = 0.0;
 		for(Assignment assign : assignments)
 		{
-			totalPoints += assign.getEarnedPoints();
-			maxPoints += assign.getPossiblePoints();
+			if(assign.getEarnedPoints() != -1)
+			{
+				totalPoints += assign.getEarnedPoints();
+				maxPoints += assign.getPossiblePoints();
+			}
 		}
 		
 		if(maxPoints == 0.0)

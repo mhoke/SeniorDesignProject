@@ -78,7 +78,14 @@
 											<td align="center">${name}</td>
 											<td align="center">${assign.dueDate}</td>
 											<td>${Type}</td>
-											<td><input type="text" name="Earned<%=counter%>" size="12" value="${assignment.earnedPoints}" /></td>
+											<c:choose>
+												<c:when test="${assignment.earnedPoints == -1}">
+													<td><input type="text" name="Earned<%=counter%>" size="12" value="-" /></td>
+												</c:when>
+												<c:otherwise>
+													<td><input type="text" name="Earned<%=counter%>" size="12" value="${assignment.earnedPoints}" /></td>
+												</c:otherwise>
+											</c:choose>
 											<td><input type="text" name="Possible<%=counter%>" size="12" value="${assignment.possiblePoints}" /></td>
 										</tr>
 										<% idCount ++; %>

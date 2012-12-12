@@ -34,6 +34,7 @@ public class AddAssignmentServlet extends HttpServlet
 		else 
 		{
 			int courseID = -1;
+			AssignmentController controller = new AssignmentController();
 			if(req.getQueryString() != null && req.getQueryString().contains("id="))
 			{
 				courseID = Integer.parseInt(req.getQueryString().split("=")[1]);
@@ -43,7 +44,7 @@ public class AddAssignmentServlet extends HttpServlet
 			{
 				try 
 				{
-					req.setAttribute("ListofGrades", Database.getInstance().getGradesforCourse(courseID));
+					req.setAttribute("ListofGrades", controller.getWeights(courseID));
 					req.setAttribute("courseID", courseID);
 					req.getRequestDispatcher("/view/addAssignment.jsp").forward(req, resp);
 				}
@@ -64,6 +65,7 @@ public class AddAssignmentServlet extends HttpServlet
 		else 
 		{
 			int courseID = -1;
+			AssignmentController controller = new AssignmentController();
 			if(req.getQueryString() != null && req.getQueryString().contains("id="))
 			{
 				courseID = Integer.parseInt(req.getQueryString().split("=")[1]);
@@ -72,7 +74,7 @@ public class AddAssignmentServlet extends HttpServlet
 			{
 				try 
 				{
-					req.setAttribute("ListofGrades", Database.getInstance().getGradesforCourse(courseID));
+					req.setAttribute("ListofGrades", controller.getWeights(courseID));
 					req.setAttribute("courseID", courseID);
 					req.getRequestDispatcher("/view/addAssignment.jsp").forward(req, resp);
 				}
@@ -92,15 +94,16 @@ public class AddAssignmentServlet extends HttpServlet
 				int Month = Integer.parseInt(req.getParameter("monthBox"));
 				int Day = Integer.parseInt(req.getParameter("dayBox"));
 				int Possible = Integer.parseInt(req.getParameter("possibleBox"));
+				int Weight = Integer.parseInt(req.getParameter("grade_weights"));
 				
 				Date date = new Date(Year - 1900, Month, Day);
 				
 				//Update Database
-				AssignmentController controller = new AssignmentController();
-				
 				try 
 				{
-					controller.CreateAssignment(userID, courseID, Name, date, Possible);
+					String Weight_Name = controller.getWeights(courseID).get(Weight).getName();
+					int weight_id = controller.getWeightfromName(Weight_Name, courseID);
+					controller.CreateAssignment(userID, courseID, Name, date, Possible, weight_id);
 				} 
 				catch (SQLException e) 
 				{
@@ -109,34 +112,27 @@ public class AddAssignmentServlet extends HttpServlet
 			}
 			else if(req.getParameter("UploadButton") != null)
 			{
-				if(ServletFileUpload.isMultipartContent(req))
+				// Create a factory for disk-based file items
+				FileItemFactory factory = new DiskFileItemFactory();
+
+				// Create a new file upload handler
+				ServletFileUpload upload = new ServletFileUpload(factory);
+
+				// Parse the request
+				try 
 				{
-					// Create a factory for disk-based file items
-					FileItemFactory factory = new DiskFileItemFactory();
-
-					// Create a new file upload handler
-					ServletFileUpload upload = new ServletFileUpload(factory);
-
-					// Parse the request
-					try 
+					List<FileItem> items = upload.parseRequest(req);
+					for(FileItem f : items)
 					{
-						List<FileItem> items = upload.parseRequest(req);
-						for(FileItem f : items)
+						if(!f.isFormField())
 						{
-							if(!f.isFormField())
-							{
-								CreateAssignmentsFromExcelFile.createAssignmentsFromExcelSheet(f.getInputStream(), courseID);
-							}
+							CreateAssignmentsFromExcelFile.createAssignmentsFromExcelSheet(f.getInputStream(), courseID);
 						}
-					} 
-					catch (Exception e) 
-					{
-						e.printStackTrace();
 					}
-				}
-				else
+				} 
+				catch (Exception e) 
 				{
-					System.out.println("Not multipart content");
+					e.printStackTrace();
 				}
 			}
 			req.getRequestDispatcher("/view/addAssignment.jsp").forward(req, resp);
